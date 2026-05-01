@@ -2,75 +2,45 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 仓库概述
+## 项目概述
 
-这是一个 **DDR 内存技术学习笔记** 集合，非软件项目。所有内容均为 Markdown 文档，无需编译、测试或运行。
+这是一个 **嵌入式系统学习笔记** 仓库，当前主要在 `linux_notes/ddr/` 目录下通过 AI 辅助学习 DDR 内存知识并撰写知识总结文档。本项目非代码项目，而是 Markdown 文档项目。
 
-## 文件结构
+## 项目结构
 
-| 文件 | 内容 |
-|------|------|
-| `ddr.md` | 核心学习笔记：SDRAM 内部架构（Bank/Row/Column/Cell）、容量计算、DIMM 模组位宽概念、时序参数（tRCD, tRC, CL, tRP, tRAS）、DDR 各代次对比 |
-| `IMX6ULL_section35_1_4.md` | i.MX 6ULL MMDC（多模式 DDR 控制器）参考手册英文原版 |
-| `IMX6ULL_section35_1_4_双语.md` | 同上章节的中英双语版本 |
-| `4Gb_DDR3_merged.md` | Micron DDR3L SDRAM 数据手册（MT41K 系列，4Gb），英文 |
-| `JESD79-3D_merged.md` | JEDEC DDR3 标准规范（JESD79-3D），英文 |
-| `JESD79-3D_merged_中文.md` | JEDEC DDR3 标准规范的中文翻译 |
-| `MinerU_markdown_SM41J256M16M_*.md` | 国微电子 SM41J256M16M 4Gb DDR3 产品手册，中文 |
-| `MinerU_markdown_终极内存技术指南_*.md` | 终极内存技术指南，中文 | **低优先级参考**——年代较久远的爱好者撰写文章，部分概念（如 P-Bank、北桥芯片、传统单通道架构）已过时，与现代 DDR3/DDR4 语境不完全适用。仅作辅助理解，不作为权威依据。 |
+```
+embedded_system_study_notes/       ← git 根目录
+├── readme.md
+├── linux_notes/
+│   ├── ddr/                       ← 当前主要工作目录
+│   │   ├── ddr.md                 ← 主知识总结文档（2110+行，持续更新）
+│   │   ├── JESD79-3D_merged.md    ← JEDEC DDR3 标准参考（英文）
+│   │   ├── JESD79-3D_merged_中文.md ← JEDEC DDR3 标准参考（中文翻译）
+│   │   ├── 4Gb_DDR3_merged.md     ← DDR3 芯片数据手册
+│   │   ├── 第35章-MMDC翻译.md      ← i.MX6ULL MMDC 控制器章节翻译
+│   │   ├── MinerU_markdown_终极内存技术指南.md ← 内存技术综合指南
+│   │   ├── MinerU_markdown_IMX6ULL参考手册.md ← i.MX6ULL 参考手册
+│   │   ├── MinerU_markdown_SM41J256M16M.md ← DDR3 芯片数据手册
+│   │   └── MinerU_markdown_【正点原子】I.MX6U嵌入式Linux驱动开发指南V2.0.1.md
+│   ├── debug/ gpio/ i2c/ lock/ mtd/ pinctl/ power/ devicetree/
+│   └── clang_notes/
+├── mineru/                        ← MinerU 文档处理工具相关
+└── .git/
+```
 
 ## 参考资料优先级
 
-- **第一优先级**：JEDEC 标准（JESD79-3D）、芯片数据手册（Micron MT41K、国微电子 SM41J256M16M）、i.MX 6ULL 官方参考手册——这些是权威技术文档
-- **第二优先级**：`ddr.md` 学习笔记——用户自己整理的知识体系
-- **低优先级**：《终极内存技术指南》——历史爱好者文章，部分术语和架构描述已过时（如北桥概念、P-Bank/Rank 混用等），仅供参考，不作为知识判定依据
+参考资料按权威性分级，编写 `ddr.md` 时出现矛盾以高优先级为准：
 
-## 使用须知
+| 优先级 | 类型 | 文件 | 说明 |
+|--------|------|------|------|
+| **P0** | JEDEC 官方标准 | `JESD79-3D_merged*.md` | 最高权威，行业标准 |
+| **P1** | 芯片数据手册 (Datasheet) | `4Gb_DDR3_merged.md`, `MinerU_markdown_SM41J256M16M.md` | 厂商官方数据，可靠 |
+| **P2** | 芯片参考手册 (Reference Manual) | `MinerU_markdown_IMX6ULL参考手册.md`, `第35章-MMDC翻译.md` | 厂商官方手册 |
+| **P3** | 第三方技术书籍/指南 | `MinerU_markdown_终极内存技术指南.md` | 内容较全面，但可能存在过时或不准确之处 |
+| **P4** | 第三方开发教程 | `MinerU_markdown_【正点原子】I.MX6U嵌入式Linux驱动开发指南V2.0.1.md` | 实践参考，权威性最低，可能过时或有误 |
 
-- 所有文件为独立 Markdown 文档，直接阅读/编辑即可
-- 文件通过 MinerU（PDF 转 Markdown 工具）提取，部分格式可能存在瑕疵（如 LaTeX 公式、HTML 表格），编辑时注意清理
-- 新增或修改笔记时，保持现有的中英双语风格（如适用）
-
-## 笔记编写规范（从实践中总结）
-
-### 信号宽度标注格式
-
-时序图和信号描述中，`[ ]` 内填写**信号线数量**（纯数字），不要填写范围格式（如 `[15:0]`）：
-
-```
-正确: BA[3]、A[14]、DQ[16]、DQS[4]、CS[1]
-避免: BA[2:0]、A[13:0]、DQ[15:0]（表格/寄存器定义中可保留范围格式）
-```
-
-寄存器位定义表格（如 MR0/MR1/MR2）中可以保留 `[x:y]` 范围格式，因为这是寄存器位域的标准写法。
-
-### 时序图编写规范
-
-1. **每个命令/特性独立成图**，不要把多个命令画在同一张时序图中
-2. 时序图必须包含：
-   - CLK/CK 波形（差分时钟用 CK + CK# 两行）
-   - 控制信号（CS#、RAS#、CAS#、WE#）
-   - 地址信号（BA[x]、A[x]）
-   - 数据信号 DQ[y]（读写时序必须画出 DQ）
-3. 数据方向要注明：读操作为"输出数据"（芯片→控制器），写操作为"输入数据"（控制器→芯片）
-4. 时序图使用等宽 ASCII 字符，关键信号变化点用 `← 注释` 标注
-
-### 各代次章节结构
-
-第四~九章按历史演进顺序编写，每章结构统一：
-
-- **x.0 引脚数量变化**（相对上一代，以 x16 芯片为基准）
-- **x.1 新增/变化引脚**（功能说明，不含命令编码表）
-- **x.2 新增时序参数**（表格 + 时序图引用）
-- **x.3 新增特性**（预取、ODT、CWL 等，配合时序图说明）
-- **x.4 时序参数总结**（可选，表格列出该代次典型值）
-
-### 以 x16 为基准
-
-所有引脚描述、时序图、信号线数量均以 **x16 芯片** 为基准展开（嵌入式最常见场景）。提及 x4/x8 时作为对比补充。
-
-### Write Latency 代次差异
-
-- **SDR SDRAM / DDR**：写延迟 = CL（无独立 WL 参数）
-- **DDR2 起**：引入独立的 CWL（CAS Write Latency），通常 CWL ≤ CL
-- 写延迟相关话题在各代次章节中展开，不在基础章节中过早引入
+**处理原则**：
+- 优先引用 P0/P1 资料的内容
+- P3/P4 资料与 P0/P1/P2 矛盾时，以 P0/P1/P2 为准
+- 所有结论尽量给出参考资料出处以便追溯
