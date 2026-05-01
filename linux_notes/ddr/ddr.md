@@ -29,21 +29,16 @@
 
 ### 1.3 命名体系：从 DRAM 到 DDR
 
-这些名词是层层包含的关系：**DRAM ⊃ SDRAM ⊃ DDR**。
+这些名词是层层递进的关系，每多一个字母前缀，就多一项技术特征：
 
-```
-DRAM（动态随机存取存储器）
- └── SDRAM（同步 DRAM）—— 命令/地址/数据与时钟同步
-      └── DDR SDRAM（双倍数据速率 SDRAM）—— 上升沿+下降沿各传输一次
-           ├── DDR2 / DDR3 / DDR4 / DDR5（各代演进）
-```
+| 缩写 | 英文全称 | 关键字拆解 |
+|------|----------|-----------|
+| **DRAM** | Dynamic Random Access Memory | **Dynamic**（动态）— 电容存储，电荷泄漏需定期刷新<br>**Random Access**（随机访问）— 可任意顺序访问任意地址<br>**Memory**（存储器） |
+| **SDRAM** | Synchronous DRAM | **Synchronous**（同步）— 命令/地址/数据与时钟信号对齐，区别于早期异步 DRAM |
+| **DDR SDRAM** | Double Data Rate SDRAM | **Double Data Rate**（双倍数据速率）— 每个时钟的上升沿和下降沿各传输一次，传输率 = 时钟频率 × 2 |
+| **DDR2/3/4/5** | DDR Generation 2/3/4/5 | 数字表示代次，每代在电压、预取深度、Bank 架构等方面演进，彼此**不兼容**） |
 
-| 缩写 | 全称 | 含义 |
-|------|------|------|
-| **DRAM** | Dynamic Random Access Memory | 动态随机存取存储器。以电容存储数据，需要定期刷新。是最广泛的主存技术类别 |
-| **SDRAM** | Synchronous DRAM | 同步 DRAM——所有命令和数据传输都与时钟边沿对齐。区别于早期无时钟的异步 DRAM |
-| **DDR SDRAM** | Double Data Rate SDRAM | 双倍数据速率 SDRAM。在 SDRAM 基础上，每个时钟的上升沿和下降沿各传输一次数据，传输率 = 时钟频率 × 2 |
-| **DDR2/3/4/5** | DDR Generation 2/3/4/5 | 第二代到第五代 DDR，每代在电压、预取深度、Bank 架构等方面持续演进 |
+> 日常口语中的"DDR"即指 DDR SDRAM 及其后续各代。
 
 ### 1.4 DDR 代次演进总览
 
