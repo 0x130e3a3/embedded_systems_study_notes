@@ -110,88 +110,71 @@ DDR 芯片容量层次:
 
 ### 2.2 Bank 内部结构：Row/Column 与 Wordline/Bitline
 
-每个 Bank 是一个二维阵列。同一个阵列有两种描述视角：
+每个 Bank 是一个二维阵列，有两种描述方式：
 
-| 视角 | 水平方向 | 垂直方向 | 适用场景 |
-|------|---------|---------|---------|
-| **地址线视角** | Column（列地址） | Row（行地址） | 控制器编程、容量计算 |
-| **物理结构视角** | Bitline（位线） | Wordline（字线） | 芯片内部架构、时序分析 |
-
-#### 地址线与物理结构的对应关系
-
-| 地址线概念 | 物理概念 | 关系 |
-|-----------|---------|------|
-| **Row（行）** | Wordline（字线） | **一对一**：1 个 Row 地址激活 1 条 Wordline |
-| **Column（列）** | Bitline Group（位线组） | **一对多**：1 个 Column 地址选中一组 Bitline，组大小 = 位宽 |
+**物理结构**：由水平导线 **Wordline（字线）** 和垂直导线 **Bitline（位线）** 交叉构成，每个交叉点 = 1 个 Cell（1bit）。
 
 ```
-Bank 存储阵列（两种视角叠加）:
+Bank 物理结构（俯视图）：
 
-      水平方向 → Bitline（物理结构）/ Column（地址线视角）
-
-         Bitline 0  Bitline 1  Bitline 2  ...  Bitline N
-            │          │          │              │
-      ┌─────┼──────────┼──────────┼──── ... ─────┼────┐
-      │  Cell │  Cell   │  Cell   │    ...  │  Cell │  ← Row 0 = Wordline 0
-      ├─────┼──────────┼──────────┼───────────┼────┤
-      │  Cell │  Cell   │  Cell   │    ...  │  Cell │  ← Row 1 = Wordline 1
-      ├─────┼──────────┼──────────┼───────────┼────┤
-      │  Cell │  Cell   │  Cell   │    ...  │  Cell │  ← Row 2 = Wordline 2
-      ├─────┼──────────┼──────────┼───────────┼────┤
-      │ ...  │   ...    │   ...   │    ...  │ ...  │
-      ├─────┼──────────┼──────────┼───────────┼────┤
-      │  Cell │  Cell   │  Cell   │    ...  │  Cell │  ← Row M = Wordline M
-      └─────┴──────────┴──────────┴───────────┴────┘
-
-      垂直方向 → Wordline（物理结构）/ Row（地址线视角）
-
-每个交叉点 = 1 个 Cell（1bit）
+              Bitline 0  Bitline 1  Bitline 2  Bitline 3  ...
+                ↓          ↓          ↓          ↓
+Wordline H0 ── Cell ──── Cell ──── Cell ──── Cell ──── ...
+Wordline H1 ── Cell ──── Cell ──── Cell ──── Cell ──── ...
+Wordline H2 ── Cell ──── Cell ──── Cell ──── Cell ──── ...
+                :          :          :          :
 ```
 
-#### 工作过程（两种视角的对应）
+**地址层面**：控制器通过 **Row 地址** 和 **Column 地址** 来定位数据，与物理结构的对应关系如下：
 
-**步骤 1 — ACT 命令（Row 地址）**：
+| 地址 | 对应物理结构 | 关系 |
+|------|-------------|------|
+| **Row 地址** | Wordline（字线） | **一对一**：1 个 Row 地址选中 1 条 Wordline |
+| **Column 地址** | Bitline Group（位线组） | **一对多**：1 个 Column 地址选中一组 Bitline，组大小 = 位宽 |
 
-```
-Row 地址 → 激活对应 Wordline → 整条 Wordline 上所有 Bitline 的 Cell 读入 Sense Amplifier
+#### 工作过程
 
-  以 x16 为例，每条 Wordline 有 16384 条 Bitline:
-  ┌── Bitline（共 16384 条）──────────────────────┐
-  │ C C C C C C C C ... C C C C C C C │
-  └───┬────┬────┬────┬────┬─── ... ───┘
-      │    │    │    │    │
-   ┌──┴───┴┐┌──┴───┴┐┌──┴───┴┐
-   │ 16个   ││ 16个   ││ 16个   │  ← 每 16 条 Bitline = 1 个 Column 位置
-   │ SenseAmp││ SenseAmp││ SenseAmp│
-   └───┬───┘└───┬───┘└───┬───┘
-       │        │        │
-   Column 地址 0   1   2   ...   ← 10位地址 = 1024个可选组
-```
+**步骤 1 — ACT 命令（Row 地址）**：发送 Row 地址 → 激活对应 Wordline → 整行所有 Cell 的数据读入 Sense Amplifier。
 
-**步骤 2 — READ/WRITE 命令（Column 地址）**：
+**步骤 2 — READ/WRITE 命令（Column 地址）**：发送 Column 地址 → 从 Sense Amplifier 阵列中选出一组（= 位宽个 bit）→ 通过多路器输出。
 
 ```
-Column 地址 → 选中一组 Bitline（16 条） → 通过多路器并行输出 16bit
+以 DDR3 x16 为例（COLBITS=10）：
+
+ACT 发送 Row 地址 → 激活 1 条 Wordline → 16384 个 Cell 读入 Sense Amplifier
+
+READ 发送 Column 地址（10位） → 从 1024 个组中选 1 组 → 输出 16bit
+
+  Sense Amplifier 阵列（共 16384 个）:
+  ┌────────────────────────────────────┐
+  │ [0~15] [16~31] [32~47] ... [16368~16383] │
+  └───┬────┘└───┬────┘└───┬────┘
+      │         │         │
+  Column 组 0   1         2     ...  ← 10位地址 = 1024 个可选组
+      (16bit)  (16bit)   (16bit)
 ```
 
-两种容量算法等价，因为：**Bitline 总数 = Column 可选组数 × 位宽**：
+#### 关键理解
 
-| 算法 | 公式 | 说明 |
-|------|------|------|
-| 按 Bitline | `Bank × Row数 × Bitline总数 × 1bit` | 每个 Cell = 1bit |
-| 按 Column 地址 | `Bank × Row数 × 2^(Column地址位数) × 位宽` | 每个 Column 地址选一组 Bitline |
+**Column 地址选中的不是一条 Bitline，而是一组 Bitline。**
 
-#### Column 地址与 Bitline 的关系（易混淆点）
+| 参数 | x4 | x8 | x16 |
+|------|----|----|-----|
+| Bitline 总数 | 131072 | 65536 | 16384 |
+| Column 地址位数 | 15 | 14 | 10 |
+| 每组 Bitline 数（=位宽） | 4 | 8 | 16 |
+| Column 可选组数 | 32768 | 16384 | 1024 |
 
-**Column 地址选中的不是单条 Bitline，而是一组 Bitline。**
+关系：**Bitline 总数 = Column 可选组数 × 位宽**。
 
-- Bitline 总数 = 物理上每条 Wordline 的 Cell 列数
-- Column 可选组数 = 2^(Column 地址位数) = JEDEC 定义的 `2^COLBITS`
-- 关系：`Bitline 总数 = Column 可选组数 × 位宽`
+#### 地址线复用
 
-以 DDR3 x16（COLBITS=10）为例：Bitline 总数 = 1024 × 16 = 16384。
+Row 地址和 Column 地址**共用同一组地址引脚**（A0~An），分时传输：
 
-**为什么需要多个 Bank**：单一 Bank 同一时刻只能激活一条 Wordline。访问不同行时必须先 Precharge（预充电）关闭当前行，再激活新行，期间无法访问。多个 Bank 可并行工作——一个 Bank 预充电时，另一个 Bank 正常读写。
+1. ACT 命令期间，地址引脚传输 Row 地址
+2. READ/WRITE 命令期间，地址引脚传输 Column 地址
+
+这就是 DDR 芯片引脚数少的原因——不需要为 Row 和 Column 分别提供独立的地址线。
 
 ### 2.3 存储单元（Cell）
 
