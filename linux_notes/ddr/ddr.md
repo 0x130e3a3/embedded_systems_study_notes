@@ -190,6 +190,38 @@ READ 发送 Column 地址（10位） → 从 1024 个组中选 1 组 → 输出 
 
 关系：**Bitline 总数 = Column 可选组数 × 位宽**。
 
+#### Page（页）/ Row Buffer（行缓冲区）
+
+**Page 就是被 ACT 命令激活后，驻留在 Sense Amplifier 中的那一整行数据。**
+
+当 ACT 命令选中一条 Wordline 后，该行所有 Cell 的数据被读入 Sense Amplifier 阵列暂存。这个 Sense Amplifier 阵列此时充当 **Row Buffer（行缓冲区）**，其中驻留的这一整行数据就是一个 **Page**。
+
+```
+ACT 命令:
+  Wordline H1 被激活 → 该行所有 Cell 数据读入 Sense Amplifier
+  ┌─────────────────────────────────┐
+  │ Sense Amplifier（Row Buffer）    │
+  │ ←────── 1 Page = 一整行数据 ────→│
+  │ [0~15][16~31][32~47]...[16384] │  ← DDR3 x16: 1024 列 × 16bit = 16384bit
+  └─────────────────────────────────┘
+
+后续 READ 命令只需发 Column 地址，从 Page 中读取对应 16bit。
+```
+
+Page 的核心意义：
+
+| 要点 | 说明 |
+|------|------|
+| **Page = Row** | Page 不是一块独立的结构，就是 Row 激活后的状态 |
+| **行缓冲区** | Sense Amplifier 在激活期间充当缓存，避免每次读都访问电容 |
+| **Page Hit** | 如果目标 Row 已在 Row Buffer 中 → 直接 READ/WRITE，无需 ACT |
+| **Page Miss** | 如果目标 Row 不在 Row Buffer 中 → 需先 ACT 再 READ/WRITE |
+| **Page 冲突** | 同一 Bank 只能打开 1 个 Page → 访问不同 Row 需先 PRE（关闭当前 Page） |
+
+**举例**：DDR3 x16 的一个 Page 大小 = 1024（列数）× 16bit（位宽）= 16384 bit = 2048 byte = 2KB。
+
+> 注意：DRAM 的 Page 与操作系统中的 Memory Page（通常 4KB）是不同层面的概念。DRAM Page 是物理芯片内部的行缓冲区，OS Page 是虚拟内存管理的逻辑单元，两者大小和用途均不同。
+
 #### 地址线复用
 
 Row 地址和 Column 地址**共用同一组地址引脚**（A0~An），分时传输：
