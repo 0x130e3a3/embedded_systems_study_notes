@@ -133,49 +133,6 @@ DDR 芯片容量层次:
 
 > 各代次 Bank 数量演进见 **1.4 节**。
 
-#### 为什么要分 Bank
-
-如果不分 Bank，整个芯片就是一个巨大的阵列，每次读写都要经历 ACT → READ/WRITE → PRE 流程，期间整个芯片不可访问。Bank 的核心价值在于**并行度**：
-
-| 场景 | 单 Bank | 多 Bank |
-|------|---------|---------|
-| Bank 0 正在读写 | 整个芯片忙，所有请求阻塞 | Bank 1/2/3... 可以同时响应其他请求 |
-| Bank 0 在预充电（PRE） | 整个芯片忙 | 可以激活（ACT）其他 Bank |
-| Bank 0 在刷新（REF） | 整个芯片忙 | DDR4 及以下：REF 刷新所有 Bank，全 Bank 锁死；DDR5 及以上：支持 Per-Bank Refresh，其他 Bank 可用 |
-
-**形象类比**：把 Bank 想象成餐厅的多个厨房。单 Bank = 只有一个厨房，所有菜品都要排队等。多 Bank = 多个独立厨房，可以同时做菜，提高整体吞吐量。
-
-**多 Bank 带来的实际优化**：
-- **Bank Interleaving（Bank 交错）**：控制器交替向不同 Bank 发命令，让一个 Bank 在等待时序的同时其他 Bank 在工作
-- **降低冲突概率**：不同地址的访问更可能落在不同 Bank，减少等待
-- **预充电与激活重叠**：Bank 0 预充电的同时 Bank 1 可以激活，隐藏预充电延迟
-
-> 注：DDR4 及以下仅支持 All-Bank Refresh，刷新期间所有 Bank 不可用。Per-Bank Refresh 在 DDR5 才引入（LPDDR 系列从 LPDDR3 开始就支持）。
-
-#### 为什么要分 Bank Group
-
-Bank Group 是 DDR4 引入的概念。当 Bank 数量增加到 16 个（DDR4）时，如果所有 Bank 平铺在一起，共享资源的竞争会加剧。Bank Group 将 Bank 分组（如 4 Group × 4 Bank = 16 Bank），组内和组外有不同的时序限制：
-
-```
-Bank Group 的价值:
-
-所有 Bank 平铺（DDR3 方式）:
-  Bank0 ~ Bank7 共享同一套时序限制 → 任何两个 Bank 之间都要等待同样的最小间隔
-
-Bank Group 架构（DDR4 方式）:
-  Group 0 ── Bank0,1,2,3  ┐
-  Group 1 ── Bank4,5,6,7  ├─ 同组内: 较宽松的时序（_L 后缀，如 tRRD_L）
-  Group 2 ── Bank8,9,10,11│  组间:     更紧的时序  （_S 后缀，如 tRRD_S）
-  Group 3 ── Bank12,13,14,15┘
-
-  原因：不同 Group 内部的行缓冲器、控制逻辑是相对独立的，组间操作可以真正并行
-```
-
-**Bank Group 带来的收益**：
-- 不同 Group 之间的操作间隔更短（_S < _L），允许更密集的访问
-- 控制器可以向不同 Group 交错发送命令，实现真正的并发
-- 为更高容量和更高速率下的性能提供了架构级保障
-
 ### 2.2 Bank 内部结构：Row/Column 与 Wordline/Bitline
 
 每个 Bank 是一个二维阵列，有两种描述方式：
@@ -1066,6 +1023,25 @@ PRE  ─────────────────────────
 - 数据在 CL 延迟后开始写入（写操作的 CL 与读操作相同）
 - 写入后需要等待 tWR（Write Recovery Time）才能执行 PRE
 
+#### 为什么要分 Bank
+
+如果不分 Bank，整个芯片就是一个巨大的阵列，每次读写都要经历 ACT → READ/WRITE → PRE 流程，期间整个芯片不可访问。Bank 的核心价值在于**并行度**：
+
+| 场景 | 单 Bank | 多 Bank |
+|------|---------|---------|
+| Bank 0 正在读写 | 整个芯片忙，所有请求阻塞 | Bank 1/2/3... 可以同时响应其他请求 |
+| Bank 0 在预充电（PRE） | 整个芯片忙 | 可以激活（ACT）其他 Bank |
+| Bank 0 在刷新（REF） | 整个芯片忙 | 全 Bank 锁死 |
+
+**形象类比**：把 Bank 想象成餐厅的多个厨房。单 Bank = 只有一个厨房，所有菜品都要排队等。多 Bank = 多个独立厨房，可以同时做菜，提高整体吞吐量。
+
+**多 Bank 带来的实际优化**：
+- **Bank Interleaving（Bank 交错）**：控制器交替向不同 Bank 发命令，让一个 Bank 在等待时序的同时其他 Bank 在工作
+- **降低冲突概率**：不同地址的访问更可能落在不同 Bank，减少等待
+- **预充电与激活重叠**：Bank 0 预充电的同时 Bank 1 可以激活，隐藏预充电延迟
+
+> 注：DDR4 及以下仅支持 All-Bank Refresh，REF 期间所有 Bank 不可用。Per-Bank Refresh 在 DDR5 才引入（LPDDR 系列从 LPDDR3 开始就支持）。
+
 ### 4.7 核心特性
 
 #### 突发传输（Burst Transfer）
@@ -1838,6 +1814,30 @@ DDR4 跨 Bank Group 并发读写示意:
 - tRRD_S < tRRD_L，tWTR_S < tWTR_L，tCCD_S < tCCD_L
 - 不同 BG 之间的操作可以"交错"进行，类似于多条独立通道
 - 软件/控制器通过合理安排访问顺序（跨 BG 交错），可以显著提升带宽利用率
+
+#### 为什么要分 Bank Group
+
+DDR3 时代 8 个 Bank 平铺在一起时，所有 Bank 共享同一套时序限制——任意两个 Bank 之间都要等待同样的最小间隔（如 tRRD、tWTR）。当 DDR4 将 Bank 数量增加到 16 个时，如果继续平铺，共享资源（行缓冲器、控制逻辑）的竞争会急剧加剧。
+
+```
+Bank Group 的价值:
+
+DDR3 平铺方式（8 Bank 共享资源）:
+  Bank0 ~ Bank7 → 任何两个 Bank 之间都要等待同样的最小间隔
+
+DDR4 Bank Group 方式（4 Group × 4 Bank = 16 Bank）:
+  Group 0 ── Bank0,1,2,3  ┐
+  Group 1 ── Bank4,5,6,7  ├─ 同组内: 较宽松的时序（_L 后缀，如 tRRD_L）
+  Group 2 ── Bank8,9,10,11│  组间:     更紧的时序  （_S 后缀，如 tRRD_S）
+  Group 3 ── Bank12,13,14,15┘
+
+  原因：不同 Group 内部的行缓冲器、控制逻辑是相对独立的，组间操作可以真正并行
+```
+
+**Bank Group 带来的收益**：
+- 不同 Group 之间的操作间隔更短（_S < _L），允许更密集的访问
+- 控制器可以向不同 Group 交错发送命令，实现真正的并发
+- 为更高容量和更高速率下的性能提供了架构级保障
 
 #### 可配置 CRC（Cyclic Redundancy Check）
 
