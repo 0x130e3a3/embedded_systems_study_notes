@@ -11,17 +11,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 embedded_system_study_notes/       ← git 根目录
 ├── readme.md
-├── linux_notes/
+── linux_notes/
 │   ├── ddr/                       ← 当前主要工作目录
-│   │   ├── ddr.md                 ← 主知识总结文档（2110+行，持续更新）
-│   │   ├── JESD79-3D_merged.md    ← JEDEC DDR3 标准参考（英文）
-│   │   ├── JESD79-3D_merged_中文.md ← JEDEC DDR3 标准参考（中文翻译）
-│   │   ├── 4Gb_DDR3_merged.md     ← DDR3 芯片数据手册
-│   │   ├── 第35章-MMDC翻译.md      ← i.MX6ULL MMDC 控制器章节翻译
-│   │   ├── MinerU_markdown_终极内存技术指南.md ← 内存技术综合指南
-│   │   ├── MinerU_markdown_IMX6ULL参考手册.md ← i.MX6ULL 参考手册
-│   │   ├── MinerU_markdown_SM41J256M16M.md ← DDR3 芯片数据手册
-│   │   └── MinerU_markdown_【正点原子】I.MX6U嵌入式Linux驱动开发指南V2.0.1.md
+│   │   ├── ddr.md                 ← 主知识总结文档（持续更新）
+│   │   ├── CLAUDE.md              ← 本文件，项目指引
+│   │   ├── image_*.png            ← 框图/截图等图片资源
+│   │   └── references/            ← 参考资料目录
+│   │       ├── JESD79-3D_merged.md               ← JEDEC DDR3 标准（英文）
+│   │       ├── JESD79-3D_merged_中文.md          ← JEDEC DDR3 标准（中文翻译）
+│   │       ├── 4Gb_DDR3_merged.md                ← Micron DDR3 数据手册
+│   │       ├── MinerU_markdown_SM41J256M16M.md   ← 国微电子 DDR3 数据手册
+│   │       ├── MinerU_markdown_IMX6ULL参考手册.md ← i.MX6ULL 参考手册
+│   │       ├── 第35章-MMDC翻译.md                 ← i.MX6ULL MMDC 控制器章节翻译
+│   │       ├── MinerU_markdown_终极内存技术指南.md ← 内存技术综合指南
+│   │       └── MinerU_markdown_【正点原子】...   ← 正点原子开发指南
 │   ├── debug/ gpio/ i2c/ lock/ mtd/ pinctl/ power/ devicetree/
 │   └── clang_notes/
 ├── mineru/                        ← MinerU 文档处理工具相关
@@ -30,7 +33,7 @@ embedded_system_study_notes/       ← git 根目录
 
 ## 参考资料优先级
 
-参考资料按权威性分级，编写 `ddr.md` 时出现矛盾以高优先级为准：
+参考资料按权威性分级，编写 `ddr.md` 时出现矛盾以高优先级为准（路径相对于 `linux_notes/ddr/references/`）：
 
 | 优先级 | 类型 | 文件 | 说明 |
 |--------|------|------|------|
