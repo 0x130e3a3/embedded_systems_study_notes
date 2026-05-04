@@ -23,8 +23,8 @@ embedded_system_study_notes/       ← git 根目录
 │   │       ├── JESD79-3D_merged_中文.md          ← JEDEC DDR3 标准（中文翻译）
 │   │       ├── 4Gb_DDR3_merged.md                ← Micron DDR3 数据手册
 │   │       ├── MinerU_markdown_SM41J256M16M.md   ← 国微电子 DDR3 数据手册
-│   │       ├── MinerU_markdown_IMX6ULL参考手册.md ← i.MX6ULL 参考手册
-│   │       ├── 第35章-MMDC翻译.md                 ← i.MX6ULL MMDC 控制器章节翻译
+│   │       ├── IMX6ULL_Reference_Manual_Ch35_MMDC.md      ← i.MX6ULL 参考手册 Ch35 MMDC（英文）
+│   │       ├── IMX6ULL_Reference_Manual_Ch35_MMDC_中文.md ← i.MX6ULL MMDC 控制器章节翻译
 │   │       ├── MinerU_markdown_终极内存技术指南.md ← 内存技术综合指南
 │   │       └── MinerU_markdown_【正点原子】...   ← 正点原子开发指南
 │   ├── debug/ gpio/ i2c/ lock/ mtd/ pinctl/ power/ devicetree/
@@ -49,7 +49,7 @@ embedded_system_study_notes/       ← git 根目录
 |--------|------|------|------|
 | **P0** | JEDEC 官方标准 | `JESD79-3D_merged*.md` | 最高权威，行业标准 |
 | **P1** | 芯片数据手册 (Datasheet) | `4Gb_DDR3_merged.md`, `MinerU_markdown_SM41J256M16M.md` | 厂商官方数据，可靠 |
-| **P2** | 芯片参考手册 (Reference Manual) | `MinerU_markdown_IMX6ULL参考手册.md`, `第35章-MMDC翻译.md` | 厂商官方手册 |
+| **P2** | 芯片参考手册 (Reference Manual) | `IMX6ULL_Reference_Manual_Ch35_MMDC*.md` | 厂商官方手册 |
 | **P3** | 第三方技术书籍/指南 | `MinerU_markdown_终极内存技术指南.md` | 内容较全面，但可能存在过时或不准确之处 |
 | **P4** | 第三方开发教程 | `MinerU_markdown_【正点原子】I.MX6U嵌入式Linux驱动开发指南V2.0.1.md` | 实践参考，权威性最低，可能过时或有误 |
 
