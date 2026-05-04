@@ -10,13 +10,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 embedded_system_study_notes/       ← git 根目录
-├── readme.md
-── linux_notes/
+── readme.md
+├── linux_notes/
 │   ├── ddr/                       ← 当前主要工作目录
-│   │   ├── ddr.md                 ← 主知识总结文档（持续更新）
-│   │   ├── CLAUDE.md              ← 本文件，项目指引
-│   │   ├── image_*.png            ← 框图/截图等图片资源
-│   │   └── references/            ← 参考资料目录
+│   │   ├── 01_ddr_theory.md                ← 第一部分：DDR相关理论知识（第1-10章）
+│   │   ├── 02_ddr_chip_analysis.md         ← 第二部分：具体DDR芯片分析（第11章+）
+│   │   ├── 03_controller_and_debug.md      ← 第三部分：控制器分析与实战调试（第12-13章+）
+│   │   ├── CLAUDE.md                       ← 本文件，项目指引
+│   │   ├── image_*.png                     ← 框图/截图等图片资源
+│   │   └── references/                     ← 参考资料目录
 │   │       ├── JESD79-3D_merged.md               ← JEDEC DDR3 标准（英文）
 │   │       ├── JESD79-3D_merged_中文.md          ← JEDEC DDR3 标准（中文翻译）
 │   │       ├── 4Gb_DDR3_merged.md                ← Micron DDR3 数据手册
@@ -31,9 +33,17 @@ embedded_system_study_notes/       ← git 根目录
 └── .git/
 ```
 
+## 文档说明
+
+| 文档 | 内容 | 更新频率 |
+|------|------|---------|
+| `01_ddr_theory.md` | DDR 基础理论：概念、芯片组织结构、各代演进、信号与时序 | 稳定，很少改动 |
+| `02_ddr_chip_analysis.md` | 具体芯片规格解读与数据手册分析 | 持续增加新芯片 |
+| `03_controller_and_debug.md` | SoC 内存控制器架构与 DDR 初始化调试 | 持续增加新 SoC/控制器 |
+
 ## 参考资料优先级
 
-参考资料按权威性分级，编写 `ddr.md` 时出现矛盾以高优先级为准（路径相对于 `linux_notes/ddr/references/`）：
+参考资料按权威性分级，编写笔记时出现矛盾以高优先级为准（路径相对于 `linux_notes/ddr/references/`）：
 
 | 优先级 | 类型 | 文件 | 说明 |
 |--------|------|------|------|
