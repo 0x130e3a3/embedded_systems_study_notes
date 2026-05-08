@@ -37,3 +37,15 @@ debug2 : 休眠时的时间保证同步方案,休眠前保存系统时间,休眠
 
 涉及到的知识点:
 系统时间(linux的时间子系统,REALTIME,MONOTONIC,BOOTTIME,MONOTONIC_RAW)    硬件时间   时区配置      timedatectl     NTP(chrony,ntpd)   时间命令(uptime,date,hwclock)
+
+
+3标题；lds脚本出错导致堆栈位置错位
+
+问题描述：
+1 csky架构
+2 lds脚本中分了两个段，一个方text，rodata，data，bss等。另一个放heap和stack。通过 > MEM0 和 >MEM1实现。但是发现heap没有按照预想的那样在MEM1中而是在MEM0中紧跟着。bss的末尾
+
+debug1 ： 实测确认是 ALIGN(8) 这个条件导致的，去掉后heap就正常的分配到MEM1了
+
+涉及到的知识点：
+链接脚本及语法  编译流程
