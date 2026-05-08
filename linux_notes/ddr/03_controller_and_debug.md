@@ -105,13 +105,122 @@ SoC 内部（AXI 32-bit）       MMDC 内部转换           DDR 接口（x16）
 - 写请求 FIFO：8 条目
 - 读请求 FIFO：16 条目
 
-### 12.3 重排序机制与 Bank 预测
+### 12.3 地址解码与地址空间
 
-MMDC 内置重排序机制，根据动态评分（Dynamic Scoring）选择最优的 DDR 访问顺序。例如：AXI 主设备按 Bank0 → Bank3 → Bank0 → Bank1 顺序请求，MMDC 会将相同 Bank 的读写合并，减少预充电/激活次数。
+#### 12.3.1 地址解码规则
 
-**Bank 预测**：通过深度请求队列，预测下一个可能访问的 Bank，提前发出预充电/激活命令。
+MMDC 接收到的 AXI 地址是 32 位的，需要解码为四个字段：
 
-### 12.4 Page Hit / Page Miss 优化
+1. **片选（Chip Select）**
+2. **Bank 号**
+3. **行号（Row）**
+4. **列号（Column）**
+
+定义 DDR 地址空间的关键寄存器：
+
+| 寄存器字段 | 作用 |
+|-----------|------|
+| `MDMISC[DDR_4_BANK]` | 定义 DDR 是 4 Bank 还是 8 Bank |
+| `MDCTL[DSIZ]` | 定义 DDR 数据总线位宽（x16） |
+| `MDMISC[BI]` | 定义 Bank Interleaving 开/关 |
+| `MDCTL[COL]` | 定义列地址位数 |
+| `MDCTL[ROW]` | 定义行地址位数 |
+
+**片选判决**：MMDC 比较 AXI 地址的最高 7 位（`ARADDR[31:25]` / `AWADDR[31:25]`）与 `MDASP[CS0_END]` 来决定访问 CS0 还是 CS1。
+
+**地址位映射表**（以 x16 DDR、8 Bank、15 行、10 列为例）：
+
+| AXI 地址位 | Bank Interleaving OFF | Bank Interleaving ON |
+|-----------|----------------------|---------------------|
+| A29 | — | ROW[14] |
+| A28 | BANK[2] | ROW[13] |
+| A27 | BANK[1] | ROW[12] |
+| A26 | BANK[0] | ROW[11] |
+| A25 | ROW[14] | ROW[10] |
+| A24 ~ A12 | ROW[13] ~ ROW[1] | ROW[9] ~ ROW[0] |
+| A14 | ROW[0] | BANK[2] |
+| A13 | BANK[2] | BANK[1] |
+| A12 | BANK[1] | BANK[0] |
+| A11 | BANK[0] | COL[9] |
+| A10 ~ A2 | COL[9] ~ COL[0] | COL[8] ~ COL[0] |
+| A1 ~ A0 | — | — |
+
+> **理解**：Bank Interleaving OFF 时，Bank 号从 AXI 的高位取（紧邻片选位），连续的地址可能跨 Bank；ON 时，Bank 号从行地址中"借用"低位，有利于连续地址落在同一 Bank 内。
+
+**AXI 到 DDR 访问的转换**：
+- **WRAP 突发（读）**：MMDC 会将非对齐的 AXI WRAP 突发拆分成多次 DDR 访问，并**优先返回关键字（critical word）**，剩余数据通过内部缓冲重排后按 AXI 顺序返回。
+- **INCREMENT 突发（写）**：非对齐的 INCREMENT 写会被拆成两次 DDR 写，无关字节通过 **DQM 数据掩码**屏蔽。
+
+#### 12.3.2 片选分区设置
+
+MMDC 支持最多两个连续的片选，每个片选密度相同，总密度必须是 2 的幂。
+
+以 2 Gbyte 总空间、每片选 1 Gbyte 为例，有三种 `MDASP[CS0_END]` 配置选项：
+
+| CS0_END 值 | CS0 范围 | CS1 范围 |
+|-----------|---------|---------|
+| `001_1111` | 0 ~ 1 Gbyte | 1 ~ 2 Gbyte |
+| `011_1111` | 0 ~ 2 Gbyte（全部映射到 CS0） | 未使用 |
+| `101_1111` | 0 ~ 3 Gbyte（含空洞） | 2 ~ 3 Gbyte |
+
+#### 12.3.3 地址镜像（Address Mirroring）
+
+当同一通道上挂有两颗 DDR 颗粒时，为简化 PCB 布线，硬件上可能将 CS1 的地址线交叉连接（如 CS0 的 A0 连到 CS1 的 A1）。MMDC 支持地址镜像配置，使控制器在向 CS1 发命令时自动交换地址位，确保逻辑地址与物理布线一致。
+
+### 12.4 重排序机制与 Bank 预测
+
+#### 仲裁流程（Arbitration General）
+
+MMDC 的完整仲裁流程如下：
+
+1. AXI 访问被采样进入读/写请求队列
+2. 读/写仲裁器选择获胜者
+3. 获胜者被采样进入**重排序队列**（Reordering Queue）
+4. 重排序机制在合法请求中选择最优顺序，最大化 DDR 总线利用率
+5. 完成后的访问从重排序队列中清除
+
+#### 动态评分模式（Dynamic Scoring）
+
+MMDC 为每个待处理请求计算**总分**，分数最高者获胜。评分由四个因素组成：
+
+| 评分因子 | 寄存器字段 | 默认值 | 说明 |
+|---------|-----------|--------|------|
+| Page Hit 分数 | `MAARCR[ARCR_PAG_HIT]` | 4 | 如果请求命中已打开的 Page，加此分 |
+| Access Hit 分数 | `MAARCR[ARCR_ACC_HIT]` | 2 | 如果请求类型与上一次相同，加此分 |
+| 动态跳跃分数 | `MAARCR[ARCR_DYN_JMP]` | 1 | 每次请求**未被选中**时，此分 +1（饥饿计数） |
+| QoS 分数 | AXI `arqos/awqos` 侧带信号 | — | 4 位优先级，值越高分数越高 |
+
+总分上限为 **0xF**，防止溢出。
+
+#### 保护机制（Guarding / Aging）
+
+为防止低优先级请求被**永久饥饿**，MMDC 内置保护机制：
+
+- 当某请求的动态跳跃分数达到最大值（`MAARCR[ARCR_DYN_MAX]`，默认 15），启动保护计数器
+- 保护计数器每轮未选中 +1，达到 `MAARCR[ARCR_GUARD]`（默认 15）后，该请求获得**最高优先级**
+- 除非有实时通道（Real-Time Channel）请求到达，否则必须优先处理
+
+> **默认配置**：`ARCR_DYN_MAX = 15`, `ARCR_GUARD = 15`，即一个请求最多等待 15 轮后强制优先。
+
+#### 实时通道模式（Real-Time Channel）
+
+当 `MAARCR[ARCR_RCH_EN] = 1`（默认启用）时，QoS = `0xF` 的访问**绕过所有其他待处理访问**，直接优先执行。这为音视频等对延迟敏感的实时数据流提供了硬件级保障。
+
+#### Bank 预测
+
+MMDC 在重排序的同时并行执行**预测机制**，在 dispatch 之前预测 CS、Bank 和 Row。预测使用三个层级的待处理访问：
+1. 处于第一流水线的访问
+2. AXI 总线上的合法访问
+3. 来自仲裁的合法访问（下一个 miss 访问）
+
+通过 `MDMISC[MIF3_MODE]` 启用。
+
+#### DDR3 特殊优化
+
+- **非对齐 WRAP 访问优化**：非对齐但匹配 DDR wrap 边界的 WRAP 突发，会被优化为单次 DDR 访问，内部进行数据重排
+- **关键字优先返回**：读事务中，MMDC 收到 DDR 返回的第一批数据（关键字）就立即驱动回 AXI 主设备，不等整个数据阶段完成
+
+### 12.5 Page Hit / Page Miss 优化
 
 | 情况 | 说明 | 优化 |
 |------|------|------|
@@ -121,7 +230,7 @@ MMDC 内置重排序机制，根据动态评分（Dynamic Scoring）选择最优
 
 MMDC 自动跟踪打开的内存页面，最大化 Page Hit 率。
 
-### 12.5 校准机制
+### 12.6 校准机制
 
 MMDC PHY 支持多种校准（可硬件自动或软件手动）：
 
@@ -151,25 +260,42 @@ MMDC PHY 支持多种校准（可硬件自动或软件手动）：
 - DDR 时钟占空比调整
 - DQS 占空比调整
 
-### 12.6 省电模式
+### 12.7 省电模式
 
 #### Self-Refresh（自刷新）
 
 DDR 芯片在 Self Refresh 模式下**自行管理刷新操作**，MMDC 可以关闭 DDR 时钟。
 
 **进入方式**：
-1. **LPMD（Low Power Mode）**：硬件/软件握手
-2. **DVFS（动态电压频率调节）**：硬件/软件握手
+1. **LPMD（Low Power Mode）**：用于**省电目的**
+   - 硬件握手：LPMD/LPACK 信号与系统时钟模块交互
+   - 软件握手：设置 `MAPSR[LPMD]`，轮询 `MAPSR[LPACK]`
+   - **自动进入**：通过 `MAPSR[PST]` 配置空闲周期数（64 ~ 16320 个时钟周期），清空 `MAPSR[PSD]`
+2. **DVFS（Dynamic Voltage and Frequency Change）**：用于**时钟频率变化**
+   - 硬件握手：DVFS/DVACK 信号
+   - 软件握手：设置 `MAPSR[DVFS]`，轮询 `MAPSR[DVACK]`
 3. **自动进入**：配置空闲周期数后自动进入
 
+> **LPMD vs DVFS 的区别**：两者进入/退出流程相同，但目的不同。LPMD 纯粹为了省电（降低功耗），DVFS 是为了改变 DDR 工作频率（配合 DVFS 调频调压）。SR 期间不需要发周期性的刷新命令。
+
+**SR 进入流程**：
+1. 检测到 LPMD/DVFS 请求后，MMDC **立即**反断言 AXI `ARREADY/AWREADY`，阻止新请求（即使 ACK 还未断言）
+2. 完成所有已打开的 AXI 访问
+3. 按正确时序关闭（预充电）所有 Bank
+4. 满足 tRP/tRPA 后，驱动自刷新命令（反断言 CKE + 刷新命令）
+5. 反断言 DDR 时钟（CK）
+6. 断言 LPACK/DVACK
+
 **退出流程**：
-1. 打开 MMDC 工作时钟
+1. 打开 MMDC 工作时钟（必须在 LPMD/DVFS 反断言**之前**）
 2. 驱动 CK 时钟到 DDR
 3. 满足 tCKSRX 后，断言 CKE
 4. 解除 LPACK/DVACK
 5. 满足 tXS 后，发出 REF 命令
-6. 如果 ZQ 校准启用，执行 ZQ Long
+6. 如果 ZQ 校准启用，执行 ZQ Long（满足 tZQoper）
 7. 满足 tDLLK 后，恢复正常操作
+
+> **注意**：检测到 LPMD/DVFS 请求时，MMDC 会**立即**反断言 `ARREADY/AWREADY`，在 ACK 断言之前就阻止新的 AXI 读写请求。
 
 #### Power Down（掉电模式）
 
@@ -180,11 +306,54 @@ DDR 芯片在 Self Refresh 模式下**自行管理刷新操作**，MMDC 可以�
 | Precharge Power Down | 所有 Bank 预充电后进入掉电 |
 | Active Power Down | 保持 Row 激活状态下进入掉电 |
 | Fast Exit | 快速退出（功耗略高，退出快） |
-| Slow Exit | 慢速退出（功耗更低，退出慢） |
+| Slow Exit | 慢速退出（功耗更低，退出慢），DDR3 中通过 `MDPDC[SLOW_PD]` 配置 |
 
-**自动进入配置**：ESDPDC 寄存器中的 PWDT_0/PWDT_1 定义空闲周期数。
+**自动进入配置**：`ESDPDC` 寄存器中的 `PWDT_0`/`PWDT_1` 定义每个片选的空闲周期数，可分别配置。
 
-### 12.7 外部信号引脚映射
+**BOTH_CS_PS**：MMDC 可以独立让每个片选进入 Power Down（根据各自空闲状态），也可以要求**两个片选都空闲**才一起进入。
+
+#### 自动预充电（Auto Precharge）
+
+通过 `ESDPDC` 的 `PRCT_0` 和 `PRCT_1` 字段，可配置每个片选在空闲 N 个周期后**自动预充电所有 Bank**。可配置值范围：2 ~ 128 个周期。
+
+### 12.8 DLL 切换（DLL Switching）
+
+#### DLL Off 模式
+
+仅在 DDR3 模式下支持，允许 DDR 在**低频**下运行（低于 125 MHz，JEDEC 标准定义）。DLL Off 模式用于 DVFS 降频场景。
+
+**DLL On → DLL Off 切换步骤**：
+
+1. 断言 `CON_REQ`，等待 `CON_ACK`
+2. 禁用可能冲突的 Power Down 定时器（`MAPSR[PSD]`, `MDPDC[PWDT_0/1]`, `MDPDC[PRCT_0/1]`）
+3. 执行 Precharge All 命令（通过 `MDSCR`）
+4. MRW 到 MR1：禁用 RTT Nom（A9,A6,A2=0），DLL ON（A0=1）
+5. MRW 到 MR2：更新 CWL = 6
+6. MRW 到 MR0：更新 CL = 6
+7. 反断言 `CON_REQ`
+8. 进入自刷新模式，在 ACK 后**切换频率**
+9. 退出自刷新
+10. 断言 `CON_REQ`，等待 `CON_ACK`
+11. 通过 IOMUX 在 DQS 上使能下拉电阻
+12. 更新 MMDC 寄存器：tCWL=6、tCL=6（`MDCFG0/1`），禁用 ODT（`MPODTCTRL=0`），禁用 DQS 门控（`MPDGCTRL0[DG_DIS]=1`）
+13. 恢复 Power Down 定时器
+14. 反断言 `CON_REQ`
+
+**DLL Off → DLL On 切换步骤**：
+
+1. Precharge All
+2. 进入自刷新 → 切换频率 → 退出自刷新
+3. 断言 `CON_REQ`，等待 `CON_ACK`
+4. 禁用 Power Down 定时器
+5. MRW 到 MR1：启用 RTT Nom，DLL ON（A0=0）
+6. MRW 到 MR0：重置 DLL（A8），更新 CL
+7. MRW 到 MR2：更新 CWL
+8. 执行 ZQ 命令
+9. 重新配置 MMDC：更新 tCWL/tCL，启用 ODT，启用 DQS 门控，禁用 DQS 下拉
+10. 恢复 Power Down 定时器
+11. 反断言 `CON_REQ`
+
+### 12.9 外部信号引脚映射
 
 | MMDC 信号 | 描述 | 方向 |
 |-----------|------|------|
@@ -203,7 +372,7 @@ DDR 芯片在 Self Refresh 模式下**自行管理刷新操作**，MMDC 可以�
 | DRAM_SDWE | 写使能 | 输出 |
 | DRAM_ZQPAD | ZQ 校准 | 输出 |
 
-### 12.8 时钟系统
+### 12.10 时钟系统
 
 | 时钟名称 | 时钟根 | 描述 |
 |---------|--------|------|
@@ -212,6 +381,154 @@ DDR 芯片在 Self Refresh 模式下**自行管理刷新操作**，MMDC 可以�
 | aclk_fast_phy_p0 | mmdc_axi_clk_root | 快速时钟（PHY） |
 
 **注意**：i.MX 6ULL 中术语 clocks 和 cycles 可互换使用，均指主 DDR 时钟（mmdc_axi_clk_root）的周期。
+
+### 12.11 刷新方案（Refresh Scheme）
+
+MMDC 的自动刷新由 `MDREF` 寄存器控制，支持灵活的刷新策略，允许系统在每次刷新周期内配置期望的 AXI 访问延迟。
+
+**周期性自动刷新的时钟源**（三选一）：
+
+| 时钟源 | 说明 |
+|--------|------|
+| 32 kHz | 低频时钟 |
+| 64 kHz | 低频时钟 |
+| MMDC 工作时钟 | DDR 主时钟 |
+
+**四种刷新方案配置**（以 3.9μs 刷新周期为基准，tREFI = 3.9μs）：
+
+| 方案 | 描述 | REFR | REF_SEL | REF_CNT | DDR 挂起时间 |
+|------|------|------|---------|---------|-------------|
+| 1 | 每 31,250 ns 发 8 次刷新 | 0x7 (8次) | 0x0 (64 kHz) | 不需要 | tRFC × 8 |
+| 2 | 每 15,625 ns 发 4 次刷新 | 0x3 (4次) | 0x1 (32 kHz) | 不需要 | tRFC × 4 |
+| 3 | 每 7,800 ns 发 2 次刷新 | 0x1 (2次) | 0x2 (REF_CNT) | 3120 (0xC30) | tRFC × 2 |
+| 4 | 每 3,900 ns 发 1 次刷新 | 0x0 (1次) | 0x2 (REF_CNT) | 1560 (0x618) | tRFC |
+
+> **权衡理解**：方案 1 一次性连续发 8 次刷新命令，DDR 在 tRFC × 8 时间内不能读写（挂起最长），但两次刷新间隔最长（31.25μs），AXI 总线有更多连续可用时间；方案 4 每次只发 1 次刷新，DDR 挂起最短，但需要更频繁地打断 AXI 访问。**选择哪个方案取决于系统对延迟突发性的容忍度**。
+
+### 12.12 DDR 突发长度说明
+
+| 模式 | DDR 突发长度 |
+|------|-------------|
+| DDR3 | **固定为 8** |
+| LPDDR2 | **固定为 4** |
+
+> **注意**：前面表格中"AXI 突发长度最高 16"指的是 AXI 总线协议层的突发长度，不是 DDR 侧的突发长度。DDR3 模式下，所有 DDR 读写访问始终是 8 个字（x16），并按照 JEDEC 标准对齐。对于非对齐的 AXI INCREMENT 访问，无关字节通过 DQM 数据掩码屏蔽；对于非对齐的 AXI WRAP 访问，MMDC 内部有优化机制来提高 DDR 数据总线效率。
+
+### 12.13 AXI 错误处理与独占访问
+
+#### AXI 响应类型
+
+| 响应 | 触发条件 |
+|------|---------|
+| **OKAY** | 访问成功，或独占访问失败 |
+| **SLV Error** | 安全违规（可通过 `MAARCR[30]` 配置为返回 OKAY） |
+| **EXOKAY** | 独占读/写成功 |
+
+读错误时，MMDC 在返回的读数据总线上驱动全零。
+
+#### 独占访问（Exclusive Accesses）
+
+MMDC 内置 **4 个独占监视器**，每个监视器对应一个配置的 AXI ID（通过 `MAEXIDR0` 和 `MAEXIDR1` 寄存器）。
+
+**合法独占访问的条件**：
+- 地址对齐（AXI 地址对齐到 AXI 大小）
+- 单次访问（AXI 突发长度 ≤ 1）
+- AXI 大小不超过 64 位
+- AXI 非缓存访问（`ARCACHE[1]` / `AWCACHE[1]` = 0）
+- AXI ID 匹配已配置的四个独占 ID 之一
+
+**工作流程**：
+1. 收到合法读独占 → 激活对应监视器
+2. 监视器激活期间收到合法写独占 → 写成功返回 EXOKAY，监视器关闭
+3. 监视器激活期间收到**非独占写**到同一地址 → 监视器关闭，后续写独占返回 OKAY（表示失败）
+
+独占违规的响应类型可通过 `MAARCR[28]`（ARCR_EXC_ERR_EN）配置。
+
+### 12.14 复位机制
+
+MMDC 支持三种复位方式，按影响程度从轻到重排列：
+
+| 复位类型 | 触发方式 | 配置/状态寄存器 | DDR 数据 | 需重新初始化 |
+|---------|---------|---------------|---------|-----------|
+| 软件复位 | `MDMISC[RST] = 1` | 保留 | 保留 | 否 |
+| 热复位 | `warm_reset` + `aresetn` 信号 | 保留 | 保留 | 否 |
+| 硬复位 | `aresetn = 0`（`warm_reset = 0`） | 全部清零 | **丢失** | **是** |
+
+#### 硬复位（Hard Reset）
+
+当 `aresetn` 被拉低且 `warm_reset` 为低时，整个 MMDC 被初始化——所有配置/状态寄存器和状态机全部复位。**DDR 必须重新配置**才能访问。
+
+#### 热复位（Warm Reset）
+
+热复位会复位 MMDC 内部寄存器，但**保留配置和状态寄存器**，因此 DDR 中的数据不会丢失，也无需重新初始化序列。
+
+**操作流程**：
+1. MMDC 进入自刷新模式（通过 LPMD 或 DVFS 请求）
+2. 等待 LPMD/DVFS 确认（ACK）
+3. 拉高 `warm_reset` 信号
+4. 拉低 `aresetn` 信号
+5. 释放 `aresetn`
+6. 释放 `warm_reset`
+7. 退出 LPMD/DVFS 模式
+
+#### 软件复位（Software Reset）
+
+与热复位类似，但通过软件设置 `MDMISC[RST]` 触发。配置/状态寄存器保留。
+
+**操作流程**：
+1. MMDC 进入自刷新模式（通过 LPMD 或 DVFS 请求）
+2. 等待 LPMD/DVFS 确认
+3. 设置 `MDMISC[RST]` 断言软件复位
+4. 退出 LPMD/DVFS 模式
+
+> **应用场景**：热复位和软件复位适用于需要在不复位 DDR 内容的前提下复位 MMDC 控制器的场景，如 SoC 系统级复位但保持 DDR 数据。
+
+### 12.15 调试监视器与性能分析（Debug & Profiling）
+
+#### 硬件调试监视器（Hardware Debug Monitor）
+
+启用 `MADPCR0[DBG_EN] = 1` 后，每个被 dispatch 到 DDR 的访问都会通过 I/O 引脚（`ipp_do_ddr_debug[50:0]`）输出观测信号：
+
+| 信号 | 位数 | 说明 |
+|------|------|------|
+| `acc_addr` | [31:0] | AXI 地址 |
+| `acc_type` | 1 | 0=写，1=读 |
+| `acc_id` | [15:0] | AXI 事务 ID |
+| `valid_strobe` | 1 | 有效请求指示（1 个时钟周期） |
+
+信号组织：`MMDC_DEBUG[50:0] = {1'b0, valid_strobe, acc_id, access_type, addr}`
+
+这些信号可通过 IOMUX 配置为芯片外部引脚输出，方便示波器或逻辑分析仪抓取。
+
+#### 逐步（SBS）软件监视器
+
+启用 `MADPCR0[SBS_EN] = 1` 后，**所有 DDR 访问暂停**。每次设置 `MADPCR0[SBS] = 1` 会：
+1. 仅 dispatch MMDC 队列头部的一个待处理访问（读或写）
+2. 该访问的 AXI 属性被采样到 `MASBS0` 和 `MASBS1` 寄存器
+3. `MADPCR0[SBS]` 自动清零
+
+> **应用**：SBS 模式常用于 DDR 时钟频率缩放过渡期间，防止频率切换过程中发生 DDR 访问。**注意**：`MAARCR[ARCR_ARB_REO_DIS]` 会禁用 SBS 功能。
+
+#### 性能分析（Profiling）
+
+MMDC 提供 6 个性能计数器，可计算 DDR 利用率和读写统计：
+
+| 寄存器 | 计数器 | 说明 |
+|--------|--------|------|
+| `MADPSR0` | 总周期数 | profiling 期间的总时钟周期（最大 2^32） |
+| `MADPSR1` | 忙周期数 | MMDC 状态机非空闲的周期数 |
+| `MADPSR2` | 读访问次数 | 发往 DDR 的读访问总数 |
+| `MADPSR3` | 写访问次数 | 发往 DDR 的写访问总数 |
+| `MADPSR4` | 读字节数 | 从 DDR 读取的总字节数 |
+| `MADPSR5` | 写字节数 | 写入 DDR 的总字节数 |
+
+**控制位**（`MADPCR0`）：
+- `DBG_EN`：启用 profiling
+- `PRF_FRZ`：冻结计数器（暂停统计）
+- `DBG_RST`：清零所有计数器
+- `CYC_OVF`：总周期溢出标志
+
+**按 AXI ID 过滤**（`MADPCR1`）：通过 `PRF_AXI_ID` 和 `PRF_AXI_ID_MASK` 可只统计特定 AXI ID 的访问。匹配公式：`(AXI-ID & MASK) Xnor (PRF_AXI_ID & MASK)`。例如要监控 ID 范围 A100~A1FF：`PRF_AXI_ID = 0xA100`, `PRF_AXI_ID_MASK = 0xFF00`。
 
 ---
 
@@ -439,6 +756,83 @@ MMDC 需要通过特定命令将配置"灌"进 DDR 颗粒的模式寄存器（MR
 | **写延迟校准** | `MMDC_MPWRDLCTL` | 微调写数据眼图中心位置 |
 
 这些校准参数通常由 `ddr_stress_tester` 工具在实际板子上跑出来的"最优解"。在工业级产品或宽温域（-40℃~85℃）场景下，这些参数直接决定系统是否会出现周期性死机或内存读写错误。
+
+#### 校准前置条件
+
+**开始任何校准前必须**：
+- 禁用省电功能（`MDPDC[PWDTn]`, `MDPDC[PRCTn]`, `MAPSR[PSD]`）
+- 涉及 DDR MPR 模式或 Write Leveling 的校准前，还需：
+  - 禁用周期刷新（`MDREF[REF_SEL] = 0x3`），手动发刷新命令（`MDSCR[CMD] = 0x2`）
+  - 禁用自动省电（`MAPSR[PSD] = 1`）
+
+#### 延迟线（Delay-line）基础
+
+- 默认延迟 = **1/4 时钟周期**
+- 最高频率下，最大可调至 **1/2 时钟周期**
+- 正常运行时，延迟线在每次 DDR 刷新周期内**自动测量**以保持精度
+- 校准开始前，延迟线的初始值必须是"合法值"（即 strobe 位于对应 data window 内），但不必是最优值
+
+#### ZQ 校准详细过程
+
+ZQ 校准分为两类：**DDR I/O 焊盘驱动强度校准**和**DDR 芯片 ZQ 命令**。
+
+**ZQ 命令时序要求**：
+- 发 ZQCL/ZQCS 前必须 **Precharge All** + 等待 tRP
+- ZQ 期间除 CK 外所有内存线保持静默
+- ZQCL 时长：复位后 512 周期，其他 ZQCL 256 周期，ZQCS 64 周期
+
+**硬件自动 ZQ 校准算法**（5 位二进制搜索）：
+1. 上拉校准：从 `zq_pu_val = 0` 开始逐位试探，通过比较器对比外部 240Ω 参考电阻，判断输出电压是否 > Vdd/2，确定内部电阻是否 < 240Ω，逐位收敛到 5 位最优值
+2. 下拉校准：同理，从 `zq_pd_val = 0` 开始逐位试探
+3. 结果分别写入 `MPZQHWCTRL[ZQ_HW_PU_RES]` 和 `MPZQHWCTRL[ZQ_HW_PD_RES]`
+
+**ZQ 微调**（Fine Tuning）：通过 `MPPDCMPR2[ZQ_PU_OFFSET]` 和 `MPPDCMPR2[ZQ_PD_OFFSET]` 可在校准结果基础上额外偏移 -7 ~ +7。
+
+#### Read DQS Gating 校准
+
+两种模式：**MPR 模式**（Multi Purpose Register）和**预定义值模式**。
+
+**硬件自动校准算法**（边界搜索法）：
+1. 从当前延迟值开始，逐步减小延迟线，每次发读命令并比较返回数据
+2. 找到下边界（数据从正确变为错误的那个点）
+3. 从初始值逐步增大延迟线，找到上边界
+4. 取上下边界的**平均值**作为最优延迟，写入 `MPDGCTRL`
+
+软件手动校准原理相同，但每一步由软件手动触发并读取比较结果。
+
+#### 读校准（Read Calibration）
+
+与 Read DQS Gating 类似，但校准的是**读 DQS 与读数据字节之间的对齐**。
+
+**硬件算法**：找到每个字节通道的读延迟上下边界，取平均值写入 `MPRDDLCTL`。
+
+#### 写校准（Write Calibration）
+
+校准写 DQS 与写数据字节之间的对齐。
+
+**硬件算法**：写数据到 DDR → 读回 → 与预定义值比较 → 扫延迟线找到窗口边界 → 取平均值写入 `MPWRDLCTL`。
+
+#### Write Leveling 校准
+
+校准写 DQS 与 CK 差分时钟之间的对齐，补偿 PCB 走线 skew。
+
+**关键设计约束**：
+- 自动校准最多检测 **1 个周期**的 skew
+- 如果 DDR3 距离控制器太远（地址/命令/时钟走线过长），skew 可能超过 1 周期
+- **建议**：尽量让 DDR3 靠近控制器，尤其是嵌入式设计
+- 使用 Fly-by 拓扑时，需计算时钟信号到最远 DDR3 的 PCB 飞行时间，确保 skew < 1 周期
+- 若预估 skew > 1 周期，需手动设置 `MPWLDECTRL[WL_CYC_DEL]`
+
+**硬件自动校准步骤**：
+1. DDR 进入 Write Leveling 模式（MRS 命令）
+2. MMDC 发 DQS 脉冲，采样反馈 DQ 位
+3. 每次增加 1/8 周期延迟，重复采样，直到 1 周期
+4. 查找 DQ 从 0→1 的第一次跳变点
+5. 精细调优：以 1/256 周期为步长微调
+6. 结果写入 `MPWLDECTRL[WL_DL_ABS_OFFSET]`
+7. DDR 退出 Write Leveling 模式（MRS 命令）
+
+> **重要**：如果校准结果是 100/256 周期，但设计者预估 skew 超过 2 周期，则 `MPWLDECTRL[WL_CYC_DEL]` 应设为 2，总延迟 = 2 + 100/256 周期。
 
 ### 13.5 DDR 校准失败排查
 
