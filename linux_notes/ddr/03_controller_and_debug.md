@@ -718,6 +718,104 @@ DCD 区域有严格的格式，分为"包头"和"指令体"：
 
 在 U-Boot 源码中，这些配置写在 `imximage.cfg` 文件中，编译时 `mkimage` 工具将其打包进 `u-boot.imx` 头部。
 
+#### JEDEC 标准 DDR3 上电初始化流程
+
+JEDEC 规范（JESD79-3D）严格规定了 DDR3 上电后的初始化顺序，**一步都不能少，顺序不能改**。
+
+**上电冷启动状态**：电容无电荷、模式寄存器未配置、DLL 未锁定、所有 Bank 关闭。此时 DDR 完全不响应读写命令。
+
+**标准初始化序列**：
+
+```
+Step 1: 上电，等待电压稳定
+         ↓
+Step 2: 驱动 CKE = 0（关闭时钟使能）
+         DDR 处于 NOP/Standby 状态，不听命令
+         ↓
+Step 3: 等待至少 200μs
+         让 DLL 内部电路稳定，电容预充电
+         ↓
+Step 4: Precharge All
+         关闭所有 Bank，确保干净状态
+         ↓
+Step 5: Auto Refresh × 2（连续两次）
+         给电容"充电"，建立电荷状态
+         第一次刷新后电荷还不稳定，
+         第二次确保电容完全充满
+         ↓
+Step 6: Load Mode Register（加载模式寄存器）
+         MR0: CAS 延迟（CL）、突发长度
+         MR1: 驱动强度、ODT、DLL 开关
+         MR2: CAS 写延迟（CWL）
+         MR3: 温度刷新率（可选）
+         ↓
+Step 7: ZQ 校准（ZQCL 命令）
+         DDR 芯片和控制器各自校准驱动强度
+         ↓
+Step 8: DLL 锁定完成
+         DLL 需要额外 200 个时钟周期来锁定
+         ↓
+Step 9: 就绪，可以发读写命令
+```
+
+**为什么是这个顺序？**
+
+- Step 2 必须最早做——上电就关 CKE，防止 DDR 在不稳定状态下误操作
+- Step 4-5 必须在 Step 6 之前——行缓冲区和电容必须处于已知状态，才能加载模式寄存器
+- Step 6（MR）必须在 Step 7（ZQ）之前——ZQ 校准需要知道驱动强度配置（MR1）
+- Step 7 必须在 Step 8 之前——ZQ 和 DLL 都需要时间稳定
+
+#### i.MX6ULL 实际初始化流程
+
+在 JEDEC 标准流程基础上，i.MX6ULL 的 Boot ROM 还要完成控制器自身的初始化：
+
+```
+Boot ROM 上电
+    ↓
+读取 DCD 数据到 OCRAM
+    ↓
+逐条执行 DCD 指令（写寄存器）：
+    1. 打开 MMDC 时钟（CCM_CCGR）
+    2. 配置 IOMUX（引脚复用为 DDR 功能）
+    3. 配置 MMDC 几何参数（MDCTL：ROW、COL、Bank、位宽）
+    4. 配置时序（MDCFG0/1/2：tRCD、tRP、tRAS 等）
+    5. 配置刷新（MDREF）
+    6. 配置 ODT 时序（MDOTC）
+    7. 禁用周期刷新（MDREF[REF_SEL] = 0x3）
+    8. 断言 CON_REQ（进入配置模式，阻止 AXI 访问）
+    9. 执行 JEDEC 开机仪式（Precharge All → Refresh × 2 → Load MR）
+   10. ZQ 校准
+   11. 执行 DDR Training（Write Leveling → Read DQS Gating → Read/Write 延迟校准）
+   12. 恢复周期刷新
+   13. 反断言 CON_REQ（退出配置模式，DDR 就绪）
+    ↓
+搬运 U-Boot 到 DDR
+    ↓
+跳转到 U-Boot 执行
+```
+
+**关键寄存器 MDSCR（特殊命令寄存器）**：
+
+JEDEC 开机仪式通过 `MDSCR[CMD]` 发出命令：
+
+| CMD 值 | 命令 | 说明 |
+|--------|------|------|
+| `0x0` | Precharge All | 关闭所有 Bank |
+| `0x2` | Auto Refresh | 刷新命令（发两次） |
+| `0x3` | Load Mode Register | 加载模式寄存器 |
+
+每个命令发出去后，MMDC 自动等待对应的时序（tRP、tRFC 等），不用软件手动延迟。
+
+**时间线**：
+
+```
+上电 ──→ Boot ROM 执行 DCD ──→ JEDEC 初始化 ──→ DDR Training ──→ DDR 就绪
+ |            |                      |                 |               |
+ 0ms        ~10ms                 ~100μs            ~1ms          可以读写了
+```
+
+整个初始化通常在几十毫秒内完成。如果 DCD 参数写错了（如行列地址配错），DDR Training 阶段就会失败，Boot ROM 卡死。
+
 ### 13.3 芯片手册参数提取
 
 初始化 i.MX6ULL 的 DDR 之前，需要从 DDR 芯片（如 Micron、Nanya 等）的 DataSheet 中提取以下三类参数。
