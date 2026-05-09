@@ -545,31 +545,33 @@ MMDC 提供 6 个性能计数器，可计算 DDR 利用率和读写统计：
 
 ## 13. i.MX 6ULL 实战与调试
 
-> **本章是最终目的**：前面所有章节的知识都在这里落地——将正确的参数填入正确的寄存器，完成 DDR 初始化和调试。
-
-| 场景 | 涉及的章节 | 涉及的寄存器 |
-|------|-----------|-------------|
-| 新板 DDR 初始化 | 2, 3, 4, 7, 11, 12 | MDCTL, MDCFG0/1/2, MDOTC, MDREF, MDSCR, MDASP |
-| 时序问题调试 | 4, 10 | MDCFG0/1/2, MDOTC |
-| 刷新异常 | 4, 12 | MDREF |
-| 模式寄存器配置 | 7, 12 | MDSCR |
-| DDR 校准失败 | 7, 12 | MPZQHWCTRL, MPWLDECTRL, MPDGCTRL, MPRDDLCTL, MPWRDLCTL |
+> **本章是最终目的**：前面第 12 章 MMDC 控制器的架构知识都在这里落地——将正确的参数填入正确的寄存器，完成 DDR 初始化和调试。
 
 以 **i.MX6ULL** 为例，DDR 初始化是一个软硬件深度结合的过程，核心目标是让处理器能够正确识别并稳定读写板载的 DDR 内存。如果初始化失败，系统通常会在启动阶段（如 U-Boot）直接卡死。
 
-### 13.1 初始化流程总览
+### 13.1 工程师的准备工作
 
-DDR 初始化不是千篇一律的，必须根据实际硬件"量体裁衣"。整个流程可分为三个核心阶段：
+DDR 初始化不是千篇一律的，必须根据实际硬件"量体裁衣"。在板子上电之前，工程师需要完成两项工作：**从芯片手册提取参数**和**生成 DCD 初始化脚本**。
 
-**阶段一：参数提取** — 从 DDR 芯片数据手册中获取关键参数（容量、位宽、行列地址、时序参数等），了解 ODT/ZQ/DQS 等信号概念。
+#### 13.1.1 参数提取
 
-**阶段二：DCD 生成** — 使用 NXP 官方的 **ddr_stress_tester** 工具，填入硬件参数进行时序校准和验证，生成包含成百上千条"寄存器地址 + 配置值"的 **.inc 初始化脚本**（即 DCD，Device Configuration Data）。
+从 DDR 芯片数据手册中获取关键参数（容量、位宽、行列地址、时序参数等）。详见 13.2 节。
 
-**阶段三：初始化执行** — 上电后 Boot ROM 自动读取并执行 DCD 数据，完成时钟配置、引脚复用、MMDC 寄存器配置和硬件校准，使 DDR 就绪。
+#### 13.1.2 DCD 脚本生成
 
-### 13.2 Boot ROM 与 DCD 机制
+使用 NXP 官方的 **ddr_stress_tester** 工具，填入硬件参数进行时序校准和验证，生成包含成百上千条"寄存器地址 + 配置值"的 **.inc 初始化脚本**（即 DCD，Device Configuration Data）。详见 13.3 节。
 
-#### Boot ROM：芯片里的"第一推动力"
+> **产出物**：一份 `.inc` 文件，内容是一系列 `setmem` 指令。这份文件就是板子运行时 Boot ROM 要执行的"操作说明书"。
+
+---
+
+### 13.2 板载 DDR 初始化流程
+
+前面两节讲的是工程师**离线**做的准备工作，本节讲板子上电后 DDR 初始化的**运行时**完整流程。
+
+#### 13.2.1 Boot ROM 与 DCD 机制
+
+**Boot ROM：芯片里的"第一推动力"**
 
 i.MX6ULL 上电复位后，CPU 执行的第一行代码是内部固化的 **Boot ROM**（不可修改）。它的首要任务：
 
@@ -578,7 +580,7 @@ i.MX6ULL 上电复位后，CPU 执行的第一行代码是内部固化的 **Boot
 3. 解析镜像头部，执行 DCD 数据完成 DDR 初始化
 4. 将真正的程序（U-Boot）搬运到 DDR 并跳转执行
 
-#### DCD：DDR 初始化的"操作说明书"
+**DCD：DDR 初始化的"操作说明书"**
 
 DCD（Device Configuration Data）的本质是一串**静态数据**，不是可执行代码。它包含一组组"寄存器地址 + 配置值"的键值对，由 Boot ROM 读取并照单配置寄存器。
 
@@ -591,7 +593,7 @@ DCD（Device Configuration Data）的本质是一串**静态数据**，不是可
 
 i.MX6ULL 通过硬件级优化，用 Boot ROM + DCD 数据**代替了传统 SPL 代码**的工作，因此常规开发中看不到 `spl.bin` 文件，直接面对 `u-boot.imx`。
 
-#### 镜像头部结构（IVT + Boot Data + DCD）
+**镜像头部结构（IVT + Boot Data + DCD）**：
 
 编译出的普通 `.bin` 文件不能直接烧录启动，必须在前面加上特殊头部生成 `.imx` 文件（如 `u-boot.imx`）。前 1KB 区域排布严格固定：
 
@@ -612,9 +614,7 @@ u-boot.imx 头部结构（前 1KB）：
 3. 逐条执行 DCD 指令（向指定地址写入配置值）
 4. DCD 执行完毕 → DDR 就绪 → 搬运 U-Boot 主体到 DDR
 
-#### DCD 数据格式
-
-DCD 区域有严格的格式，分为"包头"和"指令体"：
+**DCD 数据格式**：
 
 | 字段 | 值 | 说明 |
 |------|-----|------|
@@ -627,14 +627,7 @@ DCD 区域有严格的格式，分为"包头"和"指令体"：
 
 在 U-Boot 源码中，这些配置写在 `imximage.cfg` 文件中，编译时 `mkimage` 工具将其打包进 `u-boot.imx` 头部。
 
-> **三处初始化流程的关系**：下面会看到三个不同粒度的初始化流程描述——
-> - **JEDEC 标准流程**（下节）：所有 DDR3 芯片通用的"开机仪式"，不涉及任何 SoC 控制器细节
-> - **i.MX6ULL 实际流程**（再下一节）：在 JEDEC 标准之上，加上 SoC 控制器自身的初始化（时钟/IOMUX/Training 等），是前者的"外壳"
-> - **DCD 脚本实例**（13.2.1）：i.MX6ULL 实际流程的完整源码实现，每条 `setmem` 对应实际流程中的某一步
->
-> 阅读建议：**标准 → 实际 → 脚本**，从抽象到具体。
-
-#### JEDEC 标准 DDR3 上电初始化流程
+#### 13.2.2 JEDEC 标准 DDR3 上电初始化流程
 
 JEDEC 规范（JESD79-3D）严格规定了 DDR3 上电后的初始化顺序，**一步都不能少，顺序不能改**。
 
@@ -681,7 +674,7 @@ Step 9: 就绪，可以发读写命令
 - Step 6（MR）必须在 Step 7（ZQ）之前——ZQ 校准需要知道驱动强度配置（MR1）
 - Step 7 必须在 Step 8 之前——ZQ 和 DLL 都需要时间稳定
 
-#### i.MX6ULL 实际初始化流程
+#### 13.2.3 i.MX6ULL 实际初始化流程
 
 JEDEC 标准只规定了 DDR 芯片侧的开机仪式（Step 4~Step 8），但 SoC 端还需要配置自身的控制器和 PHY。下面是 JEDEC 标准 + MMDC 控制器初始化的完整流程：
 
@@ -720,7 +713,7 @@ Boot ROM 上电
 
 > **关键理解**：DCD 脚本中的 PHY 校准参数（第5步）是**预设初始值**，不是运行时执行校准。真正的校准由 NXP **ddr_stress_tester** 工具在目标板子上跑完后，将最优值填入这些寄存器。Boot ROM 只是把预设值写入寄存器，后续 MMDC 硬件自动校准时会在此基础上精细调整。
 
-**关键寄存器 MDSCR（特殊命令寄存器）**：
+**MDSCR 特殊命令寄存器**：
 
 JEDEC 开机仪式通过 `MDSCR[CMD]` 发出命令：
 
@@ -742,7 +735,57 @@ JEDEC 开机仪式通过 `MDSCR[CMD]` 发出命令：
 
 整个初始化通常在几十毫秒内完成。如果 DCD 参数写错了（如行列地址配错），DDR Training 阶段就会失败，Boot ROM 卡死。
 
-### 13.2.1 DCD 初始化脚本实例解析
+### 13.3 芯片手册参数提取
+
+初始化 i.MX6ULL 的 DDR 之前，需要从 DDR 芯片（如 Micron、Nanya 等）的 DataSheet 中提取以下三类参数。这是 13.1.1 节"参数提取"的具体展开。
+
+#### 静态参数清单
+
+**几何架构参数**（决定 MMDC 如何编址和寻址）：
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| **DRAM Density** | 芯片容量（Gb → MB 需 ÷8） | 4Gb = 512MB |
+| **Bus Width** | 数据位宽 | 16-bit / 32-bit |
+| **Banks** | Bank 数量（DDR3 = 8） | 8 |
+| **ROW Addresses** | 行地址线数量 | 14 或 15 |
+| **COLUMN Addresses** | 列地址线数量 | 10 或 11 |
+| **Page Size** | 页大小 = 2^列地址数 × 位宽 | 2K / 4K |
+
+**核心时序参数**（来自 "AC Electrical Characteristics" 表格）：
+
+| 参数 | 全称 | 物理意义 | 单位 |
+|------|------|---------|------|
+| **tCL** | CAS Latency | 读命令 → 数据出现在总线的延迟 | tCK |
+| **tRCD** | RAS to CAS Delay | 激活行 → 可读写列的延迟 | ns/tCK |
+| **tRP** | Row Precharge Time | 关闭当前行 → 可打开新行的时间 | ns/tCK |
+| **tRAS** | Active to Precharge | 行激活到预充电的最小间隔 | ns/tCK |
+| **tRFC** | Refresh Cycle Time | 刷新周期（期间不能读写） | ns/tCK |
+| **tWR** | Write Recovery Time | 最后一次写 → 可执行预充电的延迟 | ns/tCK |
+| **tRC** | Row Cycle Time | 两次行激活之间的最小间隔 | ns/tCK |
+
+**速度等级**：
+
+| 参数 | 说明 |
+|------|------|
+| **Memory Type** | DDR3 / DDR3L / LPDDR2 等 |
+| **Speed Bin** | DDR3-1600 / DDR3-1866 等，决定 MMDC 时钟频率 |
+
+> **ns → tCK 换算**：MMDC 频率 400MHz → tCK = 1/400MHz = 2.5ns。例如 tRCD = 13.75ns → 13.75/2.5 ≈ 5.5 → **向上取整为 6 个 tCK**。实际开发中，这些繁琐的换算和寄存器拼装通常由 NXP 官方的 **DDR Script Aid**（Excel 工具）或 **ddr_stress_tester** 工具自动完成。
+
+#### 动态信号认知（ODT / ZQ / DQS）
+
+这些不属于"从手册抄参数"的范畴，而是在后续寄存器配置和硬件自动训练中解决。
+
+| 信号 | 全称 | 作用 | 初始化关注点 |
+|------|------|------|-------------|
+| **ODT** | On-Die Termination | 片内终端电阻，消除信号反射 | 在 MMDC 寄存器中配置阻值（如 40Ω、120Ω），参考 NXP 评估板经验值 |
+| **ZQ** | Impedance Calibration | 阻抗校准，抵抗 PVT 漂移 | 通过外部 240Ω 参考电阻（RZQ），发送 ZQCL 命令触发硬件自动校准 |
+| **DQS** | Data Strobe | 数据选通信号，配合 DQ 精准采样 | 通过 Training 动态调整 DQS 与 DQ 的延迟对齐 |
+
+> ODT/ZQ/DQS 的详细原理说明见 [01_ddr_theory.md](01_ddr_theory.md) 第 7 章 DDR3 部分。
+
+### 13.4 DCD 初始化脚本实例
 
 以下脚本由 NXP **ddr_stress_tester** 工具生成，对应硬件配置：
 
@@ -900,20 +943,9 @@ setmem /32    0x021b001c =    0x00000000    // MMDC0_MDSCR, clear configuration 
 
 **第一段：禁用看门狗**
 
-```text
-setmem /16    0x020bc000 =    0x30
-```
-
 向 WDOG1 控制寄存器写入 `0x30`，禁用看门狗定时器。DDR 初始化耗时数十毫秒，如果不关闭看门狗，期间没有喂狗会导致系统复位。
 
 **第二段：使能所有时钟**
-
-```text
-setmem /32    0x020c4068 =    0xffffffff    // CCM_CCGR0
-setmem /32    0x020c406c =    0xffffffff    // CCM_CCGR1
-...
-setmem /32    0x020c4080 =    0xffffffff    // CCM_CCGR6
-```
 
 CCM（Clock Controller Module）的 CCGR0~CCGR6 寄存器全部写 `0xFFFFFFFF`。ROM code 上电后会关闭部分外设时钟，这里粗暴地全部打开——这是 NXP 评估板的常见做法，量产时可以精细控制只打开 MMDC 所需的时钟门。
 
@@ -966,21 +998,7 @@ CCM（Clock Controller Module）的 CCGR0~CCGR6 寄存器全部写 `0xFFFFFFFF`�
 
 **第五段：MMDC 控制器核心寄存器**
 
-```text
-setmem /32    0x021b0004 =    0x0002002D    // MMDC0_MDPDC  预充电控制
-setmem /32    0x021b0008 =    0x1B333030    // MMDC0_MDOTC  ODT 时序
-setmem /32    0x021b000c =    0x676B52F3    // MMDC0_MDCFG0 时序配置 0
-setmem /32    0x021b0010 =    0xB66D0B63    // MMDC0_MDCFG1 时序配置 1
-setmem /32    0x021b0014 =    0x01FF00DB    // MMDC0_MDCFG2 时序配置 2
-setmem /32    0x021b0018 =    0x00211740    // MMDC0_MDMISC  杂项配置
-setmem /32    0x021b001c =    0x00008000    // MMDC0_MDSCR  配置请求位
-setmem /32    0x021b002c =    0x000026D2    // MMDC0_MDRWD  超时控制
-setmem /32    0x021b0030 =    0x006B1023    // MMDC0_MDOR   输出延迟
-setmem /32    0x021b0040 =    0x0000004F    // MDASP        片选分区
-setmem /32    0x021b0000 =    0x84180000    // MMDC0_MDCTL  几何架构配置
-```
-
-其中 `MDCTL`（`0x84180000`）最为关键，解码如下：
+核心寄存器配置（时序、几何、ODT、片选分区等）。其中 `MDCTL`（`0x84180000`）最为关键：
 
 | 字段 | 值 | 含义 |
 |------|-----|------|
@@ -991,17 +1009,17 @@ setmem /32    0x021b0000 =    0x84180000    // MMDC0_MDCTL  几何架构配置
 | `BANK` | 3（= 8 Bank） | 8 Bank |
 | `DSIZ` | 1（= x16） | 16 位数据总线 |
 
-`MDMISC`（`0x00211740`）包含 RALAT=5（读访问延迟）、COL=10 等配置。注释提到在 528MHz 板上可考虑降低 RALAT 以获得更好的低频性能。
+`MDMISC`（`0x00211740`）包含 RALAT=5（读访问延迟）、COL=10 等配置。
 
 **第六段：JEDEC 模式寄存器写入序列**
 
-这是 JEDEC 标准规定的 DDR3 上电初始化序列——通过 MDSCR 寄存器依次写入 MR2→MR3→MR1→MR0→ZQCL：
+通过 MDSCR 寄存器依次写入 MR2→MR3→MR1→MR0→ZQCL：
 
 ```text
-setmem /32    0x021b001c =    0x02008032    // MR2 写入: CWL=6, RttWR
-setmem /32    0x021b001c =    0x00008033    // MR3 写入: 0
-setmem /32    0x021b001c =    0x00048031    // MR1 写入: ODIC, DLL 使能
-setmem /32    0x021b001c =    0x15208030    // MR0 写入: BL=8, CL=11, DLL Reset
+setmem /32    0x021b001c =    0x02008032    // MR2: CWL=6, RttWR
+setmem /32    0x021b001c =    0x00008033    // MR3: 0
+setmem /32    0x021b001c =    0x00048031    // MR1: ODIC, DLL 使能
+setmem /32    0x021b001c =    0x15208030    // MR0: BL=8, CL=11, DLL Reset
 setmem /32    0x021b001c =    0x04008040    // ZQCL 校准命令
 ```
 
@@ -1013,14 +1031,6 @@ MDSCR 寄存器格式：`[CMD_TYPE:15:12][CS:11:8][MR_VALUE:7:0]`。例如 `0x02
 ZQCL 命令 `0x04008040`：`0x4` = ZQ Calibration 命令类型。
 
 **第七段：功耗管理与收尾**
-
-```text
-setmem /32    0x021b0020 =    0x00007800    // MDREF 自动刷新计数
-setmem /32    0x021b0818 =    0x00000227    // MPODTCTRL ODT 控制
-setmem /32    0x021b0004 =    0x0002556D    // MDPDC 使能 Power Down
-setmem /32    0x021b0404 =    0x00011006    // MAPSR 空闲自动进入 Self-Refresh
-setmem /32    0x021b001c =    0x00000000    // MDSCR 清除配置位，初始化完成
-```
 
 最后清除 `MDSCR` 的 configuration bit，MMDC 退出配置模式，DDR 进入正常工作状态。
 
@@ -1043,169 +1053,44 @@ setmem /32    0x021b001c =    0x00000000    // MDSCR 清除配置位，初始化
 
 > **注意**：Precharge All 和 Refresh × 2 在 DCD 脚本中**没有对应的 setmem 行**。当 `MDSCR[CON_REQ]` 被置位后，MMDC 控制器会**自动**按 JEDEC 顺序执行 Precharge All → Refresh × 2 →（等待用户写 MR），脚本只需写 MR 相关的 setmem。
 
-### 13.3 芯片手册参数提取
+### 13.5 MMDC 核心寄存器详解
 
-初始化 i.MX6ULL 的 DDR 之前，需要从 DDR 芯片（如 Micron、Nanya 等）的 DataSheet 中提取以下三类参数。
+MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各寄存器的详细说明见 13.3 节脚本实例，本节仅列出汇总。
 
-#### 静态参数清单
+**核心控制器寄存器**：
 
-**几何架构参数**（决定 MMDC 如何编址和寻址）：
-
-| 参数 | 说明 | 示例 |
-|------|------|------|
-| **DRAM Density** | 芯片容量（Gb → MB 需 ÷8） | 4Gb = 512MB |
-| **Bus Width** | 数据位宽 | 16-bit / 32-bit |
-| **Banks** | Bank 数量（DDR3 = 8） | 8 |
-| **ROW Addresses** | 行地址线数量 | 14 或 15 |
-| **COLUMN Addresses** | 列地址线数量 | 10 或 11 |
-| **Page Size** | 页大小 = 2^列地址数 × 位宽 | 2K / 4K |
-
-**核心时序参数**（来自 "AC Electrical Characteristics" 表格）：
-
-| 参数 | 全称 | 物理意义 | 单位 |
-|------|------|---------|------|
-| **tCL** | CAS Latency | 读命令 → 数据出现在总线的延迟 | tCK |
-| **tRCD** | RAS to CAS Delay | 激活行 → 可读写列的延迟 | ns/tCK |
-| **tRP** | Row Precharge Time | 关闭当前行 → 可打开新行的时间 | ns/tCK |
-| **tRAS** | Active to Precharge | 行激活到预充电的最小间隔 | ns/tCK |
-| **tRFC** | Refresh Cycle Time | 刷新周期（期间不能读写） | ns/tCK |
-| **tWR** | Write Recovery Time | 最后一次写 → 可执行预充电的延迟 | ns/tCK |
-| **tRC** | Row Cycle Time | 两次行激活之间的最小间隔 | ns/tCK |
-
-**速度等级**：
-
-| 参数 | 说明 |
-|------|------|
-| **Memory Type** | DDR3 / DDR3L / LPDDR2 等 |
-| **Speed Bin** | DDR3-1600 / DDR3-1866 等，决定 MMDC 时钟频率 |
-
-> **ns → tCK 换算**：MMDC 频率 396MHz → tCK = 1/396MHz ≈ 2.525ns。例如 tRCD = 13.75ns → 13.75/2.525 ≈ 5.44 → **向上取整为 6 个 tCK**。
-
-#### 动态信号认知（ODT / ZQ / DQS）
-
-这些不属于"从手册抄参数"的范畴，而是在后续寄存器配置和硬件自动训练中解决。
-
-| 信号 | 全称 | 作用 | 初始化关注点 |
-|------|------|------|-------------|
-| **ODT** | On-Die Termination | 片内终端电阻，消除信号反射 | 在 MMDC 寄存器中配置阻值（如 40Ω、120Ω），参考 NXP 评估板经验值 |
-| **ZQ** | Impedance Calibration | 阻抗校准，抵抗 PVT 漂移 | 通过外部 240Ω 参考电阻（RZQ），发送 ZQCL 命令触发硬件自动校准 |
-| **DQS** | Data Strobe | 数据选通信号，配合 DQ 精准采样 | 通过 Training 动态调整 DQS 与 DQ 的延迟对齐 |
-
-> ODT/ZQ/DQS 的详细原理说明见 [01_ddr_theory.md](01_ddr_theory.md) 第 7 章 DDR3 部分。
-
-### 13.4 MMDC 寄存器配置详解
-
-MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。DCD 数据会向这一区域连续写入几十条指令，按执行顺序分为以下模块。
-
-#### 13.4.1 时钟与 IOMUX 配置
-
-DCD 中常见做法是将 `CCM_CCGR0` ~ `CCM_CCGR6`（地址 `0x020C4068` ~ `0x020C4080`）全部写入 `0xFFFFFFFF`，强制打开所有外设时钟。更精细的配置可专门设定 MMDC 时钟源：通过 `CBCDR` 寄存器（`0x020C4014`）从 PLL2 分频出所需频率给 DDR 使用。
-
-DDR 信号线必须复用为 EMC（External Memory Controller）功能，同时配置驱动强度（DSE）、压摆率（Slew Rate）和差分模式等电气属性。具体的 IOMUX 寄存器配置列表见 13.2.1 节脚本实例。
-
-#### 13.4.2 几何架构配置
-
-核心寄存器 **MMDC_MDCTL**（`0x021B0000`），32 位打包了所有几何参数：
-
-| 比特位 | 参数 | 说明 | 示例值 |
-|--------|------|------|--------|
-| **SDDRC** | DDR 类型 | DDR3 / LPDDR2 / DDR3L | DDR3L |
-| **ROW** | 行地址数 | 14 或 15 | 15 |
-| **COL** | 列地址数 | 10 或 11 | 10 |
-| **BANK** | Bank 数 | DDR3 固定为 3（= 8 Bank） | 3 |
-| **SDW** | 数据位宽 | 16 或 32 | 16 |
-
-示例：`0x84180000` = DDR3, ROW=15, COL=10, 8 Bank, x16, SDE 使能。
-
-#### 13.4.3 JEDEC 时序配置
-
-这些参数由芯片手册提取的 ns 值换算为 tCK 后填入：
-
-| 寄存器 | 地址 | 主要参数 | 说明 |
-|--------|------|---------|------|
-| **MDCFG0** | `0x021B000C` | tCL, tRCD, tRP | 最核心的三个延迟 |
-| **MDCFG1** | `0x021B0010` | tRAS, tRC, tWR | 行周期与写恢复 |
-| **MDCFG2** | `0x021B0014` | tRFC, tXSR | 刷新周期与退出自刷新延迟 |
-| **MDOR** | `0x021B0030` | 超时参数 | 防止控制器异常死等 |
-| **MDREF** | `0x021B0020` | 刷新率 | DDR 定期"充电"保持数据 |
-
-> **ns → tCK 换算**：MMDC 频率 400MHz → tCK = 1/400MHz = 2.5ns。例如 tRCD = 13.75ns → 13.75/2.5 ≈ 5.5 → **向上取整为 6 个 tCK**。实际开发中，这些繁琐的换算和寄存器拼装通常由 NXP 官方的 **DDR Script Aid**（Excel 工具）或 **ddr_stress_tester** 工具自动完成。
-
-#### 13.4.4 模式寄存器与命令序列
-
-MMDC 需要通过特定命令将配置"灌"进 DDR 颗粒的模式寄存器（MR0 ~ MR3）。**完整的 JEDEC 初始化序列（含 Precharge All → Refresh × 2 → Load MR 的时序图和顺序解释）详见 13.2 节**，本节只列出 MMDC 寄存器层面的操作方式。
-
-**通过 MDSCR 发出 MRS 命令**：
-
-| CMD 值 | 命令 | 说明 |
+| 寄存器 | 地址 | 用途 |
 |--------|------|------|
-| `0x0` | Precharge All | 关闭所有 Bank |
-| `0x2` | Auto Refresh | 刷新命令（发两次） |
-| `0x3` | Load Mode Register | 加载模式寄存器 |
+| **MDCTL** | `0x021B0000` | 几何架构（SDDRC/ROW/COL/BANK/DSIZ） |
+| **MDPDC** | `0x021B0004` | 预充电控制 / Power Down 配置 |
+| **MDOTC** | `0x021B0008` | ODT 时序 |
+| **MDCFG0** | `0x021B000C` | 时序配置 0（tCL/tRCD/tRP/tXP 等） |
+| **MDCFG1** | `0x021B0010` | 时序配置 1（tRC/tRAS/tWR/tCWL 等） |
+| **MDCFG2** | `0x021B0014` | 时序配置 2（tRFC/tXSR 等） |
+| **MDMISC** | `0x021B0018` | 杂项（RALAT/COL/BI 等） |
+| **MDSCR** | `0x021B001C` | 特殊命令（CON_REQ/CON_ACK/MRS 命令） |
+| **MDRWD** | `0x021B002C` | 超时控制 |
+| **MDOR** | `0x021B0030` | 输出延迟 |
+| **MDREF** | `0x021B0020` | 刷新控制 |
+| **MAPSR** | `0x021B0404` | 电源管理（自刷新/低功耗） |
 
-MDSCR 寄存器格式：`[CMD_TYPE:15:12][CS:11:8][MR_VALUE:7:0]`。每个命令发出去后，MMDC 自动等待对应的时序（tRP、tRFC 等），不用软件手动延迟。
+**PHY 寄存器**：
 
-**DDR3 模式寄存器与 MMDC 的对应**：
+| 寄存器 | 地址 | 用途 |
+|--------|------|------|
+| **MPZQHWCTRL** | `0x021b0800` | ZQ 硬件校准控制 |
+| **MPWLDECTRL** | `0x021b080c` | Write Leveling 延迟控制 |
+| **MPDGCTRL0** | `0x021b083c` | Read DQS Gating 控制 |
+| **MPRDDLCTL** | `0x021b0848` | 读数据延迟控制 |
+| **MPWRDLCTL** | `0x021b0850` | 写数据延迟控制 |
+| **MPRDDQBY0/1DL** | `0x021b081c/0820` | 读 DQ 字节 lane 延迟 |
+| **MPWRDQBY0/1DL** | `0x021b082c/0830` | 写 DQ 字节 lane 延迟 |
+| **MPDCCR** | `0x021b08c0` | DQS/CLK 占空比控制 |
+| **MPMUR0** | `0x021b08b8` | 强制测量控制 |
+| **MPPDCMPR2** | `0x021b0890` | ZQ 校准偏移微调 |
+| **MPODTCTRL** | `0x021b0818` | ODT 控制 |
 
-| DDR 模式寄存器 | 配置内容 |
-|---------------|---------|
-| **MR0** | CAS 延迟（CL）、突发长度（BL，通常固定为 8） |
-| **MR1** | 驱动强度、ODT 阻值（如 RZQ/4） |
-| **MR2** | CAS 写延迟（CWL） |
-
-#### 13.4.5 硬件自动校准（DDR Training）
-
-由于 PCB 走线微小误差和运行后电压/温度波动，MMDC 内置硬件校准引擎在 DCD 最后阶段自动执行。
-
-| 校准类型 | 寄存器 | 说明 |
-|---------|--------|------|
-| **ZQ 校准** | `MMDC_MPZQHWCTRL` | 通过外部 240Ω 参考电阻，自动微调驱动强度和 ODT 阻值 |
-| **Write Leveling** | `MMDC_MPWLDECTRL` | 补偿 CK 和 DQS 之间的 PCB 走线偏斜（skew） |
-| **Read DQS Gating** | `MMDC_MPDGCTRL` | 动态调整接收窗口，确保精准捕获 DQS 信号 |
-| **读延迟校准** | `MMDC_MPRDDLCTL` | 微调读数据眼图中心位置 |
-| **写延迟校准** | `MMDC_MPWRDLCTL` | 微调写数据眼图中心位置 |
-
-#### Write Leveling 校准
-
-**Write Leveling 解决什么问题**：补偿 CLK 和 DQS 之间的 PCB 走线 skew（偏移）。
-
-**Fly-by 拓扑的引入**：
-
-DDR3 频率升高（800MT/s 起步），传统的 T 型分支走线产生信号反射。DDR3 改用 **Fly-by 拓扑**——命令/地址/时钟线像串糖葫芦一样依次穿过每颗 DDR 颗粒，但**数据线仍然是点对点直连**：
-
-```
-控制器 ── CLK/ADDR/CMD ──▶ ──▶ ──▶  (Fly-by)
-                             │      │
-                           DDR1   DDR2
-
-控制器 DQ/DQS ──────▶ DDR1（直连，距离短）
-```
-
-**结果**：写操作时，CLK 走 Fly-by 长路径，DQS 走点对点短路径，两者到达 DDR 芯片的时间不同，产生 skew。规范要求 **DQS 的中心要对齐 CLK 的边沿**，如果错位，DDR 用 DQS 采样 DQ 时可能采在跳变沿上。
-
-**Write Leveling 的校准过程**：
-
-1. 控制器通过 MRS 命令让 DDR 进入 Write Leveling 模式
-2. 控制器发出 DQS 脉冲
-3. DDR 芯片用本地收到的 **CLK 边沿** 采样 **DQS**，将结果反馈到 DQ 引脚
-4. 控制器读取 DQ 反馈：DQ = 0 → DQS 还没到，DQ = 1 → DQS 已经到了
-5. 逐步调整 DQS 延迟，直到找到 0→1 的跳变点
-
-**关键设计约束**：
-- 硬件自动校准最多检测 **1 个时钟周期**的 skew
-- 如果 DDR3 距离控制器太远，skew 超过 1 周期，需手动设置 `MPWLDECTRL[WL_CYC_DEL]`
-- **PCB Layout 要求**：DDR3 尽量靠近控制器，计算时钟信号到最远 DDR3 的飞行时间
-
-**硬件自动校准步骤**：
-1. DDR 进入 Write Leveling 模式（MRS 命令）
-2. MMDC 发 DQS 脉冲，采样反馈 DQ 位
-3. 每次增加 1/8 周期延迟，重复采样，直到 1 周期
-4. 查找 DQ 从 0→1 的第一次跳变点
-5. 精细调优：以 1/256 周期为步长微调
-6. 结果写入 `MPWLDECTRL[WL_DL_ABS_OFFSET]`
-7. DDR 退出 Write Leveling 模式（MRS 命令）
-
-> **重要**：如果校准结果是 100/256 周期，但设计者预估 skew 超过 2 周期，则 `MPWLDECTRL[WL_CYC_DEL]` 应设为 2，总延迟 = 2 + 100/256 周期。
+### 13.6 DDR 校准算法详解
 
 #### 校准前置条件
 
@@ -1262,7 +1147,49 @@ ZQ 校准分为两类：**DDR I/O 焊盘驱动强度校准**和**DDR 芯片 ZQ �
 
 **硬件算法**：写数据到 DDR → 读回 → 与预定义值比较 → 扫延迟线找到窗口边界 → 取平均值写入 `MPWRDLCTL`。
 
-### 13.5 DDR 校准失败排查
+#### Write Leveling 校准
+
+**Write Leveling 解决什么问题**：补偿 CLK 和 DQS 之间的 PCB 走线 skew（偏移）。
+
+**Fly-by 拓扑的引入**：
+
+DDR3 频率升高（800MT/s 起步），传统的 T 型分支走线产生信号反射。DDR3 改用 **Fly-by 拓扑**——命令/地址/时钟线像串糖葫芦一样依次穿过每颗 DDR 颗粒，但**数据线仍然是点对点直连**：
+
+```
+控制器 ── CLK/ADDR/CMD ──▶ ──▶ ──▶  (Fly-by)
+                             │      │
+                           DDR1   DDR2
+
+控制器 DQ/DQS ──────▶ DDR1（直连，距离短）
+```
+
+**结果**：写操作时，CLK 走 Fly-by 长路径，DQS 走点对点短路径，两者到达 DDR 芯片的时间不同，产生 skew。规范要求 **DQS 的中心要对齐 CLK 的边沿**，如果错位，DDR 用 DQS 采样 DQ 时可能采在跳变沿上。
+
+**Write Leveling 的校准过程**：
+
+1. 控制器通过 MRS 命令让 DDR 进入 Write Leveling 模式
+2. 控制器发出 DQS 脉冲
+3. DDR 芯片用本地收到的 **CLK 边沿** 采样 **DQS**，将结果反馈到 DQ 引脚
+4. 控制器读取 DQ 反馈：DQ = 0 → DQS 还没到，DQ = 1 → DQS 已经到了
+5. 逐步调整 DQS 延迟，直到找到 0→1 的跳变点
+
+**关键设计约束**：
+- 硬件自动校准最多检测 **1 个时钟周期**的 skew
+- 如果 DDR3 距离控制器太远，skew 超过 1 周期，需手动设置 `MPWLDECTRL[WL_CYC_DEL]`
+- **PCB Layout 要求**：DDR3 尽量靠近控制器，计算时钟信号到最远 DDR3 的飞行时间
+
+**硬件自动校准步骤**：
+1. DDR 进入 Write Leveling 模式（MRS 命令）
+2. MMDC 发 DQS 脉冲，采样反馈 DQ 位
+3. 每次增加 1/8 周期延迟，重复采样，直到 1 周期
+4. 查找 DQ 从 0→1 的第一次跳变点
+5. 精细调优：以 1/256 周期为步长微调
+6. 结果写入 `MPWLDECTRL[WL_DL_ABS_OFFSET]`
+7. DDR 退出 Write Leveling 模式（MRS 命令）
+
+> **重要**：如果校准结果是 100/256 周期，但设计者预估 skew 超过 2 周期，则 `MPWLDECTRL[WL_CYC_DEL]` 应设为 2，总延迟 = 2 + 100/256 周期。
+
+### 13.7 DDR 校准失败排查
 
 如果 U-Boot 报错 `DRAM init failed` 或系统启动卡死，从以下维度逐一排查：
 
@@ -1276,7 +1203,7 @@ ZQ 校准分为两类：**DDR I/O 焊盘驱动强度校准**和**DDR 芯片 ZQ �
 | **ZQ 电阻异常** | 外部 240Ω 参考电阻焊接不良或精度不够 | 万用表测量 RZQ 电阻值 |
 | **温度漂移** | 高温/低温环境下校准参数失效 | 在高低温箱中验证，必要时做温度补偿 |
 
-### 13.6 信号完整性基础
+### 13.8 信号完整性基础
 
 <!-- TODO: 信号完整性基础知识，如反射、串扰、时序裕量等 -->
 
