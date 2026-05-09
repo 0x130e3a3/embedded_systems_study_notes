@@ -627,6 +627,13 @@ DCD 区域有严格的格式，分为"包头"和"指令体"：
 
 在 U-Boot 源码中，这些配置写在 `imximage.cfg` 文件中，编译时 `mkimage` 工具将其打包进 `u-boot.imx` 头部。
 
+> **三处初始化流程的关系**：下面会看到三个不同粒度的初始化流程描述——
+> - **JEDEC 标准流程**（下节）：所有 DDR3 芯片通用的"开机仪式"，不涉及任何 SoC 控制器细节
+> - **i.MX6ULL 实际流程**（再下一节）：在 JEDEC 标准之上，加上 SoC 控制器自身的初始化（时钟/IOMUX/Training 等），是前者的"外壳"
+> - **DCD 脚本实例**（13.2.1）：i.MX6ULL 实际流程的完整源码实现，每条 `setmem` 对应实际流程中的某一步
+>
+> 阅读建议：**标准 → 实际 → 脚本**，从抽象到具体。
+
 #### JEDEC 标准 DDR3 上电初始化流程
 
 JEDEC 规范（JESD79-3D）严格规定了 DDR3 上电后的初始化顺序，**一步都不能少，顺序不能改**。
@@ -676,7 +683,7 @@ Step 9: 就绪，可以发读写命令
 
 #### i.MX6ULL 实际初始化流程
 
-在 JEDEC 标准流程基础上，i.MX6ULL 的 Boot ROM 还要完成控制器自身的初始化：
+JEDEC 标准只规定了 DDR 芯片侧的开机仪式（Step 4~Step 8），但 SoC 端还需要配置自身的控制器和 PHY。下面是 JEDEC 标准 + MMDC 控制器初始化的完整流程：
 
 ```
 Boot ROM 上电
@@ -684,24 +691,34 @@ Boot ROM 上电
 读取 DCD 数据到 OCRAM
     ↓
 逐条执行 DCD 指令（写寄存器）：
-    1. 打开 MMDC 时钟（CCM_CCGR）
-    2. 配置 IOMUX（引脚复用为 DDR 功能）
-    3. 配置 MMDC 几何参数（MDCTL：ROW、COL、Bank、位宽）
-    4. 配置时序（MDCFG0/1/2：tRCD、tRP、tRAS 等）
-    5. 配置刷新（MDREF）
-    6. 配置 ODT 时序（MDOTC）
-    7. 禁用周期刷新（MDREF[REF_SEL] = 0x3）
-    8. 断言 CON_REQ（进入配置模式，阻止 AXI 访问）
-    9. 执行 JEDEC 开机仪式（Precharge All → Refresh × 2 → Load MR）
-   10. ZQ 校准
-   11. 执行 DDR Training（Write Leveling → Read DQS Gating → Read/Write 延迟校准）
-   12. 恢复周期刷新
-   13. 反断言 CON_REQ（退出配置模式，DDR 就绪）
+
+  ┌─ SoC 端准备（与 JEDEC 无关）
+  │  1. 禁用看门狗（WDOG）
+  │  2. 使能 MMDC 时钟（CCM_CCGR）
+  │  3. 配置 IOMUX（引脚复用 + 电气特性）
+  │
+  ├─ MMDC 控制器预配置（DDR 尚未激活）
+  │  4. 设置 MDSCR CON_REQ（进入手动配置模式）
+  │  5. 配置 PHY 校准预设值（ZQ/WL/DG/RD/WR 延迟线初始值）
+  │  6. 配置 MMDC 时序与几何参数（MDCTL/MDCFG0/1/2/MDMISC/MDOTC/MDOR）
+  │
+  ├─ JEDEC 标准开机仪式（对应 JEDEC 流程 Step 4~8）
+  │  7. Precharge All（通过 MDSCR 发出）
+  │  8. Auto Refresh × 2（通过 MDSCR 发出，MMDC 自动等待 tRFC）
+  │  9. Load Mode Register: MR2 → MR3 → MR1 → MR0（通过 MDSCR 逐条写入）
+  │  10. ZQCL 校准命令（通过 MDSCR 发出）
+  │
+  └─ 收尾与功耗管理
+     11. 配置自动刷新（MDREF）+ ODT 控制（MPODTCTRL）
+     12. 使能 Power Down（MDPDC）+ 自动 Self-Refresh（MAPSR）
+     13. 清除 MDSCR CON_REQ（退出配置模式，DDR 就绪）
     ↓
 搬运 U-Boot 到 DDR
     ↓
 跳转到 U-Boot 执行
 ```
+
+> **关键理解**：DCD 脚本中的 PHY 校准参数（第5步）是**预设初始值**，不是运行时执行校准。真正的校准由 NXP **ddr_stress_tester** 工具在目标板子上跑完后，将最优值填入这些寄存器。Boot ROM 只是把预设值写入寄存器，后续 MMDC 硬件自动校准时会在此基础上精细调整。
 
 **关键寄存器 MDSCR（特殊命令寄存器）**：
 
@@ -1006,6 +1023,25 @@ setmem /32    0x021b001c =    0x00000000    // MDSCR 清除配置位，初始化
 ```
 
 最后清除 `MDSCR` 的 configuration bit，MMDC 退出配置模式，DDR 进入正常工作状态。
+
+#### JEDEC 标准步骤 → DCD 脚本段落对应关系
+
+| JEDEC 步骤 | DCD 脚本段落 | 说明 |
+|-----------|------------|------|
+| 上电等待，CKE=0 | 第1~3段（WDOG + 时钟 + IOMUX） | SoC 端准备，非 JEDEC 流程 |
+| — | 第4段（PHY 校准预设值） | MMDC PHY 预设延迟线初始值，非 JEDEC |
+| — | 第5段（MMDC 核心寄存器） | MMDC Core 预配置（时序/几何/ODT），非 JEDEC |
+| **Precharge All** | — | MMDC 控制器在配置模式下**自动执行**，脚本中无独立 setmem 行 |
+| **Refresh × 2** | — | 同上，MMDC 自动执行并等待 tRFC |
+| **MR2** | 第6段 | `0x02008032`（CWL=6） |
+| **MR3** | 第6段 | `0x00008033`（值为 0） |
+| **MR1** | 第6段 | `0x00048031`（ODT/驱动强度/DLL 使能） |
+| **MR0** | 第6段 | `0x15208030`（BL=8, CL=11） |
+| **ZQCL** | 第6段末尾 | `0x04008040` |
+| DLL 锁定 | 第4段（PHY 预设值） | 预设值写入，后续硬件自动校准 |
+| 就绪 | 第7段（功耗管理收尾） | 清除 CON_REQ，退出配置模式 |
+
+> **注意**：Precharge All 和 Refresh × 2 在 DCD 脚本中**没有对应的 setmem 行**。当 `MDSCR[CON_REQ]` 被置位后，MMDC 控制器会**自动**按 JEDEC 顺序执行 Precharge All → Refresh × 2 →（等待用户写 MR），脚本只需写 MR 相关的 setmem。
 
 ### 13.3 芯片手册参数提取
 
