@@ -816,6 +816,288 @@ JEDEC 开机仪式通过 `MDSCR[CMD]` 发出命令：
 
 整个初始化通常在几十毫秒内完成。如果 DCD 参数写错了（如行列地址配错），DDR Training 阶段就会失败，Boot ROM 卡死。
 
+### 13.2.1 DCD 初始化脚本实例解析
+
+以下脚本由 NXP **ddr_stress_tester** 工具生成，对应硬件配置：
+
+| 项目 | 值 |
+|------|-----|
+| SoC | i.MX6ULL |
+| DDR 类型 | DDR3 |
+| 颗粒型号 | Micron MT41K256M16HA-125 |
+| 容量 | 4Gb（512MB） |
+| 位宽 | x16 |
+| 频率 | 400MHz |
+| 片选数 | 1（CS0 only） |
+
+#### 完整脚本源码
+
+```text
+//=============================================================================
+// init script for i.MX6UL DDR3
+//=============================================================================
+
+wait = on
+
+//=============================================================================
+// Disable WDOG
+//=============================================================================
+setmem /16    0x020bc000 =    0x30
+
+//=============================================================================
+// Enable all clocks (they are disabled by ROM code)
+//=============================================================================
+setmem /32    0x020c4068 =    0xffffffff
+setmem /32    0x020c406c =    0xffffffff
+setmem /32    0x020c4070 =    0xffffffff
+setmem /32    0x020c4074 =    0xffffffff
+setmem /32    0x020c4078 =    0xffffffff
+setmem /32    0x020c407c =    0xffffffff
+setmem /32    0x020c4080 =    0xffffffff
+
+//=============================================================================
+// IOMUX
+//=============================================================================
+// DDR IO TYPE:
+setmem /32    0x020e04b4 =    0x000C0000    // IOMUXC_SW_PAD_CTL_GRP_DDR_TYPE
+setmem /32    0x020e04ac =    0x00000000    // IOMUXC_SW_PAD_CTL_GRP_DDRPKE
+
+// CLOCK:
+setmem /32    0x020e027c =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_SDCLK_0
+
+// ADDRESS:
+setmem /32    0x020e0250 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_CAS
+setmem /32    0x020e024c =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_RAS
+setmem /32    0x020e0490 =    0x00000028    // IOMUXC_SW_PAD_CTL_GRP_ADDDS
+
+// Control:
+setmem /32    0x020e0288 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_RESET
+setmem /32    0x020e0270 =    0x00000000    // IOMUXC_SW_PAD_CTL_PAD_DRAM_SDBA2
+setmem /32    0x020e0260 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_SDODT0
+setmem /32    0x020e0264 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_SDODT1
+setmem /32    0x020e04a0 =    0x00000028    // IOMUXC_SW_PAD_CTL_GRP_CTLDS
+
+// Data Strobes:
+setmem /32    0x020e0494 =    0x00020000    // IOMUXC_SW_PAD_CTL_GRP_DDRMODE_CTL
+setmem /32    0x020e0280 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_SDQS0
+setmem /32    0x020e0284 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_SDQS1
+
+// Data:
+setmem /32    0x020e04b0 =    0x00020000    // IOMUXC_SW_PAD_CTL_GRP_DDRMODE
+setmem /32    0x020e0498 =    0x00000028    // IOMUXC_SW_PAD_CTL_GRP_B0DS
+setmem /32    0x020e04a4 =    0x00000028    // IOMUXC_SW_PAD_CTL_GRP_B1DS
+
+setmem /32    0x020e0244 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_DQM0
+setmem /32    0x020e0248 =    0x00000028    // IOMUXC_SW_PAD_CTL_PAD_DRAM_DQM1
+
+//=============================================================================
+// DDR Controller Registers
+//=============================================================================
+// Manufacturer:    Micron
+// Device Part Number: MT41K256M16HA-125
+// Clock Freq.:     400MHz
+// Density per CS in Gb: 4
+// Chip Selects used:  1
+// Number of Banks:    8
+// Row address:        15
+// Column address:     10
+// Data bus width      16
+//=============================================================================
+setmem /32    0x021b001c =    0x00008000    // MMDC0_MDSCR, set Configuration request bit
+
+//=============================================================================
+// Calibration setup.
+//=============================================================================
+setmem /32    0x021b0800 =    0xA1390003    // DDR_PHY_P0_MPZQHWCTRL, enable HW ZQ calibration
+setmem /32    0x021b080c  =    0x00000000   // Write Leveling delay (may need fine tuning)
+
+// Read DQS Gating calibration
+setmem /32    0x021b083c =    0x00000000    // MPDGCTRL0 PHY0
+
+// Read calibration
+setmem /32    0x021b0848 =    0x40404040    // MPRDDLCTL PHY0
+
+// Write calibration
+setmem /32    0x021b0850 =    0x40404040    // MPWRDLCTL PHY0
+
+// Read data bit delay
+setmem /32    0x021b081c =    0x33333333    // MMDC_MPRDDQBY0DL
+setmem /32    0x021b0820 =    0x33333333    // MMDC_MPRDDQBY1DL
+
+// Write data bit delay
+setmem /32    0x021b082c =    0xF3333333    // MMDC_MPWRDQBY0DL
+setmem /32    0x021b0830 =    0xF3333333    // MMDC_MPWRDQBY1DL
+
+// DQS & CLK Duty Cycle
+setmem /32    0x021b08c0 =    0x00921012    // MMDC_MPDCCR
+
+// Complete calibration by forced measurement
+setmem /32    0x021b08b8 =    0x00000800    // DDR_PHY_P0_MPMUR0, frc_msr
+
+// MMDC init:
+setmem /32    0x021b0004 =    0x0002002D    // MMDC0_MDPDC
+setmem /32    0x021b0008 =    0x1B333030    // MMDC0_MDOTC
+setmem /32    0x021b000c =    0x676B52F3    // MMDC0_MDCFG0
+setmem /32    0x021b0010 =    0xB66D0B63    // MMDC0_MDCFG1
+setmem /32    0x021b0014 =    0x01FF00DB    // MMDC0_MDCFG2
+setmem /32    0x021b0018 =    0x00211740    // MMDC0_MDMISC
+setmem /32    0x021b001c =    0x00008000    // MMDC0_MDSCR
+setmem /32    0x021b002c =    0x000026D2    // MMDC0_MDRWD
+setmem /32    0x021b0030 =    0x006B1023    // MMDC0_MDOR
+setmem /32    0x021b0040 =    0x0000004F    // Chan0 CS0_END
+setmem /32    0x021b0000 =    0x84180000    // MMDC0_MDCTL
+
+setmem /32    0x021b0890 =    0x00400a38    // MPPDCMPR2
+
+// Mode register writes
+setmem /32    0x021b001c =    0x02008032    // MMDC0_MDSCR, MR2 write, CS0
+setmem /32    0x021b001c =    0x00008033    // MMDC0_MDSCR, MR3 write, CS0
+setmem /32    0x021b001c =    0x00048031    // MMDC0_MDSCR, MR1 write, CS0
+setmem /32    0x021b001c =    0x15208030    // MMDC0_MDSCR, MR0 write, CS0
+setmem /32    0x021b001c =    0x04008040    // MMDC0_MDSCR, ZQ calibration, CS0
+
+// CS1 mode register writes (commented out — only 1 CS used)
+// setmem /32    0x021b001c =    0x0200803A    // MR2 write, CS1
+// setmem /32    0x021b001c =    0x0000803B    // MR3 write, CS1
+// setmem /32    0x021b001c =    0x00048039    // MR1 write, CS1
+// setmem /32    0x021b001c =    0x15208038    // MR0 write, CS1
+// setmem /32    0x021b001c =    0x04008048    // ZQ calibration, CS1
+
+setmem /32    0x021b0020 =    0x00007800    // MMDC0_MDREF
+setmem /32    0x021b0818 =    0x00000227    // DDR_PHY_P0_MPODTCTRL
+setmem /32    0x021b0004 =    0x0002556D    // MMDC0_MDPDC, power down enabled
+setmem /32    0x021b0404 =    0x00011006    // MMDC0_MAPSR, auto self-refresh
+setmem /32    0x021b001c =    0x00000000    // MMDC0_MDSCR, clear configuration bit
+```
+
+#### 逐段解析
+
+**第一段：禁用看门狗**
+
+```text
+setmem /16    0x020bc000 =    0x30
+```
+
+向 WDOG1 控制寄存器写入 `0x30`，禁用看门狗定时器。DDR 初始化耗时数十毫秒，如果不关闭看门狗，期间没有喂狗会导致系统复位。
+
+**第二段：使能所有时钟**
+
+```text
+setmem /32    0x020c4068 =    0xffffffff    // CCM_CCGR0
+setmem /32    0x020c406c =    0xffffffff    // CCM_CCGR1
+...
+setmem /32    0x020c4080 =    0xffffffff    // CCM_CCGR6
+```
+
+CCM（Clock Controller Module）的 CCGR0~CCGR6 寄存器全部写 `0xFFFFFFFF`。ROM code 上电后会关闭部分外设时钟，这里粗暴地全部打开——这是 NXP 评估板的常见做法，量产时可以精细控制只打开 MMDC 所需的时钟门。
+
+**第三段：IOMUX 引脚复用与电气配置**
+
+将 SoC 引脚复用为 DDR 功能，并设置驱动强度、压摆率、差分模式等电气参数：
+
+| 寄存器地址 | 值 | 寄存器名 | 作用 |
+|-----------|-----|----------|------|
+| `0x020e04b4` | `0x000C0000` | GRP_DDR_TYPE | 设置 DDR IO 类型为 DDR3（1.5V） |
+| `0x020e04ac` | `0x00000000` | GRP_DDRPKE | 禁用 DDR 引脚 keeper（保持电路） |
+| `0x020e027c` | `0x00000028` | DRAM_SDCLK_0 | 时钟引脚驱动强度 DSE ≈ 34Ω |
+| `0x020e0250` | `0x00000028` | DRAM_CAS | 列地址选通驱动强度 |
+| `0x020e024c` | `0x00000028` | DRAM_RAS | 行地址选通驱动强度 |
+| `0x020e0490` | `0x00000028` | GRP_ADDDS | 地址总线驱动强度组 |
+| `0x020e0288` | `0x00000028` | DRAM_RESET | 复位引脚驱动强度 |
+| `0x020e0260` | `0x00000028` | DRAM_SDODT0 | ODT0 引脚驱动强度 |
+| `0x020e0264` | `0x00000028` | DRAM_SDODT1 | ODT1 引脚驱动强度 |
+| `0x020e04a0` | `0x00000028` | GRP_CTLDS | 控制信号驱动强度组 |
+| `0x020e0494` | `0x00020000` | GRP_DDRMODE_CTL | DQS 设置为 DDR 差分模式 |
+| `0x020e0280` | `0x00000028` | DRAM_SDQS0 | DQS0 驱动强度 |
+| `0x020e0284` | `0x00000028` | DRAM_SDQS1 | DQS1 驱动强度 |
+| `0x020e04b0` | `0x00020000` | GRP_DDRMODE | 数据总线 DDR 模式 |
+| `0x020e0498` | `0x00000028` | GRP_B0DS | 数据 Byte0 驱动强度组 |
+| `0x020e04a4` | `0x00000028` | GRP_B1DS | 数据 Byte1 驱动强度组 |
+| `0x020e0244` | `0x00000028` | DRAM_DQM0 | 数据掩码 0 驱动强度 |
+| `0x020e0248` | `0x00000028` | DRAM_DQM1 | 数据掩码 1 驱动强度 |
+
+`0x28` 是常见的驱动强度配置（约 34Ω），`0x00020000` 设置 DDR 差分模式。如果板子上信号质量差（过冲/下冲严重），可适当调整 DSE 值。
+
+**第四段：PHY 校准预设值**
+
+在初始化前预设 PHY 层的延迟线初始值，后续硬件自动校准会在此基础上精细调整：
+
+| 寄存器 | 值 | 含义 |
+|--------|-----|------|
+| `MPZQHWCTRL` (0x021b0800) | `0xA1390003` | 使能硬件 ZQ 校准（一次性 + 周期性） |
+| `MPWLDECTRL` (0x021b080c) | `0x00000000` | Write Leveling 延迟初始值 = 0 |
+| `MPDGCTRL0` (0x021b083c) | `0x00000000` | Read DQS Gating 起始延迟 = 0 |
+| `MPRDDLCTL` (0x021b0848) | `0x40404040` | Read DQS 延迟 = 0x40（默认值） |
+| `MPWRDLCTL` (0x021b0850) | `0x40404040` | Write DQS 延迟 = 0x40（默认值） |
+| `MPRDDQBY0DL` (0x021b081c) | `0x33333333` | Read DQ Byte0 延迟 |
+| `MPRDDQBY1DL` (0x021b0820) | `0x33333333` | Read DQ Byte1 延迟 |
+| `MPWRDQBY0DL` (0x021b082c) | `0xF3333333` | Write DQ Byte0 延迟 |
+| `MPWRDQBY1DL` (0x021b0830) | `0xF3333333` | Write DQ Byte1 延迟 |
+| `MPDCCR` (0x021b08c0) | `0x00921012` | DQS/CLK 占空比校准 |
+| `MPMUR0` (0x021b08b8) | `0x00000800` | 强制测量完成校准（frc_msr） |
+
+> **注意**：注释明确写了 *"may need to run write leveling calibration to fine tune these settings"*。这些默认值只是起点，不同 PCB 布局需要重新运行 ddr_stress_tester 获取最优值。
+
+**第五段：MMDC 控制器核心寄存器**
+
+```text
+setmem /32    0x021b0004 =    0x0002002D    // MMDC0_MDPDC  预充电控制
+setmem /32    0x021b0008 =    0x1B333030    // MMDC0_MDOTC  ODT 时序
+setmem /32    0x021b000c =    0x676B52F3    // MMDC0_MDCFG0 时序配置 0
+setmem /32    0x021b0010 =    0xB66D0B63    // MMDC0_MDCFG1 时序配置 1
+setmem /32    0x021b0014 =    0x01FF00DB    // MMDC0_MDCFG2 时序配置 2
+setmem /32    0x021b0018 =    0x00211740    // MMDC0_MDMISC  杂项配置
+setmem /32    0x021b001c =    0x00008000    // MMDC0_MDSCR  配置请求位
+setmem /32    0x021b002c =    0x000026D2    // MMDC0_MDRWD  超时控制
+setmem /32    0x021b0030 =    0x006B1023    // MMDC0_MDOR   输出延迟
+setmem /32    0x021b0040 =    0x0000004F    // MDASP        片选分区
+setmem /32    0x021b0000 =    0x84180000    // MMDC0_MDCTL  几何架构配置
+```
+
+其中 `MDCTL`（`0x84180000`）最为关键，解码如下：
+
+| 字段 | 值 | 含义 |
+|------|-----|------|
+| `SDE_TO_CHIP` | 1 | 片选使能 |
+| `SDDRC` | DDR3 | DDR3 类型 |
+| `ROW` | 15 | 15 位行地址 |
+| `COL` | 10 | 10 位列地址 |
+| `BANK` | 3（= 8 Bank） | 8 Bank |
+| `DSIZ` | 1（= x16） | 16 位数据总线 |
+
+`MDMISC`（`0x00211740`）包含 RALAT=5（读访问延迟）、COL=10 等配置。注释提到在 528MHz 板上可考虑降低 RALAT 以获得更好的低频性能。
+
+**第六段：JEDEC 模式寄存器写入序列**
+
+这是 JEDEC 标准规定的 DDR3 上电初始化序列——通过 MDSCR 寄存器依次写入 MR2→MR3→MR1→MR0→ZQCL：
+
+```text
+setmem /32    0x021b001c =    0x02008032    // MR2 写入: CWL=6, RttWR
+setmem /32    0x021b001c =    0x00008033    // MR3 写入: 0
+setmem /32    0x021b001c =    0x00048031    // MR1 写入: ODIC, DLL 使能
+setmem /32    0x021b001c =    0x15208030    // MR0 写入: BL=8, CL=11, DLL Reset
+setmem /32    0x021b001c =    0x04008040    // ZQCL 校准命令
+```
+
+MDSCR 寄存器格式：`[CMD_TYPE:15:12][CS:11:8][MR_VALUE:7:0]`。例如 `0x02008032`：
+- `0x2`（bit 13-12）= Load Mode Register 命令
+- `0x0`（bit 11-8）= CS0
+- `0x32` = MR2 值 = `0b00000010`（CWL=6）
+
+ZQCL 命令 `0x04008040`：`0x4` = ZQ Calibration 命令类型。
+
+**第七段：功耗管理与收尾**
+
+```text
+setmem /32    0x021b0020 =    0x00007800    // MDREF 自动刷新计数
+setmem /32    0x021b0818 =    0x00000227    // MPODTCTRL ODT 控制
+setmem /32    0x021b0004 =    0x0002556D    // MDPDC 使能 Power Down
+setmem /32    0x021b0404 =    0x00011006    // MAPSR 空闲自动进入 Self-Refresh
+setmem /32    0x021b001c =    0x00000000    // MDSCR 清除配置位，初始化完成
+```
+
+最后清除 `MDSCR` 的 configuration bit，MMDC 退出配置模式，DDR 进入正常工作状态。
+
 ### 13.3 芯片手册参数提取
 
 初始化 i.MX6ULL 的 DDR 之前，需要从 DDR 芯片（如 Micron、Nanya 等）的 DataSheet 中提取以下三类参数。
