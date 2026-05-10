@@ -662,23 +662,10 @@ MMDC 内置 **4 个独占监视器**，每个监视器对应一个配置的 AXI 
 > **类比**：独占访问就像银行的"保险箱租用协议"——你先登记（独占读，监视器 ON），然后你可以来取（独占写，返回 EXOKAY）。但如果期间有人普通访问了同一个保险箱（非独占写），你的协议就失效了（监视器 OFF），再来取就失败了（返回 OKAY 表示独占失败）。
 
 
-### 12.10 校准机制
 
-> **对应手册**：§35.11 Calibration Process（§35.11.2 ZQ calibration、§35.11.3~§35.11.6 读/写/Write Leveling 校准、§35.11.10 Duty cycle adjustment）
+### 12.10 ODT 配置（On-Die Termination）
 
-MMDC PHY 支持多种校准（可硬件自动或软件手动）。ZQ/ODT 的原理详见 [01_ddr_theory.md](01_ddr_theory.md) 第 7 章 DDR3 部分，本节只列出 MMDC 寄存器层面的配置。
-
-#### ZQ 校准（MMDC 侧）
-
-**校准触发时机**：
-
-| 类型 | 触发方式 | MMDC 寄存器 | 说明 |
-|------|---------|-----------|------|
-| ZQ Short | 硬件自动（周期性） | `MPZQHWCTRL` | 短期校准，维持驱动强度精度 |
-| ZQ Long | 硬件自动（退出 Self Refresh） | `MPZQHWCTRL` | 长期校准，完全重新校准 |
-| ZQ INIT | 软件手动 | `MPZQHWCTRL` | 初始化时执行 |
-
-**MMDC 硬件 ZQ 校准算法**（5 位二进制搜索）详见 13.4.5 节。
+> **对应手册**：§35.10 ODT Configuration
 
 #### ODT 配置（MMDC 侧）
 
@@ -717,95 +704,9 @@ JEDEC DDR3 标准规定，从控制器断言 DRAM_ODT 信号到 DDR 芯片内部
 
 > **类比**：ODT 就像给没在说话的 DDR 芯片穿上吸音棉——即使它没被访问，信号线上传播的电信号也会到达它的引脚，如果不终结就会产生反射。MPODTCTRL 就是决定什么时候给谁穿吸音棉的开关。
 
-#### 读/写数据校准
+### 12.11 刷新方案（Refresh Scheme）
 
-| 校准类型 | MMDC 寄存器 | 说明 |
-|---------|-----------|------|
-| 读数据校准 | `MPRDDLCTL` | 调整读 DQS 与读数据字节的对齐 |
-| 读 DQS 门控校准 | `MPDGCTRL` | 调整 DQS 门控与读前导窗口的对齐（仅 DDR3） |
-| 写数据校准 | `MPWRDLCTL` | 调整写 DQS 与写数据字节的对齐 |
-| Write Leveling | `MPWLDECTRL` | 调整写 DQS 与 CK 差分时钟的对齐 |
-| 读精细调优 | `MPRDDQBYnDL` | 每个读数据位最多 7 个延迟线单位 |
-| 写精细调优 | `MPWRDQBYnDL` | 每个写数据位最多 3 个延迟线单位 |
-
-#### 精细调优（Fine Tuning）
-
-在校准（粗调）完成后，MMDC 还提供了一组精细调优电路，用于补偿每个引脚级别的微小偏差。
-
-**写精细调优**（Write Fine Tuning，`§35.11.7`）：
-
-对每个 DQ/DM 引脚相对于 DQS 进行**最多 100 ps**的微调。通过 `MPWRDQBYnDL` 寄存器，每个 DQ/DM 可独立配置 0~3 个延迟单位，每个单位约 **30~35 ps**。
-
-```
-总写延迟 = MPWRDLCTL[WR_DL_ABS_OFFSET]（粗调，可达半个周期）
-         + MPWRDQBYnDL[wr_dqN_del]（精细，最多 3 × 35ps ≈ 100ps）
-```
-
-**读精细调优**（Read Fine Tuning，`§35.11.8`）：
-
-对每个读入的 DQ 引脚相对于 DQS 进行 **±100 ps** 的微调。通过 `MPRDDQBYnDL` 寄存器，每个 DQ 可独立配置最多 7 个延迟单位。
-
-> **有趣的读精细调优机制**：如果 DQ 落后 DQS 太多（即使精细调优加到最大也追不上），MMDC 采用一个巧妙的方法——先把 DQS 延迟减 100 ps（让"裁判"等一等），再把 DQ 加 200 ps（让"选手"跑快点），净效果 = DQ 相对 DQS 提前了 100 ps。
-
-**ZQ 精细调优**（ZQ Fine Tuning，`§35.11.9`）：
-
-通过 `MPPDCMPR2[ZQ_PU_OFFSET]` 和 `MPPDCMPR2[ZQ_PD_OFFSET]` 在 ZQ 校准结果基础上额外偏移 **-7 ~ +7**。用于补偿：
-- PCB 走线长度差异导致的阻抗变化
-- 特殊负载场景（多颗粒并联时总负载不同）
-- 温度补偿（高温下驱动强度下降，可手动偏移补偿）
-
-**DDR 时钟精细调优**：
-
-通过 `MPCKDL` 寄存器对 DDR 时钟 CK0 进行微调（`SDclk0_del` 字段，0~3 个延迟单位）。用于补偿 CLK 与 DQS/地址线之间的 PCB 走线 skew。
-
-**占空比调整**（Duty Cycle Adjustment，`MPDCCR`）：
-
-DDR 时钟是差分信号（CK/CKB），理想情况下高低各占 50%。但由于 PCB 走线或缓冲器差异，可能产生占空比失真。`MPDCCR` 寄存器可以调整 CK/CKB 的占空比，确保时钟波形对称。这在高频 DDR3 运行时尤为重要，因为非对称时钟会导致 setup/hold 时间裕量不均匀。
-
-
-### 12.11 DLL 切换（DLL Switching）
-
-> **对应手册**：§35.9 DLL Switching（§35.9.1 DLL Off mode）
-
-#### DLL Off 模式
-
-仅在 DDR3 模式下支持，允许 DDR 在**低频**下运行（低于 125 MHz，JEDEC 标准定义）。DLL Off 模式用于 DVFS 降频场景。
-
-**DLL On → DLL Off 切换步骤**：
-
-1. 断言 `CON_REQ`，等待 `CON_ACK`
-2. 禁用可能冲突的 Power Down 定时器（`MAPSR[PSD]`, `MDPDC[PWDT_0/1]`, `MDPDC[PRCT_0/1]`）
-3. 执行 Precharge All 命令（通过 `MDSCR`）
-4. MRW 到 MR1：禁用 RTT Nom（A9,A6,A2=0），DLL ON（A0=1）
-5. MRW 到 MR2：更新 CWL = 6
-6. MRW 到 MR0：更新 CL = 6
-7. 反断言 `CON_REQ`
-8. 进入自刷新模式，在 ACK 后**切换频率**
-9. 退出自刷新
-10. 断言 `CON_REQ`，等待 `CON_ACK`
-11. 通过 IOMUX 在 DQS 上使能下拉电阻
-12. 更新 MMDC 寄存器：tCWL=6、tCL=6（`MDCFG0/1`），禁用 ODT（`MPODTCTRL=0`），禁用 DQS 门控（`MPDGCTRL0[DG_DIS]=1`）
-13. 恢复 Power Down 定时器
-14. 反断言 `CON_REQ`
-
-**DLL Off → DLL On 切换步骤**：
-
-1. Precharge All
-2. 进入自刷新 → 切换频率 → 退出自刷新
-3. 断言 `CON_REQ`，等待 `CON_ACK`
-4. 禁用 Power Down 定时器
-5. MRW 到 MR1：启用 RTT Nom，DLL ON（A0=0）
-6. MRW 到 MR0：重置 DLL（A8），更新 CL
-7. MRW 到 MR2：更新 CWL
-8. 执行 ZQ 命令
-9. 重新配置 MMDC：更新 tCWL/tCL，启用 ODT，启用 DQS 门控，禁用 DQS 下拉
-10. 恢复 Power Down 定时器
-11. 反断言 `CON_REQ`
-
-
-### 12.12 刷新方案（Refresh Scheme）
-
-> **对应手册**：§35.4.9 Refresh Scheme
+> **对应手册**：§35.4.8 Refresh Scheme
 
 MMDC 的自动刷新由 `MDREF` 寄存器控制，支持灵活的刷新策略，允许系统在每次刷新周期内配置期望的 AXI 访问延迟。
 
@@ -829,7 +730,7 @@ MMDC 的自动刷新由 `MDREF` 寄存器控制，支持灵活的刷新策略，
 > **权衡理解**：方案 1 一次性连续发 8 次刷新命令，DDR 在 tRFC × 8 时间内不能读写（挂起最长），但两次刷新间隔最长（31.25μs），AXI 总线有更多连续可用时间；方案 4 每次只发 1 次刷新，DDR 挂起最短，但需要更频繁地打断 AXI 访问。**选择哪个方案取决于系统对延迟突发性的容忍度**。
 
 
-### 12.13 省电模式
+### 12.12 省电模式（Power Saving）
 
 > **对应手册**：§35.4.6 Power Saving and Clock Frequency Change modes（§35.4.6.1 Power saving general、§35.4.6.2 Self refresh and Frequency change entry/exit）
 
@@ -888,7 +789,7 @@ DDR 芯片在 Self Refresh 模式下**自行管理刷新操作**，MMDC 可以�
 通过 `ESDPDC` 的 `PRCT_0` 和 `PRCT_1` 字段，可配置每个片选在空闲 N 个周期后**自动预充电所有 Bank**。可配置值范围：2 ~ 128 个周期。
 
 
-### 12.14 复位机制
+### 12.13 复位机制（Reset）
 
 > **对应手册**：§35.4.7 Reset（§35.4.7.1 Hard reset、§35.4.7.2 Warm reset、§35.4.7.3 Software reset）
 
@@ -930,7 +831,112 @@ MMDC 支持三种复位方式，按影响程度从轻到重排列：
 > **应用场景**：热复位和软件复位适用于需要在不复位 DDR 内容的前提下复位 MMDC 控制器的场景，如 SoC 系统级复位但保持 DDR 数据。
 
 
-### 12.15 调试监视器与性能分析（Debug & Profiling）
+### 12.14 DLL 切换（DLL Switching）
+
+> **对应手册**：§35.9 DLL Switching（§35.9.1 DLL Off mode）
+
+#### DLL Off 模式
+
+仅在 DDR3 模式下支持，允许 DDR 在**低频**下运行（低于 125 MHz，JEDEC 标准定义）。DLL Off 模式用于 DVFS 降频场景。
+
+**DLL On → DLL Off 切换步骤**：
+
+1. 断言 `CON_REQ`，等待 `CON_ACK`
+2. 禁用可能冲突的 Power Down 定时器（`MAPSR[PSD]`, `MDPDC[PWDT_0/1]`, `MDPDC[PRCT_0/1]`）
+3. 执行 Precharge All 命令（通过 `MDSCR`）
+4. MRW 到 MR1：禁用 RTT Nom（A9,A6,A2=0），DLL ON（A0=1）
+5. MRW 到 MR2：更新 CWL = 6
+6. MRW 到 MR0：更新 CL = 6
+7. 反断言 `CON_REQ`
+8. 进入自刷新模式，在 ACK 后**切换频率**
+9. 退出自刷新
+10. 断言 `CON_REQ`，等待 `CON_ACK`
+11. 通过 IOMUX 在 DQS 上使能下拉电阻
+12. 更新 MMDC 寄存器：tCWL=6、tCL=6（`MDCFG0/1`），禁用 ODT（`MPODTCTRL=0`），禁用 DQS 门控（`MPDGCTRL0[DG_DIS]=1`）
+13. 恢复 Power Down 定时器
+14. 反断言 `CON_REQ`
+
+**DLL Off → DLL On 切换步骤**：
+
+1. Precharge All
+2. 进入自刷新 → 切换频率 → 退出自刷新
+3. 断言 `CON_REQ`，等待 `CON_ACK`
+4. 禁用 Power Down 定时器
+5. MRW 到 MR1：启用 RTT Nom，DLL ON（A0=0）
+6. MRW 到 MR0：重置 DLL（A8），更新 CL
+7. MRW 到 MR2：更新 CWL
+8. 执行 ZQ 命令
+9. 重新配置 MMDC：更新 tCWL/tCL，启用 ODT，启用 DQS 门控，禁用 DQS 下拉
+10. 恢复 Power Down 定时器
+11. 反断言 `CON_REQ`
+
+
+### 12.15 校准机制
+
+> **对应手册**：§35.11 Calibration Process（§35.11.2 ZQ calibration、§35.11.3~§35.11.6 读/写/Write Leveling 校准、§35.11.10 Duty cycle adjustment）
+
+MMDC PHY 支持多种校准（可硬件自动或软件手动）。ZQ/ODT 的原理详见 [01_ddr_theory.md](01_ddr_theory.md) 第 7 章 DDR3 部分，本节只列出 MMDC 寄存器层面的校准配置。ODT 配置见 12.10 节。
+
+#### ZQ 校准（MMDC 侧）
+
+**校准触发时机**：
+
+| 类型 | 触发方式 | MMDC 寄存器 | 说明 |
+|------|---------|-----------|------|
+| ZQ Short | 硬件自动（周期性） | `MPZQHWCTRL` | 短期校准，维持驱动强度精度 |
+| ZQ Long | 硬件自动（退出 Self Refresh） | `MPZQHWCTRL` | 长期校准，完全重新校准 |
+| ZQ INIT | 软件手动 | `MPZQHWCTRL` | 初始化时执行 |
+
+**MMDC 硬件 ZQ 校准算法**（5 位二进制搜索）详见 13.4.5 节。
+
+#### 读/写数据校准
+
+| 校准类型 | MMDC 寄存器 | 说明 |
+|---------|-----------|------|
+| 读数据校准 | `MPRDDLCTL` | 调整读 DQS 与读数据字节的对齐 |
+| 读 DQS 门控校准 | `MPDGCTRL` | 调整 DQS 门控与读前导窗口的对齐（仅 DDR3） |
+| 写数据校准 | `MPWRDLCTL` | 调整写 DQS 与写数据字节的对齐 |
+| Write Leveling | `MPWLDECTRL` | 调整写 DQS 与 CK 差分时钟的对齐 |
+| 读精细调优 | `MPRDDQBYnDL` | 每个读数据位最多 7 个延迟线单位 |
+| 写精细调优 | `MPWRDQBYnDL` | 每个写数据位最多 3 个延迟线单位 |
+
+
+#### 精细调优（Fine Tuning）
+
+在校准（粗调）完成后，MMDC 还提供了一组精细调优电路，用于补偿每个引脚级别的微小偏差。
+
+**写精细调优**（Write Fine Tuning，`§35.11.7`）：
+
+对每个 DQ/DM 引脚相对于 DQS 进行**最多 100 ps**的微调。通过 `MPWRDQBYnDL` 寄存器，每个 DQ/DM 可独立配置 0~3 个延迟单位，每个单位约 **30~35 ps**。
+
+```
+总写延迟 = MPWRDLCTL[WR_DL_ABS_OFFSET]（粗调，可达半个周期）
+         + MPWRDQBYnDL[wr_dqN_del]（精细，最多 3 × 35ps ≈ 100ps）
+```
+
+**读精细调优**（Read Fine Tuning，`§35.11.8`）：
+
+对每个读入的 DQ 引脚相对于 DQS 进行 **±100 ps** 的微调。通过 `MPRDDQBYnDL` 寄存器，每个 DQ 可独立配置最多 7 个延迟单位。
+
+> **有趣的读精细调优机制**：如果 DQ 落后 DQS 太多（即使精细调优加到最大也追不上），MMDC 采用一个巧妙的方法——先把 DQS 延迟减 100 ps（让"裁判"等一等），再把 DQ 加 200 ps（让"选手"跑快点），净效果 = DQ 相对 DQS 提前了 100 ps。
+
+**ZQ 精细调优**（ZQ Fine Tuning，`§35.11.9`）：
+
+通过 `MPPDCMPR2[ZQ_PU_OFFSET]` 和 `MPPDCMPR2[ZQ_PD_OFFSET]` 在 ZQ 校准结果基础上额外偏移 **-7 ~ +7**。用于补偿：
+- PCB 走线长度差异导致的阻抗变化
+- 特殊负载场景（多颗粒并联时总负载不同）
+- 温度补偿（高温下驱动强度下降，可手动偏移补偿）
+
+**DDR 时钟精细调优**：
+
+通过 `MPCKDL` 寄存器对 DDR 时钟 CK0 进行微调（`SDclk0_del` 字段，0~3 个延迟单位）。用于补偿 CLK 与 DQS/地址线之间的 PCB 走线 skew。
+
+**占空比调整**（Duty Cycle Adjustment，`MPDCCR`）：
+
+DDR 时钟是差分信号（CK/CKB），理想情况下高低各占 50%。但由于 PCB 走线或缓冲器差异，可能产生占空比失真。`MPDCCR` 寄存器可以调整 CK/CKB 的占空比，确保时钟波形对称。这在高频 DDR3 运行时尤为重要，因为非对称时钟会导致 setup/hold 时间裕量不均匀。
+
+
+### 12.16 调试监视器与性能分析（Debug & Profiling）
 
 > **对应手册**：§35.6 MMDC Debug（Hardware debug monitor、SBS software monitor）、§35.7 MMDC Profiling
 
