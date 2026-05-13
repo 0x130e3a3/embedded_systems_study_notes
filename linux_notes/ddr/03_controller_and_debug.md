@@ -1062,57 +1062,219 @@ JEDEC DDR3 标准规定，从控制器断言 DRAM_ODT 信号到 DDR 芯片内部
 
 ### 12.11 校准流程
 
-> **对应手册**：Â§35.11 Calibration Process
+> **对应手册**：§35.11 Calibration Process
 
-
-
-MMDC PHY 支持多种校准（可硬件自动或软件手动）。ZQ/ODT 的原理详见 [01_ddr_theory.md](01_ddr_theory.md) 第 7 章 DDR3 部分，本节只列出 MMDC 寄存器层面的校准配置。ODT 配置见 12.10 节。
-
+MMDC PHY 支持多种校准（可硬件自动或软件手动）。ZQ/ODT 的原理详见 [01_ddr_theory.md](01_ddr_theory.md) 第 7 章 DDR3 部分，本节列出 MMDC 寄存器层面的校准配置与详细算法。ODT 配置见 12.10 节。校准失败排查见 13.7 节。
 
 #### 12.11.1 延迟线
 
-> **对应手册**：Â§35.11.1 Delay-line
-
-MMDC PHY 使用可编程延迟线（Delay-line）来实现各种校准。延迟线可以对信号路径进行精细的时序调整，单位为固定的延迟步长。所有校准算法（ZQ、DQS门控、读/写校准等）本质上都是在搜索最优的延迟线配置值。
-
+> **对应手册**：§35.11.1 Delay-line
+- 默认延迟 = **1/4 时钟周期**
+- 最高频率下，最大可调至 **1/2 时钟周期**
+- 正常运行时，延迟线在每次 DDR 刷新周期内**自动测量**以保持精度
+- 校准开始前，延迟线的初始值必须是"合法值"（即 strobe 位于对应 data window 内），但不必是最优值
 
 #### 12.11.2 ZQ 校准
 
-> **对应手册**：Â§35.11.2 ZQ calibration
+> **对应手册**：§35.11.2 ZQ calibration
+ZQ 校准分为两类：**DDR I/O 焊盘驱动强度校准**和**DDR 芯片 ZQ 命令**。
 
+**ZQ 命令时序要求**：
+- 发 ZQCL/ZQCS 前必须 **Precharge All** + 等待 tRP（让所有 bank 回到空闲状态）
+- ZQ 期间除 CK 外所有内存线保持静默（quiet-line 要求）——不能有任何其他命令干扰
+- ZQCL 时长：复位后首次 512 周期，其他 ZQCL 256 周期，ZQCS 64 周期
+- ZQ 命令通过 A10 引脚区分 Long/Short，通过 CS 选择目标芯片（CS0/CS1/两者）
 
-**校准触发时机**：
+**MPZQHWCTRL 寄存器关键字段**：
 
-| 类型 | 触发方式 | MMDC 寄存器 | 说明 |
-|------|---------|-----------|------|
-| ZQ Short | 硬件自动（周期性） | `MPZQHWCTRL` | 短期校准，维持驱动强度精度 |
-| ZQ Long | 硬件自动（退出 Self Refresh） | `MPZQHWCTRL` | 长期校准，完全重新校准 |
-| ZQ INIT | 软件手动 | `MPZQHWCTRL` | 初始化时执行 |
+| 字段 | 作用 |
+|------|------|
+| \`ZQ_HW_PER\` | ZQ Short 周期计数器（多少周期自动触发一次短期校准） |
+| \`ZQ_MODE\` | 决定 MMDC 执行 I/O 焊盘校准和/或发 ZQ 命令给 DDR 芯片 |
+| \`ZQ_HW_FOR\` | 强制单次硬件 ZQ 校准（非周期性） |
+| \`ZQ_EARLY_COMPARATOR_EN_TIMER\` | 比较器使能前的等待周期数（确保 ZQ 信号稳定） |
+| \`ZQ_HW_PU_RES\` / \`ZQ_HW_PD_RES\` | 存储上拉/下拉校准结果（5 位值） |
+| \`ZQ_CMP_OUT_SMP\` | ZQ 信号驱动到采样比较器之间的延迟（00=7周期, 01=15周期） |
 
-**MMDC 硬件 ZQ 校准算法**（5 位二进制搜索）详见 13.4.5 节。
+**硬件自动 ZQ 校准算法**（5 位二进制搜索）：
+1. 上拉校准：从 \`zq_pu_val = 0\` 开始，通过比较器对比外部 240Ω 参考电阻（RZQ），判断输出电压是否 > Vdd/2 → 确定内部电阻是否 < 240Ω，逐位收敛到 5 位最优值
+2. 下拉校准：同理，从 \`zq_pd_val = 0\` 开始逐位试探
+3. 结果分别写入 \`MPZQHWCTRL[ZQ_HW_PU_RES]\` 和 \`MPZQHWCTRL[ZQ_HW_PD_RES]\`
 
+**ZQ 校准触发时机**：
 
+| 类型 | 触发方式 | 说明 |
+|------|---------|------|
+| ZQ Long | 上电初始化、退出 Self Refresh、退出慢速 Precharge PD | 完全重新校准，时间长 |
+| ZQ Short | 硬件周期性（由 ZQ_HW_PER 计数器触发） | 维持驱动强度精度，补偿温度/电压漂移 |
+| ZQ Init | 软件手动（首次上电，在 MMDC 使能之前） | 初始化校准 |
+
+> **类比**：把 ZQ 校准想象定期给吉他调音。ZQ Init = 新琴首次调音（大调）；ZQ Long = 换了弦后重新调（大调）；ZQ Short = 演奏过程中偶尔微调（小调）。温度变化、电压波动就像温湿度变化让琴弦松紧变化，需要定期 Short 校准来补偿。
+
+**ZQ 微调**（Fine Tuning）：通过 \`MPPDCMPR2[ZQ_PU_OFFSET]\` 和 \`MPPDCMPR2[ZQ_PD_OFFSET]\` 可在校准结果基础上额外偏移 -7 ~ +7。用于补偿 PCB 走线差异或特殊负载场景。
 
 #### 12.11.3 读 DQS 门控校准
 
-> **对应手册**：Â§35.11.3 Read DQS Gating Calibration
-MMDC 支持硬件自动和软件手动两种读 DQS 门控校准。硬件自动校准使用 MPR（Multipurpose Register）或预定义值进行校准。详细算法见第 13 章校准相关内容。
+> **对应手册**：§35.11.3 Read DQS Gating Calibration
+**它校准什么**：Read DQS Gating 校准的是**DQS 门控信号与读前导（preamble）窗口的中心对齐**。DDR3 读操作时，控制器需要知道"什么时候打开耳朵听 DDR 返回的数据"——开早了听到噪声，开晚了错过数据。
+
+**两种操作模式**：
+- **MPR 模式**（Multi Purpose Register）：让 DDR 芯片从内部多功能寄存器返回已知固定数据（JEDEC 标准定义的测试模式）
+- **预定义值模式**：控制器先向 DDR 写入一组预定义数据（通过 `MPPDCMPR1[PDV1, PDV2]` 配置），再读回比较
+
+**Tmod + 4 要求**：在 MPR 模式下，两次 MRS 命令之间至少间隔 Tmod 周期（DDR3 中 Tmod = max(tMRD, tMOD)）。MMDC 在校准中等待 Tmod+4 周期确保 DDR 内部状态完全更新。
+
+**HC_DEL vs DL_ABS_OFFSET 的区别**：
+
+| 字段 | 精度 | 范围 | 含义 |
+|------|------|------|------|
+| `DG_HC_DEL` | 半周期（0.5 cycle）步进 | 0~15（4 位） | 粗调延迟 = HC_DEL × 0.5 × 周期 |
+| `DG_DL_ABS_OFFSET` | 1/256 周期步进 | 0~127（7 位） | 精细延迟 = (OFFSET/256) × 周期 |
+
+总延迟 = HC_DEL × 0.5 × 周期 + (OFFSET/256) × 周期
+
+**硬件自动校准算法**（边界搜索法，35 步）：
+
+阶段一 — 找初始点是否合法：
+1. 等待延迟线更新完成，满足 Tmod+4 要求
+2. 发读命令到 DDR，等待 16 或 32 周期（由 `DG_CMP_CYC` 决定）
+3. 比较返回数据与预定义/MPR 值
+4. 如果比较失败 → DQS 门控在非法时间点，报错 `HW_DG_ERR`
+5. 如果比较通过 → 进入阶段二
+
+阶段二 — 向下搜索下边界（减延迟）：
+6. 重置读 FIFO（`RST_RD_FIFO = 1`）
+7. 每个字节的 DQS 门控延迟减少半个周期（`DG_HC_DEL + 1`）
+8. 发读命令 + 比较
+9. 重复 6~8，直到比较失败 → 记录临时下边界
+
+阶段三 — 向上搜索上边界（加延迟）：
+10. 从下边界开始，每次增加半个周期
+11. 发读命令 + 比较
+12. 比较通过继续加，直到比较失败 → 记录临时上边界
+
+阶段四 — 精确定位边界（用 DL_ABS_OFFSET 步进）：
+13. 回到下边界 - 半个周期位置
+14. 每次增加 1 个 DL_ABS_OFFSET 单位（1/256 周期）
+15. 发读 + 比较，精确找到下边界
+16. 回到上边界 - 半个周期位置
+17. 同样方式精确找到上边界 - 1
+
+阶段五 — 计算最优值：
+18. 最优值 = (下边界 + 上边界) / 2，写入 `MPDGCTRLn[DG_DL_ABS_OFFSETn]`
+19. 清零 `HW_DG_EN` 表示校准完成
+20. 边界结果同时存入 `MPDGHWSTn[HW_DG_UPn]` 和 `MPDGHWSTn[HW_DG_LOWn]` 供软件读取
+
+> **关键理解**：为什么先找边界再取平均？因为数据窗口（DQ valid window）在 DQS 周期内有一个"有效区间"。找到这个区间的左边界和右边界，取中间点就是最安全的位置——即使温度漂移或电压波动，也有最大裕量。
+
+软件手动校准原理完全相同，但每一步由软件通过 `MPDGCTRL` 手动触发并读取比较结果，通常用于调试。
 
 #### 12.11.4 读校准
 
-> **对应手册**：Â§35.11.4 Read Calibration
-读校准通过 `MPRDDLCTL` 寄存器调整读 DQS 与读数据字节的对齐。支持硬件自动和软件手动两种模式。
+> **对应手册**：§35.11.4 Read Calibration
+**它校准什么**：在 Read DQS Gating 已经找到"什么时候打开耳朵"之后，读校准确保**打开耳朵后听到的 DQ 数据确实是对齐在 DQS  strobe 中心的**。Gating 校准的是"门控信号何时开启"，Read 校准的是"DQS strobe 相对于 DQ 数据的相位"。
+
+**前置条件**：Read DQS Gating 校准必须已完成。
+
+**硬件自动校准步骤**（与 DQS Gating 类似的边界搜索法）：
+
+1. 等待读延迟线更新完成，满足 Tmod+4 要求
+2. 发读命令到 DDR，等待 16 或 32 周期（由 `MPRDDLHWCTL[HW_RD_DL_CMP_CYC]` 决定）
+3. 比较返回数据与预定义/MPR 值
+4. 如果比较失败 → 初始读 DQS 不在 DQ 窗口内，报错 `MPRDDLHWCTL[HW_RD_DL_ERRn]`（n = 字节编号）
+5. 如果比较通过 → 开始向下搜索
+
+向下搜索下边界：
+6. 重置读 FIFO（`MPDGCTRL[RST_RD_FIFO] = 1`）
+7. 读延迟减 1（`MPRDDLCTL[RD_DL_ABS_OFFSETn] -= 1`）
+8. 发读 + 比较
+9. 重复 6~8 直到比较失败 → 下边界存入 `MPRDDLHWSTn[HW_RD_DL_LOWn]`
+
+向上搜索上边界：
+10. 从下边界开始，读延迟每次加 1
+11. 发读 + 比较
+12. 比较通过继续加，直到比较失败 → 上边界存入 `MPRDDLHWSTn[HW_RD_DL_UPn]`
+
+计算最优值：
+13. 最优值 = (下边界 + 上边界) / 2，写入 `MPRDDLCTL[RD_DL_ABS_OFFSETn]`
+14. 清零 `HW_RD_DL_EN` 表示校准完成
+
+**错误处理**：如果初始值就不在 DQ 窗口内（步骤 4 失败），MMDC 在 `MPRDDLHWCTL[HW_RD_DL_ERRn]` 中标记对应字节出错。排查方法：检查 DCD 中的初始延迟值是否合理，或 PCB 走线是否存在严重 skew。
 
 #### 12.11.5 写校准
 
-> **对应手册**：Â§35.11.5 Write Calibration
-写校准通过 `MPWRDLCTL` 寄存器调整写 DQS 与写数据字节的对齐。支持硬件自动和软件手动两种模式。
+> **对应手册**：§35.11.5 Write Calibration
+**它校准什么**：确保控制器发出的**写 DQS strobe 与写 DQ 数据在 DDR 芯片端对齐**。写操作时，DQS 和 DQ 同时从控制器发出，但由于 PCB 走线差异和芯片内部延迟，到达 DDR 芯片时可能不同步。
+
+**前置条件**：Write Leveling 校准必须已完成（确保 DQS 与 CLK 对齐）。
+
+**硬件自动校准步骤**（20 步）：
+
+1. 等待写延迟线更新完成（`MPWRDLCTL[WR_DL_ABS_OFFSETn]`）
+2. 发写命令到 DDR（bank 0, address 0），等待 16 或 32 周期
+3. 从 DDR 读回数据
+4. 与预定义值比较（使用 `MPPDCMPR1` 中配置的值）
+5. 如果比较失败 → 初始写 DQS 不在 DQ 窗口内，报错 `MPWRDLHWCTL[HW_WR_DL_ERRn]`
+
+向下搜索下边界：
+6. 重置读 FIFO
+7. 写延迟减 1（`MPWRDLCTL[WR_DL_ABS_OFFSETn] -= 1`）
+8. 发写 → 读回 → 比较
+9. 重复直到比较失败 → 下边界存入 `MPWRDLHWSTn[HW_WR_DL_LOWn]`
+
+向上搜索上边界：
+10. 从下边界开始，写延迟每次加 1
+11. 发写 → 读回 → 比较
+12. 比较通过继续加，直到比较失败 → 上边界存入 `MPWRDLHWSTn[HW_WR_DL_UPn]`
+
+计算最优值：
+13. 最优值 = (下边界 + 上边界) / 2，写入 `MPWRDLCTL[WR_DL_ABS_OFFSETn]`
+14. 清零 `HW_WR_DL_EN` 表示校准完成
+
+> **重要**：写校准的"写"是往 DDR 写数据，"校"是从 DDR 读回验证——写进去什么就读回什么来比对。所以写校准实际上依赖读通路的正确性（Read DQS Gating 和 Read Calibration 必须先完成）。
 
 #### 12.11.6 Write Leveling 校准
 
-> **对应手册**：Â§35.11.6 Write leveling Calibration
-Write Leveling 通过 `MPWLDECTRL` 寄存器调整写 DQS 与 CK 差分时钟的对齐，用于补偿 DDR3 模块上 CK 与 DQS 之间的 PCB 走线 skew。
+> **对应手册**：§35.11.6 Write leveling Calibration
+**Write Leveling 解决什么问题**：补偿 CLK 和 DQS 之间的 PCB 走线 skew（偏移）。
 
+**Fly-by 拓扑的引入**：
+
+DDR3 频率升高（800MT/s 起步），传统的 T 型分支走线产生信号反射。DDR3 改用 **Fly-by 拓扑**——命令/地址/时钟线像串糖葫芦一样依次穿过每颗 DDR 颗粒，但**数据线仍然是点对点直连**：
+
+```
+控制器 ── CLK/ADDR/CMD ──▶ ──▶ ──▶  (Fly-by)
+                             │      │
+                           DDR1   DDR2
+
+控制器 DQ/DQS ──────▶ DDR1（直连，距离短）
+```
+
+**结果**：写操作时，CLK 走 Fly-by 长路径，DQS 走点对点短路径，两者到达 DDR 芯片的时间不同，产生 skew。规范要求 **DQS 的中心要对齐 CLK 的边沿**，如果错位，DDR 用 DQS 采样 DQ 时可能采在跳变沿上。
+
+**Write Leveling 的校准过程**：
+
+1. 控制器通过 MRS 命令让 DDR 进入 Write Leveling 模式
+2. 控制器发出 DQS 脉冲
+3. DDR 芯片用本地收到的 **CLK 边沿** 采样 **DQS**，将结果反馈到 DQ 引脚
+4. 控制器读取 DQ 反馈：DQ = 0 → DQS 还没到，DQ = 1 → DQS 已经到了
+5. 逐步调整 DQS 延迟，直到找到 0→1 的跳变点
+
+**关键设计约束**：
+- 硬件自动校准最多检测 **1 个时钟周期**的 skew
+- 如果 DDR3 距离控制器太远，skew 超过 1 周期，需手动设置 `MPWLDECTRL[WL_CYC_DEL]`
+- **PCB Layout 要求**：DDR3 尽量靠近控制器，计算时钟信号到最远 DDR3 的飞行时间
+
+**硬件自动校准步骤**：
+1. DDR 进入 Write Leveling 模式（MRS 命令）
+2. MMDC 发 DQS 脉冲，采样反馈 DQ 位
+3. 每次增加 1/8 周期延迟，重复采样，直到 1 周期
+4. 查找 DQ 从 0→1 的第一次跳变点
+5. 精细调优：以 1/256 周期为步长微调
+6. 结果写入 `MPWLDECTRL[WL_DL_ABS_OFFSET]`
+7. DDR 退出 Write Leveling 模式（MRS 命令）
+
+> **重要**：如果校准结果是 100/256 周期，但设计者预估 skew 超过 2 周期，则 `MPWLDECTRL[WL_CYC_DEL]` 应设为 2，总延迟 = 2 + 100/256 周期。
 #### 12.11.7 写精细调优
 
 > **对应手册**：§35.11.7 Write fine tuning
@@ -1705,222 +1867,6 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 | **MPMUR0** | `0x021b08b8` | 强制测量控制 |
 | **MPPDCMPR2** | `0x021b0890` | ZQ 校准偏移微调 |
 | **MPODTCTRL** | `0x021b0818` | ODT 控制 |
-
-### 13.6 DDR 校准算法详解
-
-> **对应手册**：§35.11 Calibration Process（完整涵盖 ZQ、Read DQS Gating、Read/Write Calibration、Write Leveling、Fine Tuning、Duty Cycle）
-
-#### 校准前置条件
-
-**开始任何校准前必须**：
-- 禁用省电功能（`MDPDC[PWDTn]`, `MDPDC[PRCTn]`, `MAPSR[PSD]`）
-- 涉及 DDR MPR 模式或 Write Leveling 的校准前，还需：
-  - 禁用周期刷新（`MDREF[REF_SEL] = 0x3`），手动发刷新命令（`MDSCR[CMD] = 0x2`）
-  - 禁用自动省电（`MAPSR[PSD] = 1`）
-
-#### 延迟线（Delay-line）基础
-
-- 默认延迟 = **1/4 时钟周期**
-- 最高频率下，最大可调至 **1/2 时钟周期**
-- 正常运行时，延迟线在每次 DDR 刷新周期内**自动测量**以保持精度
-- 校准开始前，延迟线的初始值必须是"合法值"（即 strobe 位于对应 data window 内），但不必是最优值
-
-#### ZQ 校准详细过程
-
-ZQ 校准分为两类：**DDR I/O 焊盘驱动强度校准**和**DDR 芯片 ZQ 命令**。
-
-**ZQ 命令时序要求**：
-- 发 ZQCL/ZQCS 前必须 **Precharge All** + 等待 tRP（让所有 bank 回到空闲状态）
-- ZQ 期间除 CK 外所有内存线保持静默（quiet-line 要求）——不能有任何其他命令干扰
-- ZQCL 时长：复位后首次 512 周期，其他 ZQCL 256 周期，ZQCS 64 周期
-- ZQ 命令通过 A10 引脚区分 Long/Short，通过 CS 选择目标芯片（CS0/CS1/两者）
-
-**MPZQHWCTRL 寄存器关键字段**：
-
-| 字段 | 作用 |
-|------|------|
-| \`ZQ_HW_PER\` | ZQ Short 周期计数器（多少周期自动触发一次短期校准） |
-| \`ZQ_MODE\` | 决定 MMDC 执行 I/O 焊盘校准和/或发 ZQ 命令给 DDR 芯片 |
-| \`ZQ_HW_FOR\` | 强制单次硬件 ZQ 校准（非周期性） |
-| \`ZQ_EARLY_COMPARATOR_EN_TIMER\` | 比较器使能前的等待周期数（确保 ZQ 信号稳定） |
-| \`ZQ_HW_PU_RES\` / \`ZQ_HW_PD_RES\` | 存储上拉/下拉校准结果（5 位值） |
-| \`ZQ_CMP_OUT_SMP\` | ZQ 信号驱动到采样比较器之间的延迟（00=7周期, 01=15周期） |
-
-**硬件自动 ZQ 校准算法**（5 位二进制搜索）：
-1. 上拉校准：从 \`zq_pu_val = 0\` 开始，通过比较器对比外部 240Ω 参考电阻（RZQ），判断输出电压是否 > Vdd/2 → 确定内部电阻是否 < 240Ω，逐位收敛到 5 位最优值
-2. 下拉校准：同理，从 \`zq_pd_val = 0\` 开始逐位试探
-3. 结果分别写入 \`MPZQHWCTRL[ZQ_HW_PU_RES]\` 和 \`MPZQHWCTRL[ZQ_HW_PD_RES]\`
-
-**ZQ 校准触发时机**：
-
-| 类型 | 触发方式 | 说明 |
-|------|---------|------|
-| ZQ Long | 上电初始化、退出 Self Refresh、退出慢速 Precharge PD | 完全重新校准，时间长 |
-| ZQ Short | 硬件周期性（由 ZQ_HW_PER 计数器触发） | 维持驱动强度精度，补偿温度/电压漂移 |
-| ZQ Init | 软件手动（首次上电，在 MMDC 使能之前） | 初始化校准 |
-
-> **类比**：把 ZQ 校准想象定期给吉他调音。ZQ Init = 新琴首次调音（大调）；ZQ Long = 换了弦后重新调（大调）；ZQ Short = 演奏过程中偶尔微调（小调）。温度变化、电压波动就像温湿度变化让琴弦松紧变化，需要定期 Short 校准来补偿。
-
-**ZQ 微调**（Fine Tuning）：通过 \`MPPDCMPR2[ZQ_PU_OFFSET]\` 和 \`MPPDCMPR2[ZQ_PD_OFFSET]\` 可在校准结果基础上额外偏移 -7 ~ +7。用于补偿 PCB 走线差异或特殊负载场景。
-
-#### Read DQS Gating 校准
-
-**它校准什么**：Read DQS Gating 校准的是**DQS 门控信号与读前导（preamble）窗口的中心对齐**。DDR3 读操作时，控制器需要知道"什么时候打开耳朵听 DDR 返回的数据"——开早了听到噪声，开晚了错过数据。
-
-**两种操作模式**：
-- **MPR 模式**（Multi Purpose Register）：让 DDR 芯片从内部多功能寄存器返回已知固定数据（JEDEC 标准定义的测试模式）
-- **预定义值模式**：控制器先向 DDR 写入一组预定义数据（通过 `MPPDCMPR1[PDV1, PDV2]` 配置），再读回比较
-
-**Tmod + 4 要求**：在 MPR 模式下，两次 MRS 命令之间至少间隔 Tmod 周期（DDR3 中 Tmod = max(tMRD, tMOD)）。MMDC 在校准中等待 Tmod+4 周期确保 DDR 内部状态完全更新。
-
-**HC_DEL vs DL_ABS_OFFSET 的区别**：
-
-| 字段 | 精度 | 范围 | 含义 |
-|------|------|------|------|
-| `DG_HC_DEL` | 半周期（0.5 cycle）步进 | 0~15（4 位） | 粗调延迟 = HC_DEL × 0.5 × 周期 |
-| `DG_DL_ABS_OFFSET` | 1/256 周期步进 | 0~127（7 位） | 精细延迟 = (OFFSET/256) × 周期 |
-
-总延迟 = HC_DEL × 0.5 × 周期 + (OFFSET/256) × 周期
-
-**硬件自动校准算法**（边界搜索法，35 步）：
-
-阶段一 — 找初始点是否合法：
-1. 等待延迟线更新完成，满足 Tmod+4 要求
-2. 发读命令到 DDR，等待 16 或 32 周期（由 `DG_CMP_CYC` 决定）
-3. 比较返回数据与预定义/MPR 值
-4. 如果比较失败 → DQS 门控在非法时间点，报错 `HW_DG_ERR`
-5. 如果比较通过 → 进入阶段二
-
-阶段二 — 向下搜索下边界（减延迟）：
-6. 重置读 FIFO（`RST_RD_FIFO = 1`）
-7. 每个字节的 DQS 门控延迟减少半个周期（`DG_HC_DEL + 1`）
-8. 发读命令 + 比较
-9. 重复 6~8，直到比较失败 → 记录临时下边界
-
-阶段三 — 向上搜索上边界（加延迟）：
-10. 从下边界开始，每次增加半个周期
-11. 发读命令 + 比较
-12. 比较通过继续加，直到比较失败 → 记录临时上边界
-
-阶段四 — 精确定位边界（用 DL_ABS_OFFSET 步进）：
-13. 回到下边界 - 半个周期位置
-14. 每次增加 1 个 DL_ABS_OFFSET 单位（1/256 周期）
-15. 发读 + 比较，精确找到下边界
-16. 回到上边界 - 半个周期位置
-17. 同样方式精确找到上边界 - 1
-
-阶段五 — 计算最优值：
-18. 最优值 = (下边界 + 上边界) / 2，写入 `MPDGCTRLn[DG_DL_ABS_OFFSETn]`
-19. 清零 `HW_DG_EN` 表示校准完成
-20. 边界结果同时存入 `MPDGHWSTn[HW_DG_UPn]` 和 `MPDGHWSTn[HW_DG_LOWn]` 供软件读取
-
-> **关键理解**：为什么先找边界再取平均？因为数据窗口（DQ valid window）在 DQS 周期内有一个"有效区间"。找到这个区间的左边界和右边界，取中间点就是最安全的位置——即使温度漂移或电压波动，也有最大裕量。
-
-软件手动校准原理完全相同，但每一步由软件通过 `MPDGCTRL` 手动触发并读取比较结果，通常用于调试。
-
-#### 读校准（Read Calibration）
-
-**它校准什么**：在 Read DQS Gating 已经找到"什么时候打开耳朵"之后，读校准确保**打开耳朵后听到的 DQ 数据确实是对齐在 DQS  strobe 中心的**。Gating 校准的是"门控信号何时开启"，Read 校准的是"DQS strobe 相对于 DQ 数据的相位"。
-
-**前置条件**：Read DQS Gating 校准必须已完成。
-
-**硬件自动校准步骤**（与 DQS Gating 类似的边界搜索法）：
-
-1. 等待读延迟线更新完成，满足 Tmod+4 要求
-2. 发读命令到 DDR，等待 16 或 32 周期（由 `MPRDDLHWCTL[HW_RD_DL_CMP_CYC]` 决定）
-3. 比较返回数据与预定义/MPR 值
-4. 如果比较失败 → 初始读 DQS 不在 DQ 窗口内，报错 `MPRDDLHWCTL[HW_RD_DL_ERRn]`（n = 字节编号）
-5. 如果比较通过 → 开始向下搜索
-
-向下搜索下边界：
-6. 重置读 FIFO（`MPDGCTRL[RST_RD_FIFO] = 1`）
-7. 读延迟减 1（`MPRDDLCTL[RD_DL_ABS_OFFSETn] -= 1`）
-8. 发读 + 比较
-9. 重复 6~8 直到比较失败 → 下边界存入 `MPRDDLHWSTn[HW_RD_DL_LOWn]`
-
-向上搜索上边界：
-10. 从下边界开始，读延迟每次加 1
-11. 发读 + 比较
-12. 比较通过继续加，直到比较失败 → 上边界存入 `MPRDDLHWSTn[HW_RD_DL_UPn]`
-
-计算最优值：
-13. 最优值 = (下边界 + 上边界) / 2，写入 `MPRDDLCTL[RD_DL_ABS_OFFSETn]`
-14. 清零 `HW_RD_DL_EN` 表示校准完成
-
-**错误处理**：如果初始值就不在 DQ 窗口内（步骤 4 失败），MMDC 在 `MPRDDLHWCTL[HW_RD_DL_ERRn]` 中标记对应字节出错。排查方法：检查 DCD 中的初始延迟值是否合理，或 PCB 走线是否存在严重 skew。
-
-#### 写校准（Write Calibration）
-
-**它校准什么**：确保控制器发出的**写 DQS strobe 与写 DQ 数据在 DDR 芯片端对齐**。写操作时，DQS 和 DQ 同时从控制器发出，但由于 PCB 走线差异和芯片内部延迟，到达 DDR 芯片时可能不同步。
-
-**前置条件**：Write Leveling 校准必须已完成（确保 DQS 与 CLK 对齐）。
-
-**硬件自动校准步骤**（20 步）：
-
-1. 等待写延迟线更新完成（`MPWRDLCTL[WR_DL_ABS_OFFSETn]`）
-2. 发写命令到 DDR（bank 0, address 0），等待 16 或 32 周期
-3. 从 DDR 读回数据
-4. 与预定义值比较（使用 `MPPDCMPR1` 中配置的值）
-5. 如果比较失败 → 初始写 DQS 不在 DQ 窗口内，报错 `MPWRDLHWCTL[HW_WR_DL_ERRn]`
-
-向下搜索下边界：
-6. 重置读 FIFO
-7. 写延迟减 1（`MPWRDLCTL[WR_DL_ABS_OFFSETn] -= 1`）
-8. 发写 → 读回 → 比较
-9. 重复直到比较失败 → 下边界存入 `MPWRDLHWSTn[HW_WR_DL_LOWn]`
-
-向上搜索上边界：
-10. 从下边界开始，写延迟每次加 1
-11. 发写 → 读回 → 比较
-12. 比较通过继续加，直到比较失败 → 上边界存入 `MPWRDLHWSTn[HW_WR_DL_UPn]`
-
-计算最优值：
-13. 最优值 = (下边界 + 上边界) / 2，写入 `MPWRDLCTL[WR_DL_ABS_OFFSETn]`
-14. 清零 `HW_WR_DL_EN` 表示校准完成
-
-> **重要**：写校准的"写"是往 DDR 写数据，"校"是从 DDR 读回验证——写进去什么就读回什么来比对。所以写校准实际上依赖读通路的正确性（Read DQS Gating 和 Read Calibration 必须先完成）。
-
-#### Write Leveling 校准
-
-**Write Leveling 解决什么问题**：补偿 CLK 和 DQS 之间的 PCB 走线 skew（偏移）。
-
-**Fly-by 拓扑的引入**：
-
-DDR3 频率升高（800MT/s 起步），传统的 T 型分支走线产生信号反射。DDR3 改用 **Fly-by 拓扑**——命令/地址/时钟线像串糖葫芦一样依次穿过每颗 DDR 颗粒，但**数据线仍然是点对点直连**：
-
-```
-控制器 ── CLK/ADDR/CMD ──▶ ──▶ ──▶  (Fly-by)
-                             │      │
-                           DDR1   DDR2
-
-控制器 DQ/DQS ──────▶ DDR1（直连，距离短）
-```
-
-**结果**：写操作时，CLK 走 Fly-by 长路径，DQS 走点对点短路径，两者到达 DDR 芯片的时间不同，产生 skew。规范要求 **DQS 的中心要对齐 CLK 的边沿**，如果错位，DDR 用 DQS 采样 DQ 时可能采在跳变沿上。
-
-**Write Leveling 的校准过程**：
-
-1. 控制器通过 MRS 命令让 DDR 进入 Write Leveling 模式
-2. 控制器发出 DQS 脉冲
-3. DDR 芯片用本地收到的 **CLK 边沿** 采样 **DQS**，将结果反馈到 DQ 引脚
-4. 控制器读取 DQ 反馈：DQ = 0 → DQS 还没到，DQ = 1 → DQS 已经到了
-5. 逐步调整 DQS 延迟，直到找到 0→1 的跳变点
-
-**关键设计约束**：
-- 硬件自动校准最多检测 **1 个时钟周期**的 skew
-- 如果 DDR3 距离控制器太远，skew 超过 1 周期，需手动设置 `MPWLDECTRL[WL_CYC_DEL]`
-- **PCB Layout 要求**：DDR3 尽量靠近控制器，计算时钟信号到最远 DDR3 的飞行时间
-
-**硬件自动校准步骤**：
-1. DDR 进入 Write Leveling 模式（MRS 命令）
-2. MMDC 发 DQS 脉冲，采样反馈 DQ 位
-3. 每次增加 1/8 周期延迟，重复采样，直到 1 周期
-4. 查找 DQ 从 0→1 的第一次跳变点
-5. 精细调优：以 1/256 周期为步长微调
-6. 结果写入 `MPWLDECTRL[WL_DL_ABS_OFFSET]`
-7. DDR 退出 Write Leveling 模式（MRS 命令）
-
-> **重要**：如果校准结果是 100/256 周期，但设计者预估 skew 超过 2 周期，则 `MPWLDECTRL[WL_CYC_DEL]` 应设为 2，总延迟 = 2 + 100/256 周期。
 
 ### 13.7 DDR 校准失败排查
 
