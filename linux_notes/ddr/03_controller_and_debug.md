@@ -1719,11 +1719,25 @@ setmem /32    0x021b001c =    0x00000000    // MMDC0_MDSCR, clear configuration 
 
 **第一段：禁用看门狗**
 
-向 WDOG1 控制寄存器写入 `0x30`，禁用看门狗定时器。DDR 初始化耗时数十毫秒，如果不关闭看门狗，期间没有喂狗会导致系统复位。
+| 寄存器地址 | 值 | 寄存器名 | 作用 |
+|-----------|-----|----------|------|
+| `0x020bc000` | `0x0030` | WDOG1_WCR | 写入 `0x30` 禁用看门狗定时器 |
+
+DDR 初始化耗时数十毫秒，如果不关闭看门狗，期间没有喂狗会导致系统复位。
 
 **第二段：使能所有时钟**
 
-CCM（Clock Controller Module）的 CCGR0~CCGR6 寄存器全部写 `0xFFFFFFFF`。ROM code 上电后会关闭部分外设时钟，这里粗暴地全部打开——这是 NXP 评估板的常见做法，量产时可以精细控制只打开 MMDC 所需的时钟门。
+| 寄存器地址 | 值 | 寄存器名 | 作用 |
+|-----------|-----|----------|------|
+| `0x020c4068` | `0xFFFFFFFF` | CCM_CCGR0 | 使能组 0 所有外设时钟 |
+| `0x020c406c` | `0xFFFFFFFF` | CCM_CCGR1 | 使能组 1 所有外设时钟 |
+| `0x020c4070` | `0xFFFFFFFF` | CCM_CCGR2 | 使能组 2 所有外设时钟 |
+| `0x020c4074` | `0xFFFFFFFF` | CCM_CCGR3 | 使能组 3 所有外设时钟 |
+| `0x020c4078` | `0xFFFFFFFF` | CCM_CCGR4 | 使能组 4 所有外设时钟 |
+| `0x020c407c` | `0xFFFFFFFF` | CCM_CCGR5 | 使能组 5 所有外设时钟 |
+| `0x020c4080` | `0xFFFFFFFF` | CCM_CCGR6 | 使能组 6 所有外设时钟 |
+
+ROM code 上电后会关闭部分外设时钟，这里全部打开——这是 NXP 评估板的常见做法，量产时可以精细控制只打开 MMDC 所需的时钟门。
 
 **第三段：IOMUX 引脚复用与电气配置**
 
@@ -1754,27 +1768,44 @@ CCM（Clock Controller Module）的 CCGR0~CCGR6 寄存器全部写 `0xFFFFFFFF`�
 
 **第四段：PHY 校准预设值**
 
-在初始化前预设 PHY 层的延迟线初始值，后续硬件自动校准会在此基础上精细调整：
+| 寄存器地址 | 值 | 寄存器名 | 作用 |
+|-----------|-----|----------|------|
+| `0x021b0800` | `0xA1390003` | MPZQHWCTRL | 使能硬件 ZQ 校准，ZQ_MODE=3（SoC pad + DDR 芯片同时校准），周期 1ms |
+| `0x021b080c` | `0x00000000` | MPWLDECTRL0 | Write Leveling 延迟起点 = 0，后续硬件校准扫描最优值 |
+| `0x021b083c` | `0x00000000` | MPDGCTRL0 | Read DQS Gating 起始延迟 = 0，后续硬件校准扫描最优窗口 |
+| `0x021b0848` | `0x40404040` | MPRDDLCTL | Read DQ 延迟 = 1/4 周期（0x40/256），经验起点 |
+| `0x021b0850` | `0x40404040` | MPWRDLCTL | Write DQ 延迟 = 1/4 周期（0x40/256），经验起点 |
+| `0x021b081c` | `0x33333333` | MPRDDQBY0DL | Read DQ Byte0 bit 级延迟，每 bit = 3 个延迟单元（≈90~105ps） |
+| `0x021b0820` | `0x33333333` | MPRDDQBY1DL | Read DQ Byte1 bit 级延迟，每 bit = 3 个延迟单元 |
+| `0x021b082c` | `0xF3333333` | MPWRDQBY0DL | Write DQ Byte0 bit 级延迟 + DM，每 bit = 3（最大值） |
+| `0x021b0830` | `0xF3333333` | MPWRDQBY1DL | Write DQ Byte1 bit 级延迟 + DM，每 bit = 3 |
+| `0x021b08c0` | `0x00921012` | MPDCCR | DQS/CLK 占空比微调，Byte1 略调 51.5/48.5，Byte0 保持 50% |
+| `0x021b08b8` | `0x00000800` | MPMUR0 | 写 FRC_MSR=1，触发强制测量校准 |
 
-| 寄存器 | 值 | 含义 |
-|--------|-----|------|
-| `MPZQHWCTRL` (0x021b0800) | `0xA1390003` | 使能硬件 ZQ 校准（一次性 + 周期性） |
-| `MPWLDECTRL` (0x021b080c) | `0x00000000` | Write Leveling 延迟初始值 = 0 |
-| `MPDGCTRL0` (0x021b083c) | `0x00000000` | Read DQS Gating 起始延迟 = 0 |
-| `MPRDDLCTL` (0x021b0848) | `0x40404040` | Read DQS 延迟 = 0x40（默认值） |
-| `MPWRDLCTL` (0x021b0850) | `0x40404040` | Write DQS 延迟 = 0x40（默认值） |
-| `MPRDDQBY0DL` (0x021b081c) | `0x33333333` | Read DQ Byte0 延迟 |
-| `MPRDDQBY1DL` (0x021b0820) | `0x33333333` | Read DQ Byte1 延迟 |
-| `MPWRDQBY0DL` (0x021b082c) | `0xF3333333` | Write DQ Byte0 延迟 |
-| `MPWRDQBY1DL` (0x021b0830) | `0xF3333333` | Write DQ Byte1 延迟 |
-| `MPDCCR` (0x021b08c0) | `0x00921012` | DQS/CLK 占空比校准 |
-| `MPMUR0` (0x021b08b8) | `0x00000800` | 强制测量完成校准（frc_msr） |
+在初始化前预设 PHY 层的延迟线初始值，后续硬件自动校准会在此基础上精细调整。
 
 > **注意**：注释明确写了 *"may need to run write leveling calibration to fine tune these settings"*。这些默认值只是起点，不同 PCB 布局需要重新运行 ddr_stress_tester 获取最优值。
 
 **第五段：MMDC 控制器核心寄存器**
 
-核心寄存器配置（时序、几何、ODT、片选分区等）。其中 `MDCTL`（`0x84180000`）最为关键：
+**第五段：MMDC 控制器核心寄存器**
+
+| 寄存器地址 | 值 | 寄存器名 | 作用 |
+|-----------|-----|----------|------|
+| `0x021b001c` | `0x00008000` | MDSCR | 置 CON_REQ=1，进入配置模式（握手机制） |
+| `0x021b0004` | `0x0002002D` | MDPDC | 预充电控制，初始 Power Down 配置 |
+| `0x021b0008` | `0x1B333030` | MDOTC | ODT 时序配置 |
+| `0x021b000c` | `0x676B52F3` | MDCFG0 | 时序配置 0（tCL/tRCD/tRP/tRC 等） |
+| `0x021b0010` | `0xB66D0B63` | MDCFG1 | 时序配置 1（tRAS/tWR/tCWL/tRTP 等） |
+| `0x021b0014` | `0x01FF00DB` | MDCFG2 | 时序配置 2（tRFC/tXSR 等） |
+| `0x021b0018` | `0x00211740` | MDMISC | 杂项：RALAT=5（读访问延迟）、COL=10 |
+| `0x021b002c` | `0x000026D2` | MDRWD | 读写超时控制 |
+| `0x021b0030` | `0x006B1023` | MDOR | 复位后输出延迟 |
+| `0x021b0040` | `0x0000004F` | ESDMISC/CS0_END | 片选 0 结束地址 |
+| `0x021b0000` | `0x84180000` | MDCTL | **几何架构**：DDR3、15 位行地址、10 位列地址、8 Bank、x16 位宽 |
+| `0x021b0890` | `0x00400A38` | MPPDCMPR2 | ZQ 校准偏移微调 |
+
+核心寄存器配置涵盖时序、几何、ODT、片选分区等。其中 `MDCTL`（`0x84180000`）最为关键，其字段拆解：
 
 | 字段 | 值 | 含义 |
 |------|-----|------|
@@ -1785,28 +1816,35 @@ CCM（Clock Controller Module）的 CCGR0~CCGR6 寄存器全部写 `0xFFFFFFFF`�
 | `BANK` | 3（= 8 Bank） | 8 Bank |
 | `DSIZ` | 1（= x16） | 16 位数据总线 |
 
-`MDMISC`（`0x00211740`）包含 RALAT=5（读访问延迟）、COL=10 等配置。
-
 **第六段：JEDEC 模式寄存器写入序列**
 
-通过 MDSCR 寄存器依次写入 MR2→MR3→MR1→MR0→ZQCL：
+| 寄存器地址 | 值 | 寄存器名 | 作用 |
+|-----------|-----|----------|------|
+| `0x021b001c` | `0x02008032` | MDSCR | MR2 写入：CWL=6，RttWR |
+| `0x021b001c` | `0x00008033` | MDSCR | MR3 写入：0 |
+| `0x021b001c` | `0x00048031` | MDSCR | MR1 写入：ODIC 驱动强度，DLL 使能 |
+| `0x021b001c` | `0x15208030` | MDSCR | MR0 写入：BL=8，CL=11，DLL Reset |
+| `0x021b001c` | `0x04008040` | MDSCR | ZQCL 长校准命令 |
 
-```text
-setmem /32    0x021b001c =    0x02008032    // MR2: CWL=6, RttWR
-setmem /32    0x021b001c =    0x00008033    // MR3: 0
-setmem /32    0x021b001c =    0x00048031    // MR1: ODIC, DLL 使能
-setmem /32    0x021b001c =    0x15208030    // MR0: BL=8, CL=11, DLL Reset
-setmem /32    0x021b001c =    0x04008040    // ZQCL 校准命令
-```
+通过 MDSCR 寄存器依次向 DDR 芯片写入模式寄存器 MR2→MR3→MR1→MR0→ZQCL。MDSCR 格式为 `[CMD_TYPE:15:12][CS:11:8][MR_VALUE:7:0]`：
 
-MDSCR 寄存器格式：`[CMD_TYPE:15:12][CS:11:8][MR_VALUE:7:0]`。例如 `0x02008032`：
-- `0x2`（bit 13-12）= Load Mode Register 命令
-- `0x0`（bit 11-8）= CS0
-- `0x32` = MR2 值 = `0b00000010`（CWL=6）
-
-ZQCL 命令 `0x04008040`：`0x4` = ZQ Calibration 命令类型。
+| 写入值 | CMD_TYPE | CS | MR_VALUE | 含义 |
+|--------|----------|----|----------|------|
+| `0x02008032` | 0x2（Load Mode） | 0x0（CS0） | 0x32 | MR2: CWL=6 |
+| `0x00008033` | 0x2（Load Mode） | 0x0（CS0） | 0x33 | MR3: 0 |
+| `0x00048031` | 0x2（Load Mode） | 0x0（CS0） | 0x31 | MR1: ODIC + DLL 使能 |
+| `0x15208030` | 0x2（Load Mode） | 0x0（CS0） | 0x30 | MR0: BL=8, CL=11 |
+| `0x04008040` | 0x4（ZQ Calib） | 0x0（CS0） | 0x40 | ZQCL 长校准 |
 
 **第七段：功耗管理与收尾**
+
+| 寄存器地址 | 值 | 寄存器名 | 作用 |
+|-----------|-----|----------|------|
+| `0x021b0020` | `0x00007800` | MDREF | 刷新控制，配置刷新计数器 |
+| `0x021b0818` | `0x00000227` | MPODTCTRL | ODT 控制，设置 ODT 使能/禁用时序 |
+| `0x021b0004` | `0x0002556D` | MDPDC | 使能 Power Down，更新预充电配置 |
+| `0x021b0404` | `0x00011006` | MAPSR | 电源管理，使能自动自刷新 |
+| `0x021b001c` | `0x00000000` | MDSCR | 清除 CON_REQ，退出配置模式，DDR 正常工作 |
 
 最后清除 `MDSCR` 的 configuration bit，MMDC 退出配置模式，DDR 进入正常工作状态。
 
