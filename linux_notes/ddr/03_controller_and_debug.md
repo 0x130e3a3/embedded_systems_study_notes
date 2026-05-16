@@ -1869,67 +1869,33 @@ ROM code 上电后会关闭部分外设时钟，这里全部打开——这是 N
 
 ### 13.5 MMDC 核心寄存器详解
 
-MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各寄存器的详细说明见 13.3 节脚本实例，本节仅列出汇总。
+MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。本节按 13.4 节 DCD 脚本的 7 段结构，将涉及的寄存器分类详解。
 
-**核心控制器寄存器**：
+---
 
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MDCTL** | `0x021B0000` | 几何架构（SDDRC/ROW/COL/BANK/DSIZ） |
-| **MDPDC** | `0x021B0004` | 预充电控制 / Power Down 配置 |
-| **MDOTC** | `0x021B0008` | ODT 时序 |
-| **MDCFG0** | `0x021B000C` | 时序配置 0（tCL/tRCD/tRP/tXP 等） |
-| **MDCFG1** | `0x021B0010` | 时序配置 1（tRC/tRAS/tWR/tCWL 等） |
-| **MDCFG2** | `0x021B0014` | 时序配置 2（tRFC/tXSR 等） |
-| **MDMISC** | `0x021B0018` | 杂项（RALAT/COL/BI 等） |
-| **MDSCR** | `0x021B001C` | 特殊命令（CON_REQ/CON_ACK/MRS 命令） |
-| **MDRWD** | `0x021B002C` | 超时控制 |
-| **MDOR** | `0x021B0030` | 输出延迟 |
-| **MDREF** | `0x021B0020` | 刷新控制 |
-| **MAPSR** | `0x021B0404` | 电源管理（自刷新/低功耗） |
+#### 13.5.1 第一段：禁用看门狗
 
-#### MDSCR（MMDC Core Special Command Register）—— `0x021B001C`
+本段涉及的 WDOG1_WCR（`0x020BC000`）属于 SoC 的 Watchdog 模块，非 MMDC 寄存器。写入 `0x30` 禁用看门狗，防止 DDR 初始化期间因未喂狗导致系统复位。
 
-**功能**：向外部 DDR 芯片发出特殊命令（Load Mode Register、Auto-Refresh、Precharge All、ZQ Calibration、Self Refresh 等）。每写入一次该寄存器，MMDC 就解释为一条命令并执行。
+---
 
-**DCD 脚本中的两次使用**：
+#### 13.5.2 第二段：使能所有时钟
 
-| 位置 | 写入值 | 目的 |
-|------|--------|------|
-| 初始化第一步 | `0x00008000` | 置 CON_REQ=1，进入配置模式 |
-| 初始化收尾 | `0x00000000` | 清除 CON_REQ，退出配置模式，DDR 正常工作 |
+本段涉及的 CCM_CCGR0~CCGR6（`0x020C4068~0x020C4080`）属于 SoC 的 Clock Controller Module，非 MMDC 寄存器。全部写 `0xFFFFFFFF` 使能所有外设时钟，确保 MMDC 正常工作。
 
-**位域拆解 `0x00008000`**：
+---
 
-```
-0x00008000 = 0b 0000_0000_0000_0000_1000_0000_0000_0000
-                                     ^
-                                     bit 15 = CON_REQ
-```
+#### 13.5.3 第三段：IOMUX 引脚复用与电气配置
 
-| 位域 | 值 | 含义 |
-|------|-----|------|
-| **CON_REQ [15]** | 1 | **配置请求**。置 1 后 MMDC 清理 pending 的 AXI 访问并阻止新访问，确保配置期间不会有内存读写干扰 |
-| CON_ACK [14] | 只读 | **配置确认**。硬件自动置 1，软件需轮询此位直到为 1 才表示可以安全配置 |
-| CMD [6:4] | 0x0 | Normal operation（此处不发命令，仅请求配置） |
-| 其余字段 | 0 | 不涉及 |
+本段涉及的 IOMUXC 寄存器（`0x020E0000` 段）属于 SoC 的 IOMUX Controller，非 MMDC 寄存器。配置 DDR 引脚功能、驱动强度（DSE≈34Ω）和差分模式。
 
-**CON_REQ 握手机制**：
+---
 
-1. 软件写入 `MDSCR = 0x00008000`（CON_REQ = 1）
-2. MMDC 清理 AXI pending 访问，自动置 CON_ACK = 1
-3. 软件轮询 `MDSCR[CON_ACK]`，读到 1 后开始配置其他寄存器
-4. 配置完成后写 `MDSCR = 0x00000000` 清除 CON_REQ，DDR 恢复正常工作
+#### 13.5.4 第四段：PHY 校准预设值
 
-> **注意**：MDSCR 不仅用于 CON_REQ 握手，后续的模式寄存器写入（MR2/MR3/MR1/MR0）和 ZQ 校准命令也通过同一寄存器发出，此时 CMD 字段填写不同命令编码。
+本段寄存器属于 MMDC PHY 层，用于预设延迟线初始值，后续硬件自动校准在此基础上精细调整。
 
-**PHY 寄存器**：
-
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPZQHWCTRL** | `0x021b0800` | ZQ 硬件校准控制 |
-
-#### MPZQHWCTRL（MMDC PHY ZQ HW Control Register）—— `0x021B0800`
+##### MPZQHWCTRL（MMDC PHY ZQ HW Control Register）—— `0x021B0800`
 
 **功能**：控制 ZQ 硬件校准行为。ZQ 校准确保 DDR 控制器 I/O 驱动器的上拉/下拉电阻阻抗与外部 240Ω 参考电阻（RZQ）精确匹配，维持信号完整性。
 
@@ -1962,13 +1928,7 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 
 > **注意**：TZQ_INIT 必须 ≥ 512 周期，因为 DDR3 JEDEC 规定首次上电 ZQCL 需要 512 个时钟周期完成校准。后续 ZQCS（Short）只需 256 周期。
 
-**PHY 寄存器**：
-
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPWLDECTRL0/1** | `0x021b080c/0810` | Write Leveling 延迟控制 |
-
-#### MPWLDECTRL0（MMDC PHY Write Leveling Delay Control Register 0）—— `0x021B080C`
+##### MPWLDECTRL0（MMDC PHY Write Leveling Delay Control Register 0）—— `0x021B080C`
 
 **功能**：控制 Write Leveling（写均衡）延迟。Write Leveling 用于补偿 DDR3 fly-by 拓扑中 CK（时钟）和 DQS（数据选通）之间的飞行时间差，确保写数据在正确的时间被采样。
 
@@ -1983,13 +1943,7 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 | WL_HC_DEL0 [8] | 0 | Byte0 半周期延迟 = 0 |
 | **WL_DL_ABS_OFFSET0 [6:0]** | 0 | Byte0 绝对微调延迟 = 0 |
 
-**为什么全写 0**：
-
-注释写了 *"may need fine tuning"*。这里是**初始起点**：
-
-1. 后续运行 Write Leveling 硬件校准时，MMDC 从 0 开始逐步增加延迟，直到找到 CK 和 DQS 对齐的最佳点
-2. 校准完成后，硬件自动将最佳延迟值**回写**到这些字段（从"配置值"变为"状态结果"）
-3. 不同 PCB 布局的 fly-by 走线长度不同，必须用 `ddr_stress_tester` 针对每块板子重新跑
+**为什么全写 0**：注释写了 *"may need fine tuning"*。这里是**初始起点**，后续运行 Write Leveling 硬件校准时，MMDC 从 0 开始逐步增加延迟，直到找到 CK 和 DQS 对齐的最佳点。校准完成后硬件自动将最佳延迟值回写。
 
 **延迟计算公式**：
 
@@ -1999,11 +1953,7 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 
 400MHz 下时钟周期 = 2.5ns，若校准后 `WL_DL_ABS_OFFSET0 = 0x80`，则微调延迟 = 128/256 × 2.5ns = 1.25ns。
 
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPDGCTRL0/1** | `0x021b083c/0840` | Read DQS Gating 控制 |
-
-#### MPDGCTRL0（MMDC PHY Read DQS Gating Control Register 0）—— `0x021B083C`
+##### MPDGCTRL0（MMDC PHY Read DQS Gating Control Register 0）—— `0x021B083C`
 
 **功能**：控制 Read DQS Gating（读 DQS 门控）校准。确保 MMDC 只在 DDR 芯片真正返回有效数据的窗口内打开 DQS 接收门，避开 preamble/postamble 无效时段，防止错误采样。
 
@@ -2022,8 +1972,6 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 | DG_HC_DEL0 [11:8] | 0 | Byte0 半周期延迟 = 0 |
 | DG_DL_ABS_OFFSET0 [6:0] | 0 | Byte0 绝对延迟 = 0 |
 
-**为什么全写 0**：与 MPWLDECTRL0 类似，这里是**校准起点**。后续通过设置 `HW_DG_EN = 1` 启动硬件自动校准，MMDC 从延迟 = 0 开始逐步扫描，找到 DQS Gate 的上下边界后取平均值写入寄存器。
-
 **校准算法简述**：
 
 1. 从延迟 = 0 开始，每次增加半个周期
@@ -2037,34 +1985,20 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 总延迟 = (DG_HC_DEL × 0.5 + DG_DL_ABS_OFFSET / 256) × 时钟周期
 ```
 
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPRDDLCTL** | `0x021b0848` | 读数据延迟控制 |
-
-#### MPRDDLCTL（MMDC PHY Read Delay-lines Configuration Register）—— `0x021B0848`
+##### MPRDDLCTL（MMDC PHY Read Delay-lines Configuration Register）—— `0x021B0848`
 
 **功能**：控制 Read DQ 延迟线，微调 DQS 选通信号与 DQ 读数据之间的相位偏移，确保 DQ 在 DQS 中间位置被采样。延迟线补偿工艺偏差，产生与工艺/温度/电压无关的恒定延迟。
 
 **DCD 脚本中的值**：`0x40404040`
-
-```
-0x40404040 = 0b 0100_0000_0100_0000_0100_0000_0100_0000
-```
 
 | 位域 | 值 | 含义 |
 |------|-----|------|
 | **RD_DL_ABS_OFFSET1 [14:8]** | `0x40` = 64 | Byte1 读延迟 = 64/256 × 周期 = **1/4 周期** |
 | **RD_DL_ABS_OFFSET0 [6:0]** | `0x40` = 64 | Byte0 读延迟 = 64/256 × 周期 = **1/4 周期** |
 
-手册原文标注：*"So for the default value of 64 we get a quarter cycle delay"*。400MHz 下 1/4 周期 = 0.625ns。
+手册原文标注：*"So for the default value of 64 we get a quarter cycle delay"*。400MHz 下 1/4 周期 = 0.625ns。这是一个**经验默认值**，后续运行 Read 硬件校准时，算法会从该起点扫描上下边界，取平均值回写。
 
-**为什么是 0x40**：这是一个**经验默认值**，足够大能覆盖大多数工艺偏差，又不会大到超出采样窗口。后续运行 Read 硬件校准时，算法会从该起点扫描上下边界，取平均值回写到这两个字段。
-
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPWRDLCTL** | `0x021b0850` | 写数据延迟控制 |
-
-#### MPWRDLCTL（MMDC PHY Write Delay-lines Configuration Register）—— `0x021B0850`
+##### MPWRDLCTL（MMDC PHY Write Delay-lines Configuration Register）—— `0x021B0850`
 
 **功能**：控制 Write DQ/DM 延迟线，在写操作中微调 DQ/DM 数据相对于 DQS 写 strobe 的相位偏移，确保 DDR 芯片在 DQS 中间位置采样到正确数据。
 
@@ -2084,13 +2018,7 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 
 两者初始值相同，但校准后通常不同——读和写的 PCB 走线 skew 不对称，各自需要最优延迟。
 
-**为什么是 0x40**：同 MPRDDLCTL，1/4 周期是经验起点。后续通过 `MPMUR0[FRC_MSR]` 强制触发校准，扫描上下边界后取平均值回写。
-
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPRDDQBY0/1DL** | `0x021b081c/0820` | 读 DQ bit 级精细延迟 |
-
-#### MPRDDQBY0/1DL（MMDC PHY Read DQ Byte0/1 Delay Register）—— `0x021B081C/0820`
+##### MPRDDQBY0/1DL（MMDC PHY Read DQ Byte0/1 Delay Register）—— `0x021B081C/0820`
 
 **功能**：对 Read DQ **每个 bit 单独做精细延迟微调**。MPRDDLCTL 是对整个 Byte 统一延迟，此寄存器在 Byte 内部逐 bit 独立调整，补偿 PCB 走线 bit-to-bit skew。
 
@@ -2113,23 +2041,13 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 | rd_dq1_del [6:4] | `011` = 3 | DQ1 增加 3 个延迟单元 |
 | rd_dq0_del [2:0] | `011` = 3 | DQ0 增加 3 个延迟单元 |
 
-每个 DQ 占用 4 位（实际低 3 位有效，取值 0~7），每个延迟单元约 **30~35ps**。
+每个 DQ 占用 4 位（实际低 3 位有效，取值 0~7），每个延迟单元约 **30~35ps**。0~7 范围内取中值 3，为后续校准留出上下调整空间。与 Byte 级 MPRDDLCTL 是**叠加关系**：先 Byte 粗调，再 Bit 精调。Byte1（`0x0820`）对应 DQ8~DQ15，结构相同。
 
-**为什么全部写 3**：保守的经验起点。0~7 范围内取中值 3，为后续校准留出上下调整空间。与 Byte 级 MPRDDLCTL 是**叠加关系**：先 Byte 粗调，再 Bit 精调。Byte1（`0x0820`）对应 DQ8~DQ15，结构相同。
-
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPWRDQBY0/1DL** | `0x021b082c/0830` | 写 DQ bit 级精细延迟 |
-
-#### MPWRDQBY0/1DL（MMDC PHY Write DQ Byte0/1 Delay Register）—— `0x021B082C/0830`
+##### MPWRDQBY0/1DL（MMDC PHY Write DQ Byte0/1 Delay Register）—— `0x021B082C/0830`
 
 **功能**：对 **Write** DQ 每个 bit 单独做精细延迟微调，补偿写路径中 DQ 相对于 DQS 的 bit-to-bit skew。
 
 **DCD 脚本中的值**：`0xF3333333`
-
-```
-0xF3333333 = 0b 1111_0011_0011_0011_0011_0011_0011_0011
-```
 
 | 位域 | 值 | 含义 |
 |------|-----|------|
@@ -2158,13 +2076,9 @@ MMDC（Multi-Mode DDR Controller）寄存器的基地址为 `0x021B0000`。各�
 | DM 延迟 | 无 | **有**（wr_dm_del） |
 | 最大延迟 | 7 个延迟单元 | 3 个延迟单元 |
 
-写版本调节范围更小（0~3），因为写时序通常比读时序更可控。全部给到 3（最大值）是安全保守的起点——确保写数据有足够的建立时间。Byte1（`0x0830`）对应 DQ8~DQ15 + DM1，结构相同。
+写版本调节范围更小（0~3），因为写时序通常比读时序更可控。全部给到 3（最大值）是安全保守的起点。Byte1（`0x0830`）对应 DQ8~DQ15 + DM1，结构相同。
 
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPDCCR** | `0x021b08c0` | DQS/CLK 占空比控制 |
-
-#### MPDCCR（MMDC Duty Cycle Control Register）—— `0x021B08C0`
+##### MPDCCR（MMDC Duty Cycle Control Register）—— `0x021B08C0`
 
 **功能**：控制 DQS 和 DDR 时钟（SDCLK）的**占空比微调**。理想情况下时钟高低电平各占 50%，但实际 PCB 走线和工艺偏差会导致偏离，此寄存器提供精细调整。
 
@@ -2191,11 +2105,7 @@ Byte0 保持默认 50%，Byte1 调为 51.5/48.5，暗示 Byte1 PCB 走线比 Byt
 
 > **注意**：初始化完成后修改此寄存器需先将 DDR 置入自刷新模式。
 
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPMUR0** | `0x021b08b8` | 强制测量控制 |
-
-#### MPMUR0（MMDC PHY Measure Unit Register）—— `0x021B08B8`
+##### MPMUR0（MMDC PHY Measure Unit Register）—— `0x021B08B8`
 
 **功能**：强制触发延迟线的测量校准过程。包含一个测量单元，用于测量一个 DDR 时钟周期内有多少个延迟单元，据此让各延迟线发出所需延迟。
 
@@ -2208,19 +2118,161 @@ Byte0 保持默认 50%，Byte1 调为 51.5/48.5，暗示 Byte1 PCB 走线比 Byt
 | MU_BYP_EN [10] | 0 | 不使用测量旁路 |
 | MU_BYP_VAL [9:0] | 0 | 旁路延迟单元数 |
 
-**在 DCD 脚本中的角色**：这是 PHY 校准流程的**最后触发器**——前面所有延迟寄存器（WLDE、DQS Gating、Read/Write Delay、DQ Byte Delay、Duty Cycle）都预设了初始值，写入 `FRC_MSR = 1` 后 MMDC 自动扫描每个延迟线的上下边界，计算最优延迟值并回写。
-
-| 步骤 | 动作 | 涉及寄存器 |
-|------|------|-----------|
-| 1~6 | 预设所有延迟起点 | MPWLDECTRL/MPDGCTRL0/MPRDDLCTL/MPWRDLCTL/MPRDDQBY/MPWRDQBY/MPDCCR |
-| **7** | **触发强制测量** | **MPMUR0[FRC_MSB] = 1** |
+**在 DCD 脚本中的角色**：这是 PHY 校准流程的**最后触发器**——前面所有延迟寄存器都预设了初始值，写入 `FRC_MSR = 1` 后 MMDC 自动扫描每个延迟线的上下边界，计算最优延迟值并回写。
 
 > **注意**：FRC_MSB 只在初始化阶段使用，DDR 正常运行后不应再触发。使用时需确保没有活跃的 DDR 访问。
 
-| 寄存器 | 地址 | 用途 |
-|--------|------|------|
-| **MPPDCMPR2** | `0x021b0890` | ZQ 校准偏移微调 |
-| **MPODTCTRL** | `0x021b0818` | ODT 控制 |
+##### MPPDCMPR2（MMDC PHY ZQ Calibration Offset Register）—— `0x021B0890`
+
+**DCD 脚本中的值**：`0x00400A38`
+
+用于对 ZQ 校准结果施加偏移微调，补偿工艺偏差导致的 ZQ 上拉/下拉电阻值偏移。
+
+---
+
+#### 13.5.5 第五段：MMDC 控制器核心寄存器
+
+本段寄存器属于 MMDC Core 层，配置 DDR 几何架构、时序参数、ODT 行为等。
+
+##### MDCTL（MMDC Core Control Register）—— `0x021B0000`
+
+**功能**：定义 DDR 芯片的**几何架构**——类型、行/列/ Bank 地址宽度、数据总线宽度。
+
+**DCD 脚本中的值**：`0x84180000`
+
+| 字段 | 值 | 含义 |
+|------|-----|------|
+| `SDE_TO_CHIP` | 1 | 片选使能 |
+| `SDDRC` | DDR3 | DDR3 类型 |
+| `ROW` | 15 | 15 位行地址 |
+| `COL` | 10 | 10 位列地址 |
+| `BANK` | 3（= 8 Bank） | 8 Bank |
+| `DSIZ` | 1（= x16） | 16 位数据总线 |
+
+##### MDPDC（MMDC Core Power Down Control Register）—— `0x021B0004`
+
+**功能**：控制预充电和 Power Down 行为。
+
+**DCD 脚本中的值**：`0x0002002D`（初始配置，Power Down 禁用）
+
+##### MDOTC（MMDC Core ODT Timing Control Register）—— `0x021B0008`
+
+**功能**：控制 ODT（片内端接）的时序参数。
+
+**DCD 脚本中的值**：`0x1B333030`
+
+##### MDCFG0（MMDC Core Timing Configuration Register 0）—— `0x021B000C`
+
+**功能**：配置 DDR 时序参数组 0，包括 tCL、tRCD、tRP、tXP 等。
+
+**DCD 脚本中的值**：`0x676B52F3`
+
+##### MDCFG1（MMDC Core Timing Configuration Register 1）—— `0x021B0010`
+
+**功能**：配置 DDR 时序参数组 1，包括 tRC、tRAS、tWR、tCWL、tRTP 等。
+
+**DCD 脚本中的值**：`0xB66D0B63`
+
+##### MDCFG2（MMDC Core Timing Configuration Register 2）—— `0x021B0014`
+
+**功能**：配置 DDR 时序参数组 2，包括 tRFC、tXSR 等。
+
+**DCD 脚本中的值**：`0x01FF00DB`
+
+##### MDMISC（MMDC Core Miscellaneous Register）—— `0x021B0018`
+
+**功能**：杂项配置，包括 RALAT（读访问延迟）、COL（列地址宽度）、BI（突发中断）等。
+
+**DCD 脚本中的值**：`0x00211740`，包含 RALAT=5、COL=10 等配置。
+
+##### MDRWD（MMDC Core Read/Write Command Delay Register）—— `0x021B002C`
+
+**功能**：控制读写命令的超时延迟。
+
+**DCD 脚本中的值**：`0x000026D2`
+
+##### MDOR（MMDC Core Out of Reset Delays Register）—— `0x021B0030`
+
+**功能**：配置复位后的输出延迟。
+
+**DCD 脚本中的值**：`0x006B1023`
+
+##### CS0_END（Chip Select 0 End Address）—— `0x021B0040`
+
+**功能**：定义片选 0 的地址空间结束边界。
+
+**DCD 脚本中的值**：`0x0000004F`
+
+---
+
+#### 13.5.6 第六段：JEDEC 模式寄存器写入序列
+
+本段通过 **MDSCR** 寄存器向 DDR 芯片写入 JEDEC 模式寄存器。
+
+##### MDSCR（MMDC Core Special Command Register）—— `0x021B001C`
+
+**功能**：向外部 DDR 芯片发出特殊命令（Load Mode Register、Auto-Refresh、Precharge All、ZQ Calibration 等）。每写入一次该寄存器，MMDC 就解释为一条命令并执行。
+
+**DCD 脚本中的模式寄存器写入序列**：
+
+| 写入值 | CMD_TYPE | CS | MR_VALUE | 含义 |
+|--------|----------|----|----------|------|
+| `0x02008032` | 0x2（Load Mode） | 0x0（CS0） | 0x32 | MR2: CWL=6 |
+| `0x00008033` | 0x2（Load Mode） | 0x0（CS0） | 0x33 | MR3: 0 |
+| `0x00048031` | 0x2（Load Mode） | 0x0（CS0） | 0x31 | MR1: ODIC + DLL 使能 |
+| `0x15208030` | 0x2（Load Mode） | 0x0（CS0） | 0x30 | MR0: BL=8, CL=11 |
+| `0x04008040` | 0x4（ZQ Calib） | 0x0（CS0） | 0x40 | ZQCL 长校准 |
+
+**MDSCR 位域格式**：
+
+| 位域 | 说明 |
+|------|------|
+| **CON_REQ [15]** | 配置请求。置 1 后 MMDC 清理 pending 的 AXI 访问并阻止新访问 |
+| CON_ACK [14] | 配置确认（只读）。硬件自动置 1，软件需轮询此位直到为 1 |
+| **CMD [6:4]** | 命令类型：0x2=Load Mode, 0x4=ZQ Calib, 0x5=Precharge All |
+| CMD_CS [3] | 片选：0=CS0, 1=CS1 |
+| CMD_BA [2:0] | Bank 地址 |
+
+**CON_REQ 握手机制**：
+
+1. 软件写入 `MDSCR = 0x00008000`（CON_REQ = 1）
+2. MMDC 清理 AXI pending 访问，自动置 CON_ACK = 1
+3. 软件轮询 `MDSCR[CON_ACK]`，读到 1 后开始配置其他寄存器
+4. 配置完成后写 `MDSCR = 0x00000000` 清除 CON_REQ，DDR 恢复正常工作
+
+---
+
+#### 13.5.7 第七段：功耗管理与收尾
+
+本段寄存器用于配置刷新、ODT、电源管理，并最终退出配置模式。
+
+##### MDREF（MMDC Core Refresh Control Register）—— `0x021B0020`
+
+**功能**：控制 DDR 刷新方案——刷新频率和每次刷新周期发出的刷新命令数。
+
+**DCD 脚本中的值**：`0x00007800`
+
+##### MPODTCTRL（MMDC PHY ODT Control Register）—— `0x021B0818`
+
+**功能**：控制 ODT（片内端接）的使能/禁用时序。
+
+**DCD 脚本中的值**：`0x00000227`
+
+##### MDPDC（MMDC Core Power Down Control Register）—— `0x021B0004`（最终值）
+
+**DCD 脚本中的值**：`0x0002556D`（使能 Power Down）
+
+##### MAPSR（MMDC Core Power Saving Control and Status Register）—— `0x021B0404`
+
+**功能**：电源管理控制，使能自动自刷新和低功耗模式。
+
+**DCD 脚本中的值**：`0x00011006`
+
+##### MDSCR（MMDC Core Special Command Register）—— `0x021B001C`（收尾）
+
+**DCD 脚本中的值**：`0x00000000`
+
+清除 CON_REQ，MMDC 退出配置模式，DDR 进入正常工作状态，开始接受 AXI 总线访问。
 
 ### 13.7 DDR 校准失败排查
 
