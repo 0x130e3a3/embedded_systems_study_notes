@@ -1,0 +1,7457 @@
+[
+    {
+        "type": "text",
+        "text": "XT26G04C 3.3V 4G-BIT SPI NAND FLASH MEMORY",
+        "text_level": 2,
+        "bbox": [
+            343,
+            239,
+            632,
+            391
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Future routine revisions will occur when appropriate, without notice. Contact XTX TECHNOLOGY INC, sales office to obtain the latest specifications and before placing your product order. Please also pay attention to information published by XTX TECHNOLOGY INC by various means, including XTX TECHNOLOGY INC. Web Site: http://www.xtxtech.com/; Technical Contact: fae@xtxtech.com",
+        "bbox": [
+            70,
+            726,
+            941,
+            801
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "Trademarks",
+        "text_level": 2,
+        "bbox": [
+            73,
+            820,
+            179,
+            837
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "XTX TECHNOLOGY INC. name and logo, the XTX logo are trademarks or registered trademarks of XTX TECHNOLOGY INC. or its subsidiaries in China. XTX TECHNOLOGY INC., Printed in the China, All Rights Reserved.",
+        "bbox": [
+            70,
+            853,
+            919,
+            910
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "header",
+        "text": "X",
+        "bbox": [
+            75,
+            33,
+            182,
+            74
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            447,
+            55,
+            528,
+            70
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            850,
+            55,
+            936,
+            70
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            48,
+            948,
+            147,
+            964
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            442,
+            948,
+            503,
+            963
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "page_number",
+        "text": "Page 2",
+        "bbox": [
+            887,
+            948,
+            942,
+            964
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "CONTENTS",
+        "text_level": 2,
+        "bbox": [
+            412,
+            86,
+            600,
+            112
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "1. Overview .... 5\n2. Features .... 5\n3. Packaging Type and Pin Configurations .... 6\n4. Block Diagram .... 7\n5. Memory Mapping .... 8\n6. Array Organization .... 9\n7. Device Operation .... 10\n7.1 SPI Modes .... 10\n7.1.1 Standard SPI .... 10\n7.1.2 Dual SPI .... 10\n7.1.3 Quad SPI .... 10\n7.2 Pin Description .... 11\n7.2.1 CS# .... 11\n7.2.2 CLK .... 11\n7.2.3 Serial Input (SI) / SIO0 .... 11\n7.2.4 Serial Output (SO) / SIO1 .... 11\n7.2.5 Write Protect (WP#) / SIO2 .... 11\n7.2.6 SIO3 .... 12\n7.3 Command Set Tables .... 13\n7.4 WRITE OPERATIONS .... 15\n7.4.1 Write Enable (WREN) (06H) .... 15\n7.4.2 WRITE DISABLE (WRDI) (04h) .... 16\n7.5 FEATURE OPERATIONS .... 17\n7.5.1 Get Features (OFH) and Set Features (1FH) .... 17\n7.6 READ OPERATIONS .... 19\n7.6.1 Page Read .... 19\n7.6.2 Page Read to Cache (13H) .... 20\n7.6.3 Read From Cache (03H or 0BH) .... 21\n7.6.4 Read From Cache x2 (3BH) .... 21\n7.6.5 Read From Cache x4 (6BH) .... 22\n7.6.6 Read From Cache Dual IO (BBH) .... 23\n7.6.7 Read From Cache Quad IO (EBH) .... 24\n7.6.8 Read ID (9FH) .... 25\n7.6.1 Read UID (4BH) .... 26\n7.7 PROGRAM OPERATIONS .... 27\n7.7.1 Page Program .... 27\n7.7.2 Program Load (PL)(02H) .... 28",
+        "bbox": [
+            57,
+            114,
+            968,
+            925
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "page_number",
+        "text": "Page 3",
+        "bbox": [
+            889,
+            948,
+            942,
+            964
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            75,
+            33,
+            182,
+            74
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            447,
+            55,
+            528,
+            70
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            850,
+            55,
+            936,
+            70
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            48,
+            948,
+            147,
+            964
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "page_number",
+        "text": "Rev 1.9",
+        "bbox": [
+            442,
+            948,
+            503,
+            963
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "7.7.3 Program Load x4 (PL x4) (32H)....28\n7.7.4 Program Execute (PE) (10H)....29\n7.7.5 Internal Data Move....30\n7.7.6 Program Load Random Data (84H)....30\n7.7.7 Program Random Data x4 (C4H/34H)....31\n7.7.8 Program Random Quad IO (72H)....32\n7.8 ERASE OPERATIONS....33\n7.8.1 Block Erase (D8H)....33\n7.9 RESET OPERATIONS....34\n7.9.1 RESET (FFh)....34\n7.10 WRITE PROTECT....35\n8. Status Register....36\n9. OTP Region....37\n9.1 OTP Access....37\n9.2 OTP Protect....37\n10. Error Management....38\n11. ECC Protection....39\n12. Application Notes And Comments....40\n12.1 Addressing for program operation....40\n12.2 Several programming cycles on the same page (Partial Page Program)....40\n12.3 Keep the power stable and sufficient....41\n13. Electrical Characteristics....42\n13.1 Absolute Maximum Ratings....42\n13.2 PinCapacitance....42\n13.3 Power-on and Power-off Timing....43\n13.4 DC Electrical Characteristics....44\n13.5 AC Measurement Conditions....45\n13.6 AC Electrical Characteristics....46\n14. SPI Serial Timing....48\n15. Ordering Information....49\n16. Package Information....50\n16.1 8-Pad WSON8 (8\\*6mm)....50\n17. Revision History....51",
+        "bbox": [
+            55,
+            78,
+            969,
+            800
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "header",
+        "text": "XTX",
+        "bbox": [
+            75,
+            33,
+            181,
+            72
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            447,
+            55,
+            528,
+            70
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            850,
+            55,
+            936,
+            70
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            48,
+            948,
+            147,
+            964
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "page_number",
+        "text": "Page 4",
+        "bbox": [
+            889,
+            950,
+            942,
+            964
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            442,
+            948,
+            503,
+            963
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "1. Overview",
+        "text_level": 2,
+        "bbox": [
+            67,
+            87,
+            256,
+            110
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "The XT26G04C is a 4G-bit (512M-byte) SPI (Serial Peripheral Interface) NAND Flash memory, with advanced write protection mechanisms. The XT26G04C supports the standard Serial Peripheral Interface (SPI), Dual/Quad I/O option.",
+        "bbox": [
+            72,
+            136,
+            919,
+            191
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "2. Features",
+        "text_level": 2,
+        "bbox": [
+            67,
+            222,
+            241,
+            245
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "4G-bit NAND Flash memory",
+        "bbox": [
+            73,
+            266,
+            291,
+            280
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "– Single-level cell (SLC) technology",
+        "bbox": [
+            78,
+            282,
+            355,
+            296
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Page size : 4352bytes(4096 + 256 bytes)",
+        "bbox": [
+            78,
+            298,
+            409,
+            313
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Block size : 64 pages(256K + 16K bytes)",
+        "bbox": [
+            78,
+            314,
+            402,
+            330
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Device size: 4Gb(2048 blocks)",
+        "bbox": [
+            110,
+            332,
+            335,
+            347
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Serial Interface",
+        "text_level": 2,
+        "bbox": [
+            73,
+            364,
+            197,
+            378
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Standard SPI: CLK, CS#, SI, SO, WP#",
+        "bbox": [
+            105,
+            380,
+            375,
+            395
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Dual SPI: CLK, CS#, SIO0, SIO1, WP#",
+        "bbox": [
+            78,
+            397,
+            375,
+            412
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Quad SPI: CLK, CS#, SIO0, SIO1, SIO2, SIO3",
+        "bbox": [
+            78,
+            414,
+            424,
+            429
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "High Performance",
+        "text_level": 2,
+        "bbox": [
+            75,
+            446,
+            219,
+            461
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "104MHz for fast read",
+        "bbox": [
+            78,
+            461,
+            273,
+            477
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Quad I/O data transfer up to 416Mbits/s",
+        "bbox": [
+            78,
+            478,
+            417,
+            492
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "4K-Byte cache for fast random read",
+        "bbox": [
+            109,
+            495,
+            380,
+            510
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Advanced Security Features",
+        "text_level": 2,
+        "bbox": [
+            73,
+            526,
+            293,
+            541
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "– Write protect all/portion of memory via software",
+        "bbox": [
+            78,
+            543,
+            478,
+            558
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Lockable 16K-Byte OTP region",
+        "bbox": [
+            78,
+            559,
+            338,
+            574
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "128-Bit Unique ID for each device",
+        "bbox": [
+            78,
+            577,
+            364,
+            592
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Program/Erase/Read Speed",
+        "text_level": 2,
+        "bbox": [
+            531,
+            268,
+            753,
+            283
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Page Program time : 360us typical",
+        "bbox": [
+            562,
+            285,
+            820,
+            301
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Block Erase time : 3.5ms typical",
+        "bbox": [
+            536,
+            301,
+            803,
+            317
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Page Read time : 175us typical",
+        "bbox": [
+            562,
+            318,
+            796,
+            334
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Single Supply Voltage: 2.7V\\~3.6V",
+        "text_level": 2,
+        "bbox": [
+            531,
+            351,
+            795,
+            368
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Advanced Security Features",
+        "bbox": [
+            531,
+            382,
+            748,
+            397
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "– 8 bit ECC option, per 528 bytes",
+        "bbox": [
+            535,
+            397,
+            798,
+            413
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "– Internal data move by page with ECC",
+        "bbox": [
+            536,
+            414,
+            842,
+            429
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "– Promised golden block0",
+        "bbox": [
+            536,
+            432,
+            748,
+            448
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Package",
+        "text_level": 2,
+        "bbox": [
+            531,
+            464,
+            602,
+            479
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "– 8-pin WSON (8\\*6mm)",
+        "bbox": [
+            535,
+            480,
+            733,
+            495
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "– All Packages are RoHS Compliant and Halogen-free",
+        "bbox": [
+            536,
+            498,
+            942,
+            515
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Data retention: 10 years",
+        "text_level": 2,
+        "bbox": [
+            531,
+            530,
+            721,
+            546
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "Endurance: 60,000 PROGRAM/ERASE cycles with ECC",
+        "bbox": [
+            530,
+            562,
+            944,
+            578
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "page_number",
+        "text": "Page 5",
+        "bbox": [
+            889,
+            948,
+            942,
+            964
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            75,
+            34,
+            182,
+            74
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            447,
+            55,
+            528,
+            70
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            850,
+            55,
+            936,
+            70
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            48,
+            948,
+            147,
+            964
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            442,
+            948,
+            503,
+            963
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "3. Packaging Type and Pin Configurations",
+        "text_level": 2,
+        "bbox": [
+            50,
+            97,
+            682,
+            124
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "XT26G04C is offered in an 8-pin WSON 8x6 mm<sup>2</sup> as shown below. Package diagram and dimension are illustrated at the end of this datasheet.",
+        "bbox": [
+            57,
+            147,
+            919,
+            183
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "image",
+        "img_path": "images/cdd8db862fa8a1a91b68fe987ea75e4885c6e5bda008b72aa1441f6cd0d24366.jpg",
+        "image_caption": [
+            "Figure1. Connection Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            288,
+            198,
+            687,
+            365
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "table",
+        "img_path": "images/a0e1adfa81f7da608f1b7478d9a5206289550c8c7a8a463b6326fc46111021c0.jpg",
+        "table_caption": [
+            "Pin Description"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>PIN NO.</td><td>PIN NAME</td><td>I/O</td><td>FUNCTION</td></tr><tr><td>1</td><td>CS#</td><td>I</td><td>Chip Select Input</td></tr><tr><td>2</td><td>SO (SIO1)</td><td>I/O</td><td>Data Output (Data Input Output 1) $^{(1)(2)}$ </td></tr><tr><td>3</td><td>WP# (SIO2)</td><td>I/O</td><td>Write Protect Input (Data Input Output 2) $^{(2)(3)}$ </td></tr><tr><td>4</td><td>VSS</td><td></td><td>Ground</td></tr><tr><td>5</td><td>SI (SIO0)</td><td>I/O</td><td>Data Input (Data Input Output 0) $^{(1)(2)}$ </td></tr><tr><td>6</td><td>SCLK</td><td>I</td><td>Serial Clock Input</td></tr><tr><td>7</td><td> $SIO_3$ </td><td>I/O</td><td>Data Input Output 3 $^{(2)}$ </td></tr><tr><td>8</td><td>VCC</td><td></td><td>Power Supply</td></tr></table>",
+        "bbox": [
+            52,
+            463,
+            907,
+            650
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "Notes:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            691,
+            110,
+            705
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "1.SIO0 and SIO1 are used for Dual SPI instructions.",
+        "bbox": [
+            55,
+            708,
+            406,
+            723
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "2.SIO0 – SIO3 are used for Quad SPI instructions",
+        "bbox": [
+            55,
+            724,
+            392,
+            739
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "page_number",
+        "text": "Page 6",
+        "bbox": [
+            872,
+            948,
+            927,
+            964
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            56,
+            511,
+            69
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            56,
+            919,
+            69
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "4. Block Diagram",
+        "text_level": 2,
+        "bbox": [
+            48,
+            97,
+            313,
+            123
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "image",
+        "img_path": "images/2a14b41a66bde56ea658fdb1a56133579498d161e0a32666bba9588c9ded62e5.jpg",
+        "image_caption": [
+            "Figure2. Block Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            132,
+            136,
+            820,
+            442
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "page_number",
+        "text": "Page 7",
+        "bbox": [
+            872,
+            958,
+            927,
+            973
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            33,
+            166,
+            74
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            56,
+            513,
+            69
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            56,
+            919,
+            69
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            958,
+            488,
+            973
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "5. Memory Mapping",
+        "text_level": 2,
+        "bbox": [
+            50,
+            97,
+            370,
+            125
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "image",
+        "img_path": "images/aa28a40b6d8169b6100a901bf82bb455ea2117863057226ed9a352c57193bbc1.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            211,
+            137,
+            756,
+            305
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Note:",
+        "text_level": 2,
+        "bbox": [
+            218,
+            315,
+            263,
+            330
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "The 13-bit column address is capable of addressing from 0 to 8191 bytes; However, only bytes 0 through 4351 are valid.",
+        "bbox": [
+            216,
+            330,
+            723,
+            359
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "Bytes 4352 through 8191 of each page are “out of bounds\", do not exist in the device, and cannot be addressed.",
+        "bbox": [
+            216,
+            359,
+            756,
+            389
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "page_number",
+        "text": "Page 8",
+        "bbox": [
+            872,
+            948,
+            927,
+            964
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            33,
+            166,
+            74
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 6
+    },
+    {
+        "type": "text",
+        "text": "6. Array Organization",
+        "text_level": 2,
+        "bbox": [
+            50,
+            86,
+            380,
+            112
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "table",
+        "img_path": "images/118be2a64368ebcf968fe3b4cdcfed2c82766051466b50b9872fcbe96c1e6646.jpg",
+        "table_caption": [
+            "Table1. Array Organization",
+            "Figure3. Array Organization"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Each device has</td><td>Each block has</td><td>Each page has</td><td>Unit</td></tr><tr><td>512M + 32M</td><td>256K + 16K</td><td>4K + 256</td><td>Bytes</td></tr><tr><td>2048 x 64</td><td>64</td><td>-</td><td>Pages</td></tr><tr><td>2048</td><td>-</td><td>-</td><td>Blocks</td></tr></table>",
+        "bbox": [
+            72,
+            163,
+            897,
+            262
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "image",
+        "img_path": "images/f535bb6e35d90e48cf1b76223b6f9db813f486bfdc0ee9e98d6375bc1de584bc.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            179,
+            357,
+            835,
+            621
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "page_number",
+        "text": "Page 9",
+        "bbox": [
+            872,
+            948,
+            927,
+            964
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 7
+    },
+    {
+        "type": "text",
+        "text": "7. Device Operation",
+        "text_level": 2,
+        "bbox": [
+            50,
+            86,
+            359,
+            112
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "7.1 SPI Modes",
+        "text_level": 2,
+        "bbox": [
+            78,
+            124,
+            244,
+            143
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "7.1.1 Standard SPI",
+        "text_level": 2,
+        "bbox": [
+            102,
+            160,
+            288,
+            178
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "The device is accessed through an SPI compatible bus consisting of four signals: Serial Clock (CLK), Chip Select (CS#), Serial Data Input (SI) and Serial Data Output (SO). Standard SPI instructions use the SI input pin to serially write instructions, addresses or data to the device on the rising edge of CLK. The SO output pin is used to read data or status from the device on the falling edge of CLK.",
+        "bbox": [
+            55,
+            201,
+            909,
+            275
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "SPI bus operation Mode 0 (0,0) and 3 (1,1) are supported. The primary difference between Mode 0 and Mode 3 concerns the normal state of the CLK signal when the SPI bus master is in standby and data is not being transferred to the Serial Flash. For Mode 0, the CLK signal is normally low on the falling and rising edges of CS#. For Mode 3, the CLK signal is normally high on the falling and rising edges of CS#.",
+        "bbox": [
+            55,
+            299,
+            907,
+            374
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "chart",
+        "img_path": "images/ee4210b0e7e68d642e78746df1ab0ca35f18f3f1656d19fb9f6b772f9509b04e.jpg",
+        "content": "",
+        "chart_caption": [
+            "Figure4. SPI SDR Modes Supported"
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            251,
+            437,
+            760,
+            577
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "7.1.2 Dual SPI",
+        "text_level": 2,
+        "bbox": [
+            102,
+            593,
+            244,
+            612
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "The device supports Dual SPI operation when using the x2 and dual IO instructions. These instructions allow data to be transferred to or from the device at two times the rate of ordinary Serial Flash devices. When using Dual SPI instructions, the SI and SO pins become bidirectional I/O pins: SIO0 and SIO1.",
+        "bbox": [
+            57,
+            636,
+            907,
+            691
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "7.1.3 Quad SPI",
+        "text_level": 2,
+        "bbox": [
+            102,
+            707,
+            253,
+            726
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "The device supports Quad SPI operation when using the x4 and Quad IO instructions. These instructions allow data to be transferred to or from the device four times the rate of ordinary Serial Flash. When using Quad SPI instructions the SI and SO pins become bidirectional SIO0 and SIO1 and the WP# pins becomes SIO2. Quad SPI instructions require the Quad Enable bit (QE) to be set.",
+        "bbox": [
+            55,
+            749,
+            909,
+            823
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "page_number",
+        "text": "Page 10",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 8
+    },
+    {
+        "type": "text",
+        "text": "7.2 Pin Description",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            295,
+            105
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "7.2.1 CS#",
+        "text_level": 2,
+        "bbox": [
+            102,
+            122,
+            201,
+            138
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "The SPI Chip Select (CS#) pin enables and disables device operation. When CS# is high, the device is deselected and the Serial Data Output (SIO0, SIO1, SIO2, SIO3) pins are at high impedance. When deselected, the devices power consumption will be at standby levels unless an internal erase, program or write status register cycle is in progress. When CS# is brought low, the device will be selected, power consumption will increase to active levels and instructions can be written to and data read from the device. After power-up, CS# must transition from high to low before a new instruction will be accepted.",
+        "bbox": [
+            55,
+            162,
+            909,
+            275
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "7.2.2 CLK",
+        "text_level": 2,
+        "bbox": [
+            102,
+            293,
+            199,
+            309
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "This input signal provides the synchronization reference for the SPI interface. Instructions, addresses, or data input are latched on the rising edge of the CLK signal. Data output changes after the falling edge of CLK.",
+        "bbox": [
+            57,
+            334,
+            907,
+            370
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "7.2.3 Serial Input (SI) / SIO0",
+        "text_level": 2,
+        "bbox": [
+            102,
+            387,
+            377,
+            406
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "This input signal is used to transfer data serially into the device. It receives instructions, addresses, and data to be programmed. Values are latched on the rising edge of serial CLK clock signal.",
+        "bbox": [
+            57,
+            429,
+            907,
+            465
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "SI becomes SIO0 – an input and output during Dual and Quad commands for receiving instructions, addresses, and data to be programmed (values latched on rising edge of serial CLK clock signal) as well as shifting out data (on the falling edge of CLK).",
+        "bbox": [
+            57,
+            489,
+            911,
+            543
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "7.2.4 Serial Output (SO) / SIO1",
+        "text_level": 2,
+        "bbox": [
+            102,
+            560,
+            404,
+            580
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "This output signal is used to transfer data serially out of the device. Data is shifted out on the falling edge of the serial CLK clock signal.",
+        "bbox": [
+            57,
+            602,
+            907,
+            637
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "SO becomes SIO1 -an input and output during Dual and Quad commands for receiving addresses, and data to be programmed (values latched on rising edge of serial CLK clock Signal) as well as shifting out data (on the falling edge of CLK).",
+        "bbox": [
+            57,
+            662,
+            907,
+            717
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "7.2.5 Write Protect (WP#) / SIO2",
+        "text_level": 2,
+        "bbox": [
+            102,
+            733,
+            427,
+            752
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "SPI NAND provides Hardware Protection Mode besides the Software Mode. Write Protect (WP#) prevents the block lock bits (BP0, BP1, BP2 and INV, CMP) from being overwritten. If the BRWD bit is set to 1 and WP# is LOW, the block protect bits cannot be altered.",
+        "bbox": [
+            57,
+            776,
+            911,
+            830
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "When WP# is driven Low (VIL), during a SET FEATURES command and while the BRWD bit of the Status Register is set to a 1, it is not possible to write to the Status Registers. This prevents any alteration of the Block Protect (BP2, BP1, BP0), INV and CMP bits of the Status Register. As a consequence, all the data bytes in the memory area that are protected by the Block Protect(BP2, BP1,BP0), INV and CMP bits, are also hardware protected against data modification if WP# is Low during a SET FEATURES command. The WP# function is not available when the Quad mode is enabled (QE=1).",
+        "bbox": [
+            55,
+            853,
+            909,
+            929
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "page_number",
+        "text": "Page 11",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 9
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            57,
+            81,
+            907,
+            118
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "The WP# function is replaced by SIO2 for input and output during Quad mode for receiving addresses, and data to be programmed (values are latched on rising edge of the CLK signal) as well as shifting out data (on the falling edge of CLK).",
+        "bbox": [
+            57,
+            143,
+            907,
+            197
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "7.2.6 SIO3",
+        "text_level": 2,
+        "bbox": [
+            102,
+            214,
+            209,
+            232
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "For Standard and Dual SPI Command Sets ,keep SIO3 pin always high level. For Quad SPI Command Sets, keep SIO3 pin high level when SIO3 is not in input and output state.",
+        "bbox": [
+            57,
+            256,
+            907,
+            292
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "page_number",
+        "text": "Page 12",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 10
+    },
+    {
+        "type": "text",
+        "text": "7.3 Command Set Tables",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            360,
+            104
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "table",
+        "img_path": "images/ce18b5a75276cb9cb21500150ea9d94c5660ea64861cfdb01d7b5e3a2472f370.jpg",
+        "table_caption": [
+            "Table2. Standard SPI Command Set"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>INSTRUCTION NAME</td><td>BYTE 1</td><td>BYTE 2</td><td>BYTE 3</td><td>BYTE 4</td><td>BYTE 5</td><td>BYTE N</td></tr><tr><td>WRITE ENABLE</td><td>06h</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>WRITE DISABLE</td><td>04h</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>GET FEATURES</td><td>0Fh</td><td>A7-A0</td><td>(D7-D0)</td><td> $wrap^{(8)}$ </td><td> $wrap^{(8)}$ </td><td> $wrap^{(8)}$ </td></tr><tr><td>SET FEATURES</td><td>1Fh</td><td>A7-A0</td><td>D7-D0</td><td></td><td></td><td></td></tr><tr><td>PAGE READ</td><td>13h</td><td>A23-A16</td><td>A15-A7</td><td>A7-A0</td><td></td><td></td></tr><tr><td>READ FROM CACHE</td><td>03h/0Bh</td><td> $A15-A8^{(1)}$ </td><td>A7-A0</td><td>dummy</td><td>(D7-D0)</td><td>Byte N</td></tr><tr><td>READ ID</td><td>9Fh</td><td>00</td><td> $(MID)^{(6)}$ </td><td> $(DID)^{(6)}$ </td><td></td><td></td></tr><tr><td>READ UID</td><td>4Bh</td><td>dummy</td><td>dummy</td><td>0x00</td><td>dummy</td><td>D127-D0</td></tr><tr><td>PROGRAM LOAD</td><td>02h</td><td> $A15-A8^{(1)}$ </td><td>A7-A0</td><td>D7-D0</td><td>Next byte</td><td>Byte N</td></tr><tr><td>PROGRAM LOAD RANDOM  $DATA^{(7)}$ </td><td>84h</td><td> $A15-A8^{(1)}$ </td><td>A7-A0</td><td>D7-D0</td><td>Next byte</td><td>Byte N</td></tr><tr><td>PROGRAM EXECUTE</td><td>10h</td><td>A23-A16</td><td>A15-A7</td><td>A7-A0</td><td></td><td></td></tr><tr><td>BLOCK ERASE</td><td>D8h</td><td>A23-A16</td><td>A15-A7</td><td>A7-A0</td><td></td><td></td></tr><tr><td>RESET</td><td>FFh</td><td></td><td></td><td></td><td></td><td></td></tr></table>",
+        "bbox": [
+            58,
+            166,
+            929,
+            610
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "table",
+        "img_path": "images/e694b580622e1c1dcbe78b0e358605fde56ddde44929061305e976e34af5babe.jpg",
+        "table_caption": [
+            "Table3. Dual SPI Command Set"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>INSTRUCTION NAME</td><td>BYTE 1</td><td>BYTE 2</td><td>BYTE 3</td><td>BYTE 4</td><td>BYTE 5</td><td>BYTE N</td></tr><tr><td>READ FROM CACHE x 2</td><td>3Bh</td><td> $A15-A8^{(1)}$ </td><td>A7-A0</td><td>dummy</td><td>(D7-D0)x2</td><td>-</td></tr><tr><td>READ FROM CACHE DUAL IO</td><td>BBh</td><td> $A15-A0^{(2)}$ </td><td>dummy $^{(3)}$ </td><td>(D7-D0)x2</td><td>Next byte</td><td>-</td></tr></table>",
+        "bbox": [
+            58,
+            660,
+            927,
+            752
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "page_number",
+        "text": "Page 13",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 11
+    },
+    {
+        "type": "table",
+        "img_path": "images/df922dfb88ffdd702f48dc12fe6d1faba617043778fd02d6300d533c3c60fdbe.jpg",
+        "table_caption": [
+            "Table4. Quad SPI Command Set"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>INSTRUCTION NAME</td><td>BYTE 1</td><td>BYTE 2</td><td>BYTE 3</td><td>BYTE 4</td><td>BYTE 5</td><td>BYTE N</td></tr><tr><td>READ FROM CACHE x4</td><td>6Bh</td><td> $A15-A8^{(1)}$ </td><td>A7-A0</td><td>dummy</td><td>(D7-D0)x4</td><td>Byte N</td></tr><tr><td>READ FROM CACHE QUAD IO</td><td>EBh</td><td> $A15-A0^{(4)}$ </td><td>(D7-D0)x4</td><td>Next byte</td><td>Next byte</td><td>Byte N</td></tr><tr><td>PROGRAM LOAD x4</td><td>32h</td><td> $A15-A8^{(1)}$ </td><td>A7-A0</td><td>(D7-D0) x4</td><td>Next byte</td><td>Byte N</td></tr><tr><td>PROGRAM LOAD RANDOM DATA  $x4^{(7)}$ </td><td>C4h/34h</td><td> $A15-A8^{(1)}$ </td><td>A7-A0</td><td>(D7-D0) x4</td><td>Next byte</td><td>Byte N</td></tr><tr><td>PROGRAM LOAD RANDOM DATA Quad  $IO^{(7)}$ </td><td>72h</td><td> $A15-A0^{(5)}$ </td><td>(D7-D0) x4</td><td>Next byte</td><td>Next byte</td><td>Byte N</td></tr></table>",
+        "bbox": [
+            58,
+            110,
+            924,
+            327
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "Notes:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            336,
+            110,
+            350
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "1.The x8 clock = dummy <2:0>, A12-A8",
+        "bbox": [
+            57,
+            353,
+            330,
+            366
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "2.The x8 clock = dummy <2:0>, A12-A0",
+        "bbox": [
+            58,
+            369,
+            330,
+            384
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "3.The x8 clock = dummy <7:0>, D7-D0",
+        "bbox": [
+            58,
+            385,
+            323,
+            400
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "4.The x8 clock = dummy <2:0>, A12-A0,dummy<7:0>,D7-D0",
+        "bbox": [
+            58,
+            401,
+            469,
+            416
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "5.The x8 clock = dummy <2:0>, A12-A0,D7-D0,D7-D0",
+        "bbox": [
+            58,
+            418,
+            424,
+            433
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "6.MID is Manufacture ID, DID is Device ID",
+        "bbox": [
+            58,
+            435,
+            348,
+            448
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "7.Only available in Internal Data Move operation",
+        "bbox": [
+            58,
+            451,
+            397,
+            466
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "8.GET FEATURES(0FH), address=0XC0, wrap function",
+        "bbox": [
+            57,
+            467,
+            426,
+            483
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "page_number",
+        "text": "Page 14",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 12
+    },
+    {
+        "type": "text",
+        "text": "7.4 WRITE OPERATIONS",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            350,
+            103
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "7.4.1 Write Enable (WREN) (06H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            121,
+            429,
+            140
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "The Write Enable (WREN) command is for setting the Write Enable Latch (WEL) bit. The Write Enable Latch (WEL) bit must be set prior to following operations that change the contents of the memory array:",
+        "bbox": [
+            58,
+            162,
+            907,
+            198
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": " Page Program",
+        "bbox": [
+            80,
+            201,
+            214,
+            216
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": " OTP Program",
+        "bbox": [
+            80,
+            219,
+            209,
+            233
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": " OTPLock",
+        "bbox": [
+            80,
+            237,
+            177,
+            251
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": " BLOCK ERASE",
+        "bbox": [
+            80,
+            255,
+            209,
+            269
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "image",
+        "img_path": "images/7eb9aa614431a123f380804a304f6c9f9852dc5b91c03cd3a5f491da715583de.jpg",
+        "image_caption": [
+            "Figure5. Write Enable Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            318,
+            321,
+            694,
+            467
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "page_number",
+        "text": "Page 15",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 13
+    },
+    {
+        "type": "text",
+        "text": "7.4.2 WRITE DISABLE (WRDI) (04h)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            444,
+            102
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "The Write Disable command is for resetting the Write Enable Latch (WEL) bit. The WEL bit is also reset by following condition:",
+        "bbox": [
+            58,
+            125,
+            907,
+            159
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": " Page Program",
+        "bbox": [
+            80,
+            163,
+            214,
+            178
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": " OTP Program",
+        "bbox": [
+            80,
+            181,
+            209,
+            195
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": " OTPLock",
+        "bbox": [
+            80,
+            199,
+            179,
+            214
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": " BLOCK ERASE",
+        "bbox": [
+            80,
+            218,
+            209,
+            233
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "image",
+        "img_path": "images/a9208e2a09f0afc3457580d477b4e23ea38d49994c6172e28355bd4d20dcdda5.jpg",
+        "image_caption": [
+            "Figure6. Write Disable Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            305,
+            285,
+            681,
+            427
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "page_number",
+        "text": "Page 16",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 14
+    },
+    {
+        "type": "text",
+        "text": "7.5 FEATURE OPERATIONS",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            379,
+            104
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "7.5.1 Get Features (0FH) and Set Features (1FH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            121,
+            572,
+            140
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "The GET FEATURES (0Fh) and SET FEATURES (1Fh) commands are used to monitor the device status and alter the device behavior from the default power-on behavior. These commands use a 1-byte feature address to determine which feature is to be read or modified. Features such as OTP and block locking can be enabled or disabled by setting specific bits in feature address A0h and B0h (shown the following table). The status register is mostly read, except WEL, which is writable bit with the WREN (06h) command.",
+        "bbox": [
+            55,
+            162,
+            907,
+            255
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "When a feature is set, it remains active until the device is power cycled or the feature is written to. Unless otherwise specified in the following table, once the device is set, it remains set, even if a RESET (FFh) command is issued.",
+        "bbox": [
+            57,
+            279,
+            907,
+            333
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "table",
+        "img_path": "images/465463dec7d08a5322e58ac99124ebdf6369a12854d5ce9c83ee06879f2b3b5c.jpg",
+        "table_caption": [
+            "Table5. Features Settings"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"2\">Register</td><td rowspan=\"2\">Address</td><td colspan=\"8\">Data Bits</td></tr><tr><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td></tr><tr><td>Block Lock</td><td>A0H</td><td>BRWD</td><td>Reserved</td><td>BP2</td><td>BP1</td><td>BPO</td><td>INV</td><td>CMP</td><td>Reserved</td></tr><tr><td>Feature</td><td>BOH</td><td>OTP_PRT</td><td>OTP_EN</td><td>Reserved</td><td>ECC_EN</td><td>Reserved</td><td>Reserved</td><td>Reserved</td><td>QE</td></tr><tr><td>Status</td><td>COH</td><td>ECCS3</td><td>ECCS2</td><td>ECCS1</td><td>ECCSO</td><td>P_FAIL</td><td>E_FAIL</td><td>WEL</td><td>OIP</td></tr><tr><td>Drive Strength</td><td>DOH</td><td>Reserved</td><td>DS_IO[1]</td><td>DS_IO[0]</td><td>Reserved</td><td>Reserved</td><td>Reserved</td><td>Reserved</td><td>Reserved</td></tr></table>",
+        "bbox": [
+            63,
+            385,
+            921,
+            570
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "Note:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            580,
+            102,
+            593
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "1.If BRWD is enabled and WP# is low, then the block lock register (BP2-BP0, INV and CMP) cannot be changed.",
+        "bbox": [
+            57,
+            595,
+            813,
+            610
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "2.If QE is enabled, the quad IO operations can be executed.",
+        "bbox": [
+            57,
+            612,
+            468,
+            627
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "3.All the reserved bits must be held low when the feature is set.",
+        "bbox": [
+            57,
+            629,
+            500,
+            642
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "4.The features in the feature byte B0H are all volatile except OTP\\_PRT bit.",
+        "bbox": [
+            57,
+            644,
+            565,
+            659
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "5.ECC is always on(ECC\\_EN is invalid) for current product.",
+        "bbox": [
+            58,
+            662,
+            454,
+            676
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "text",
+        "text": "6.DS\\_IO[1] and DS\\_IO[0]:IO driver strength setting.",
+        "bbox": [
+            58,
+            678,
+            411,
+            693
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "table",
+        "img_path": "images/1f18661ee61529f0450dc507939ff0c52daf52b1882e77d84081798c2d33ee4a.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>DS_IO[1]</td><td>DS_IO[0]</td><td>IO driver strength</td></tr><tr><td>0</td><td>0</td><td>25%(Default)</td></tr><tr><td>0</td><td>1</td><td>50%</td></tr><tr><td>1</td><td>0</td><td>75%</td></tr><tr><td>1</td><td>1</td><td>100%</td></tr></table>",
+        "bbox": [
+            85,
+            706,
+            701,
+            793
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "page_number",
+        "text": "Page 17",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 15
+    },
+    {
+        "type": "image",
+        "img_path": "images/533a285a111c01c15f58dda7c1248bddd4bd170287a57cb693dcf8f83c9f602c.jpg",
+        "image_caption": [
+            "Figure7. Get Features Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            154,
+            148,
+            815,
+            315
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "image",
+        "img_path": "images/9cf7aad143c5c7fc60bb791fb063235c2daeeb15bac53cba4f9bf36143a763f2.jpg",
+        "image_caption": [
+            "Figure8. Set Features Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            156,
+            389,
+            813,
+            539
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "page_number",
+        "text": "Page 18",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            513,
+            70
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 16
+    },
+    {
+        "type": "text",
+        "text": "7.6 READ OPERATIONS",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            338,
+            104
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "7.6.1 Page Read",
+        "text_level": 2,
+        "bbox": [
+            102,
+            122,
+            266,
+            140
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "The PAGE READ (13h) command transfers the data from the NAND Flash array to the cache register. The command sequence is follows:",
+        "bbox": [
+            58,
+            163,
+            907,
+            195
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "1.13h (PAGE READ TO CACHE)",
+        "bbox": [
+            58,
+            201,
+            268,
+            216
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "2.0Fh (GET FEATURES command to read the status)",
+        "bbox": [
+            57,
+            220,
+            411,
+            235
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "Monitor whether the status of the operation is finished",
+        "bbox": [
+            90,
+            239,
+            476,
+            255
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "3.0Bh or 03h (READ FROM CACHE)",
+        "bbox": [
+            57,
+            258,
+            296,
+            274
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "Requires mode configure bits, followed by 13-bit column address for the starting byte address",
+        "bbox": [
+            90,
+            277,
+            739,
+            294
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "Other Operation：",
+        "bbox": [
+            92,
+            299,
+            219,
+            312
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": " 3Bh (READ FROM CACHE x2)",
+        "bbox": [
+            80,
+            315,
+            302,
+            330
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": " 6Bh (READ FROM CACHE x4)",
+        "bbox": [
+            80,
+            334,
+            302,
+            347
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": " BBh (READ FROM CACHE DUAL IO)",
+        "bbox": [
+            80,
+            351,
+            343,
+            366
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": " EBh (READ FROM CACHE QUAD IO)",
+        "bbox": [
+            80,
+            369,
+            348,
+            384
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "The PAGE READ command requires a 24-bit address consisting of 7 dummy bits followed by a 17-bit block/page address. After the block/page addresses are registered, the device starts the transfer from the main array to the cache register, and is busy for tRD time. During this time, the GET FEATURES (0Fh) command can be issued to monitor the status of the operation (refer to the Status Register section). Following a status of successful completion, the READ FROM CACHE (03h/0Bh/3Bh/6Bh/BBh/EBh) command must be issued in order to read the data out of the cache.",
+        "bbox": [
+            55,
+            409,
+            909,
+            521
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "The device supports pre-read function. When reading multiple pages continuously, the average tRD is shortened.",
+        "bbox": [
+            57,
+            545,
+            907,
+            580
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "page_number",
+        "text": "Page 19",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 17
+    },
+    {
+        "type": "text",
+        "text": "7.6.2 Page Read to Cache (13H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            414,
+            102
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "image",
+        "img_path": "images/470d5f2d9448b85624a6b279095b17eceebfe1b6b64a342e1943c971fb31d97e.jpg",
+        "image_caption": [
+            "Figure9. Page Read to cache Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            194,
+            153,
+            823,
+            501
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "page_number",
+        "text": "Page 20",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 18
+    },
+    {
+        "type": "text",
+        "text": "7.6.3 Read From Cache (03H or 0BH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            463,
+            102
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "image",
+        "img_path": "images/ac3eae4ec0c638bbcda8839f4aa8ad1366f0d71ae2e6a2263b2d89c64cf9b874.jpg",
+        "image_caption": [
+            "Figure10. Read From Cache Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            206,
+            150,
+            812,
+            495
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "text",
+        "text": "7.6.4 Read From Cache x2 (3BH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            517,
+            419,
+            535
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "image",
+        "img_path": "images/1ff63ee7088cffc0b4154a3fe37cf602f81a6b5d9682f08c5bf755e404fa0cfd.jpg",
+        "image_caption": [
+            "Figure11. Read From Cache x2 Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            197,
+            592,
+            825,
+            933
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "page_number",
+        "text": "Page 21",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            950,
+            488,
+            963
+        ],
+        "page_idx": 19
+    },
+    {
+        "type": "text",
+        "text": "7.6.5 Read From Cache x4 (6BH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            419,
+            102
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "text",
+        "text": "The Quad Enable bit (QE) of feature (B0 [0]) must be set to enable for the read from cache x4 command.",
+        "bbox": [
+            75,
+            125,
+            865,
+            141
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "image",
+        "img_path": "images/b34e7124d293b5fcbafb206837fef65b1ba41947d2a60f7c3330e26fe8788213.jpg",
+        "image_caption": [
+            "Figure12. Read From Cache x4 Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            181,
+            195,
+            830,
+            568
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "page_number",
+        "text": "Page 22",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            513,
+            70
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 20
+    },
+    {
+        "type": "text",
+        "text": "7.6.6 Read From Cache Dual IO (BBH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            471,
+            102
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "text",
+        "text": "The Read from Cache Dual I/O command (BBH) is similar to the Read form Cache x2 command (3BH) but with the capability to input the 3 dummy bits, followed by a 13-bit column address for the starting byte address and a dummy byte by SIO0 and SIO1, each bit being latched in during the rising edge of SCLK, then the cache contents are shifted out 2-bit per clock cycle from SIO0 and SIO1. The first byte addressed can be at any location. The address is automatically incremented to the next higher address after each byte of data is shifted out until the boundary by the dummy<2:0>.",
+        "bbox": [
+            55,
+            125,
+            909,
+            237
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "image",
+        "img_path": "images/6762c7ca065629c5400aec36de37249a54de3c07c2d35792e3f13f49b649618a.jpg",
+        "image_caption": [
+            "Figure13. Read From Cache Dual IO Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            93,
+            289,
+            909,
+            471
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "page_number",
+        "text": "Page 23",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 21
+    },
+    {
+        "type": "text",
+        "text": "7.6.7 Read From Cache Quad IO (EBH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            478,
+            102
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "text",
+        "text": "The Read from Cache Quad IO command is similar to the Read from Cache x4 command but with the capability to input the 3 dummy bits, followed a 13-bit column address for the starting byte address and a dummy byte by SIO0, SIO1, SIO2, SIO3, each bit being latched in during the rising edge of SCLK, then the cache contents are shifted out 4-bit per clock cycle from SIO0, SIO1, SIO2, SIO3. The first byte addressed can be at any location. The address is automatically incremented to the next higher address after each byte of data is shifted out until the boundary by the dummy<2:0>. The Quad Enable bit (QE) of feature (B0 [0]) must be set to enable for the read from cache quad IO command.",
+        "bbox": [
+            55,
+            125,
+            909,
+            256
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "image",
+        "img_path": "images/f649c9a4a2fa6891b1ac82b8f97e7f8800f5f9ffb572597af6b5715fade87315.jpg",
+        "image_caption": [
+            "Figure14. Read From Cache Quad IO Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            174,
+            309,
+            845,
+            573
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "page_number",
+        "text": "Page 24",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 22
+    },
+    {
+        "type": "text",
+        "text": "7.6.8 Read ID (9FH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            296,
+            102
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "text",
+        "text": "The READ ID command is used to read the 2 bytes of identifier code programmed into the NAND Flash device. The READ ID command reads a 2-byte table (see below) that includes the Manufacturer ID and the device configuration.",
+        "bbox": [
+            58,
+            125,
+            909,
+            179
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "image",
+        "img_path": "images/917119bcd64df2142bbd028bbfeb645642d8a46cfaa7b1d4ebc9594e23999be1.jpg",
+        "image_caption": [
+            "Figure15. Read ID Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            75,
+            233,
+            902,
+            404
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "table",
+        "img_path": "images/f13785ce3f0df678dfa72f389f51e4439ad2280978b76113be8d62468a7d4fff.jpg",
+        "table_caption": [
+            "Table6. READ ID Table"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Address</td><td>Value</td><td>Description</td></tr><tr><td>Byte 0</td><td>0BH</td><td>Manufacture ID (XTX)</td></tr><tr><td>Byte 1</td><td>13H</td><td>Device ID (SPI NAND 3.3V 4Gbit)</td></tr></table>",
+        "bbox": [
+            70,
+            459,
+            895,
+            532
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "page_number",
+        "text": "Page 25",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 23
+    },
+    {
+        "type": "text",
+        "text": "7.6.1 Read UID (4BH)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            98,
+            315,
+            116
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "text",
+        "text": "The READ UID instruction accesses a factory-set read-only 128-bit number that is unique to each device. The ID number can be used in conjunction with user software methods to help prevent copying or cloning of a system.",
+        "bbox": [
+            57,
+            138,
+            907,
+            193
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "image",
+        "img_path": "images/8d993034782d101551b47868f7701407a36fd97d0c4516fcdeaaaa4f1cc660e0.jpg",
+        "image_caption": [
+            "Figure16. Read UID (4Bh) Timing"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            174,
+            242,
+            810,
+            527
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "page_number",
+        "text": "Page 26",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 24
+    },
+    {
+        "type": "text",
+        "text": "7.7 PROGRAM OPERATIONS",
+        "text_level": 2,
+        "bbox": [
+            78,
+            93,
+            397,
+            112
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "7.7.1 Page Program",
+        "text_level": 2,
+        "bbox": [
+            102,
+            130,
+            300,
+            149
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "The PAGE PROGRAM operation sequence programs 1 byte to 4352 bytes of data within a page. The page program sequence is as follows:",
+        "bbox": [
+            58,
+            171,
+            907,
+            205
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": " 02H (PROGRAM LOAD)/32H (PROGRAM LOAD x4)",
+        "bbox": [
+            78,
+            207,
+            461,
+            224
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": " 06H (WRITE ENABLE)",
+        "bbox": [
+            80,
+            226,
+            260,
+            241
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": " 10H (PROGRAM EXECUTE)",
+        "bbox": [
+            80,
+            245,
+            296,
+            258
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": " 0FH (GET FEATURES command to read the status)",
+        "bbox": [
+            78,
+            262,
+            461,
+            277
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "The 1st step is to issue a PROGRAM LOAD (02H/32H) command. PROGRAM LOAD consists of an 8-bit Op code, followed by 3 dummy bits and a 13-bit column address, then the data bytes to be programmed. The data bytes are loaded into a cache register which is 4352 bytes long. If more than 4352 bytes are loaded, then those additional bytes are ignored by the cache register. The command sequence ends when CS# goes from low to high.",
+        "bbox": [
+            55,
+            302,
+            909,
+            395
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "The 2nd step, prior to performing the PROGRAM EXECUTE operation, is to issue a WRITE ENABLE (06H) command. As with any command that changes the memory contents, the WRITE ENABLE must be executed in order to set the WEL bit. If this command is not issued, then the rest of the program sequence is ignored.",
+        "bbox": [
+            55,
+            420,
+            907,
+            476
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "The 3rd step is to issue a PROGRAM EXECUTE (10h) command to initiate the transfer of data from the cache register to the main array. PROGRAM EXECUTE consists of an 8-bit Op code, followed by a 24-bit address (7 dummy bits and a 17-bit page/block address). After the page/block address is registered, the memory device starts the transfer from the cache register to the main array, and is busy for t<sub>PROG</sub> time.",
+        "bbox": [
+            55,
+            500,
+            907,
+            574
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "During this busy time, the status register can be polled to monitor the status of the operation (refer to the Status Register section). When the operation completes successfully, the next series of data can be loaded with the PROGRAM LOAD command.",
+        "bbox": [
+            55,
+            597,
+            907,
+            650
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "Note :",
+        "text_level": 2,
+        "bbox": [
+            55,
+            682,
+            105,
+            697
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "The number of consecutive partial page programming operations (NOP) within the same page must not exceed 4. In addition, pages must be sequentially programmed within a block.",
+        "bbox": [
+            90,
+            700,
+            890,
+            733
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "page_number",
+        "text": "Page 27",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 25
+    },
+    {
+        "type": "text",
+        "text": "7.7.2 Program Load (PL)(02H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            83,
+            395,
+            102
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "image",
+        "img_path": "images/22c28bcab1d10e8a0060f135e00219590b7eca8d6133643d908e3b4c4a8110fb.jpg",
+        "image_caption": [
+            "Figure17. Program Load Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            196,
+            146,
+            828,
+            428
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "text",
+        "text": "7.7.3 Program Load x4 (PL x4) (32H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            473,
+            456,
+            492
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "text",
+        "text": "The Program Load x4 command (32H) is similar to the Program Load command (02H) but with the capability to input the data bytes by four pins: SIO0, SIO1, SIO2, and SIO3. The command sequence is shown below. The Quad Enable bit (QE) of feature (B0 [0]) must be set to enable for the program load x4 command.",
+        "bbox": [
+            57,
+            514,
+            907,
+            570
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "image",
+        "img_path": "images/ddc548c17077b11f7e57d2426ecc66d8ff3aab181b59eb51c2e442cf461bdcb6.jpg",
+        "image_caption": [
+            "Figure18. Program Load x4 Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            88,
+            621,
+            924,
+            830
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "page_number",
+        "text": "Page 28",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 26
+    },
+    {
+        "type": "text",
+        "text": "7.7.4 Program Execute (PE) (10H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            431,
+            102
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "text",
+        "text": "After the data is loaded, a PROGRAM EXECUTE (10H) command must be issued to initiate the transfer of data from the cache register to the main array. PROGRAM EXECUTE consists of an 8-bit Op code, followed by a 24-bit address (7 dummy bits and a 17-bit page/block address). After the page/block address is registered, the memory device starts the transfer from the cache register to the main array, and is busy for t<sub>PROG</sub> time. During this busy time, the status register can be polled to monitor the status of the operation (refer to Status Register). When the operation completes successfully, the next series of data can be loaded with the PROGRAM LOAD command.",
+        "bbox": [
+            55,
+            125,
+            907,
+            255
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "image",
+        "img_path": "images/feb93e7e9b0bf20c081033f4a4a18126b5dba202f459f5cdb79962cfed9c8d17.jpg",
+        "image_caption": [
+            "Figure19. Program Execute Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            209,
+            309,
+            838,
+            655
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "page_number",
+        "text": "Page 29",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 27
+    },
+    {
+        "type": "text",
+        "text": "7.7.5 Internal Data Move",
+        "text_level": 2,
+        "bbox": [
+            102,
+            98,
+            354,
+            115
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": "The Internal Data Move command sequence programs or replaces data in a page with existing data. The Internal Data Move command sequence is as follows:",
+        "bbox": [
+            57,
+            138,
+            899,
+            174
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": " 13H (PAGE READ TO CACHE)",
+        "bbox": [
+            78,
+            176,
+            300,
+            190
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": " 84H/C4H/ 34H/72H(PROGRAM LOAD RANDOM DATA : Optional)",
+        "bbox": [
+            78,
+            192,
+            545,
+            206
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": " 06H (WRITE ENABLE)",
+        "bbox": [
+            80,
+            207,
+            250,
+            220
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": " 10H (PROGRAM EXECUTE)",
+        "bbox": [
+            80,
+            222,
+            286,
+            235
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": " 0FH (GET FEATURES command to read the status)",
+        "bbox": [
+            80,
+            237,
+            442,
+            251
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": "Prior to performing an internal data move operation, the target page content must be read out into the cache register by issuing a PAGE READ (13H) command. The PROGRAM LOAD RANDOM DATA (84H/C4H/34H/72H) command can be issued, if user wants to update bytes of data in the page.",
+        "bbox": [
+            57,
+            274,
+            901,
+            328
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": "New data is loaded in the 13-bit column address. If the RANDOM DATA is not sequential, another PROGRAM LOAD RANDOM DATA (84H/C4H/34H/72H) command must be issued with the new column address. After the data is loaded, the WRITE ENABLE command must be issued, and then a PROGRAM EXECUTE (10H) command can be issued to start the programming operation.",
+        "bbox": [
+            55,
+            352,
+            901,
+            427
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": "7.7.6 Program Load Random Data (84H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            444,
+            496,
+            461
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": "This command consists of an 8-bit Op code, followed by 3 dummy bits, and a 13-bit column address. New data is loaded in the column address provided with the 13 bits. If the random data is not sequential, then another PROGRAM LOAD RANDOM DATA (84h) command must be issued with a new column address. After the data is loaded, a PROGRAM EXECUTE (10h) command can be issued to start the programming operation.",
+        "bbox": [
+            55,
+            485,
+            901,
+            560
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "image",
+        "img_path": "images/d2f0ea783c9508733ab3f89c06c029e13e5cf72b3f297487e6a8b63eec1a9651.jpg",
+        "image_caption": [
+            "Figure20. Program Load Random Data Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            179,
+            609,
+            808,
+            887
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "page_number",
+        "text": "Page 30",
+        "bbox": [
+            872,
+            959,
+            937,
+            973
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            132,
+            973
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            959,
+            488,
+            973
+        ],
+        "page_idx": 28
+    },
+    {
+        "type": "text",
+        "text": "7.7.7 Program Random Data x4 (C4H/34H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            98,
+            521,
+            116
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "text",
+        "text": "The Program Load Random Data x4 command (C4H) is similar to the Program Load Random Data command (84H) but with the capability to input the data bytes by four pins: SIO0, SIO1, SIO2, and SIO3. The command sequence is shown below. The Quad Enable bit (QE) of feature (B0 [0]) must be set to enable for the program load random data x4 command.",
+        "bbox": [
+            57,
+            138,
+            907,
+            213
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "image",
+        "img_path": "images/b42d444459201b849fc6db8a54db957de81b77bbb008e6b14817beb283ea2c88.jpg",
+        "image_caption": [
+            "Figure21. Program Load Random Data x4 Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            63,
+            266,
+            897,
+            473
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "page_number",
+        "text": "Page 31",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 29
+    },
+    {
+        "type": "text",
+        "text": "7.7.8 Program Random Quad IO (72H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            84,
+            479,
+            102
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "text",
+        "text": "The Program Load Random Data Quad IO command (72H) is similar to the Program Load Random Data x4 command (C4H) but with the capability to input the 3 dummy bits, and a 13-bit column address by four pins: SIO0, SIO1, SIO2, and SIO3. The command sequence is shown below. The Quad Enable bit (QE) of feature (B0 [0]) must be set to enable for the program load random data x4 command.",
+        "bbox": [
+            55,
+            125,
+            912,
+            199
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "image",
+        "img_path": "images/417d3e70a15fda87c7b99ebdb8f9ef063db9547b42634682bc272b612a379660.jpg",
+        "image_caption": [
+            "Figure22. Program Load Random Data Quad IO Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            132,
+            267,
+            852,
+            476
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "page_number",
+        "text": "Page 32",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            132,
+            964
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 30
+    },
+    {
+        "type": "text",
+        "text": "7.8 ERASE OPERATIONS",
+        "text_level": 2,
+        "bbox": [
+            78,
+            91,
+            348,
+            111
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": "7.8.1 Block Erase (D8H)",
+        "text_level": 2,
+        "bbox": [
+            102,
+            128,
+            333,
+            146
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": "The BLOCK ERASE (D8h) command is used to erase at the block level. The blocks are organized as 64 pages per block, 4352 bytes per page (4096+256 bytes). Each block is 272Kbytes. The BLOCK ERASE command (D8h) operates on one block at a time. The command sequence for the BLOCK ERASE operation is as follows:",
+        "bbox": [
+            57,
+            169,
+            907,
+            224
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": " 06h (WRITE ENBALE command)",
+        "bbox": [
+            80,
+            226,
+            343,
+            242
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": " D8h (BLOCK ERASE command)",
+        "bbox": [
+            80,
+            245,
+            335,
+            260
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": " 0Fh (GET FEATURES command to read the status register)",
+        "bbox": [
+            80,
+            264,
+            541,
+            281
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": "Prior to performing the BLOCK ERASE operation, a WRITE ENABLE (06h) command must be issued. As with any command that changes the memory contents, the WRITE ENABLE command must be executed in order to set the WEL bit. If the WRITE ENABLE command is not issued, then the rest of the erase sequence is ignored. A WRITE ENABLE command must be followed by a BLOCK ERASE (D8h) command. This command requires a 24-bit address. After the row address is registered, the control logic automatically controls timing and erase-verify operations. The device is busy for t<sub>ERS</sub> time during the BLOCK ERASE operation. The GET FEATURES (0Fh) command can be used to monitor the status of the operation (refer to the Status Register section).",
+        "bbox": [
+            55,
+            305,
+            907,
+            437
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": "Note:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            446,
+            102,
+            459
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": "When a BLOCK ERASE operation is in progress, user can issue READ FROM CACHE commands (03H/0BH/3BH/6BH/BBH/EBH) to read the data in the cache.",
+        "bbox": [
+            90,
+            461,
+            947,
+            494
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "image",
+        "img_path": "images/0f043f8cb4895e75fdadea13099d4f1424f4825fb6be8a7529bac5c43c5e82fe.jpg",
+        "image_caption": [
+            "Figure23. Block Erase Sequence Diagram"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            181,
+            547,
+            810,
+            894
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "page_number",
+        "text": "Page 33",
+        "bbox": [
+            872,
+            959,
+            936,
+            973
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            959,
+            486,
+            973
+        ],
+        "page_idx": 31
+    },
+    {
+        "type": "text",
+        "text": "7.9 RESET OPERATIONS",
+        "text_level": 2,
+        "bbox": [
+            78,
+            92,
+            345,
+            111
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "text",
+        "text": "The RESET (FFh) command stops all operations. For example, in case of a program or erase or read operation, the reset command can make the device enter the wait state.",
+        "bbox": [
+            57,
+            135,
+            917,
+            169
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "text",
+        "text": "7.9.1 RESET (FFh)",
+        "bbox": [
+            102,
+            188,
+            276,
+            207
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "image",
+        "img_path": "images/433bdb528fbc3794cebeb3a831eb22350ceac30aca05eb17b860d3b5bbcf44f6.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            320,
+            226,
+            699,
+            399
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "page_number",
+        "text": "Page 34",
+        "bbox": [
+            872,
+            959,
+            937,
+            973
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            958,
+            488,
+            973
+        ],
+        "page_idx": 32
+    },
+    {
+        "type": "text",
+        "text": "7.10 WRITE PROTECT",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            320,
+            104
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "text",
+        "text": "The write protection will be determined by the combination of CMP, INV, BP[2:0] bits in the Block Lock Register (A0).",
+        "bbox": [
+            57,
+            128,
+            919,
+            163
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "text",
+        "text": "The block lock feature provides the ability to protect the entire device, or ranges of blocks, from the PROGRAM and ERASE operations. After power-up, the device is in the “locked” state, i.e., feature bits BP0, BP1and BP2are set to 1, INV, CMP and BRWD are set to 0. To unlock all the blocks, or a range of blocks, the SET FEATURES command must be issued to alter the state of protection feature bits. When BRWD is set and WP# is LOW, none of the writable protection feature bits can be set. Also, when a PROGRAM/ERASE command is issued to a locked block, status bit OIP remains 0.When an ERASE command is issued to a locked block, the erase failure, 04H is returned. When a PROGRAM command is issued to a locked block, program failure, 08h is returned",
+        "bbox": [
+            55,
+            187,
+            919,
+            319
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "table",
+        "img_path": "images/a911ffb82c56f8d011d6e8d39967361a234dfcc4de195f5d2635b8a25ce809af.jpg",
+        "table_caption": [
+            "Table7. Block Lock Register Block Protect Bits"
+        ],
+        "table_footnote": [
+            "When WP# is not LOW, user can issue bellows commands to alter the protection states as want.",
+            " Issue SET FEATURES register write (1FH)",
+            " Issue the feature bit address (A0H) and the feature bits combination as the table"
+        ],
+        "table_body": "<table><tr><td>CMP</td><td>INV</td><td>BP2</td><td>BP1</td><td>BPO</td><td>Protected Row Address</td><td>Protected Rows</td></tr><tr><td>x</td><td>x</td><td>0</td><td>0</td><td>0</td><td>None</td><td>None</td></tr><tr><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1F800h ~1FFFFh</td><td>Upper 1/64</td></tr><tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1F000h ~1FFFFh</td><td>Upper 1/32</td></tr><tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1E000h ~1FFFFh</td><td>Upper 1/16</td></tr><tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1C000h ~1FFFFh</td><td>Upper 1/8</td></tr><tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>18000h ~1FFFFh</td><td>Upper 1/4</td></tr><tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>10000h ~1FFFFh</td><td>Upper 1/2</td></tr><tr><td>x</td><td>x</td><td>1</td><td>1</td><td>1</td><td>All (default)</td><td>All (default)</td></tr><tr><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>00000h ~007FFh</td><td>Lower 1/64</td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>00000h ~00FFFh</td><td>Lower 1/32</td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>00000h ~01FFFh</td><td>Lower 1/16</td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>00000h ~03FFFh</td><td>Lower 1/8</td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>00000h ~07FFFh</td><td>Lower 1/4</td></tr><tr><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>00000h ~0FFFFh</td><td>Lower 1/2</td></tr><tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>00000h ~1F7FFh</td><td>Lower 63/64</td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>00000h ~1FFFFh</td><td>Lower 31/32</td></tr><tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>00000h ~1DFFFh</td><td>Lower 15/16</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>00000h ~1BFFFh</td><td>Lower 7/8</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>00000h ~17FFFh</td><td>Lower 3/4</td></tr><tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>00000h ~0003Fh</td><td>Block0</td></tr><tr><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>00800h ~1FFFFh</td><td>Upper 63/64</td></tr><tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>01000h ~1FFFFh</td><td>Upper 31/32</td></tr><tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>02000h ~1FFFFh</td><td>Upper 15/16</td></tr><tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>04000h ~1FFFFh</td><td>Upper 7/8</td></tr><tr><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>08000h ~1FFFFh</td><td>Upper 3/4</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>00000h ~0003Fh</td><td>Block0</td></tr></table>",
+        "bbox": [
+            100,
+            369,
+            882,
+            871
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            959,
+            488,
+            973
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "page_number",
+        "text": "Page 35",
+        "bbox": [
+            872,
+            959,
+            937,
+            973
+        ],
+        "page_idx": 33
+    },
+    {
+        "type": "text",
+        "text": "8. Status Register",
+        "text_level": 2,
+        "bbox": [
+            50,
+            87,
+            323,
+            112
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "text",
+        "text": "The device has an 8-bit status register that software can read during the device operation for operation state query. The status register can be read by issuing the GET FEATURES (0FH) command, followed by the feature address C0h (see FEATURE OPERATION).The Output Driver Register can be set and read by issuing the SET FEATURES (0FH)and GET FEATURES command followed by the feature address D0h(see FEATURE OPERATION).",
+        "bbox": [
+            55,
+            136,
+            921,
+            211
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "table",
+        "img_path": "images/0c334e6ac9727dce10539fc908a6740dcc95ecec8338ede70d49e9f4a98dad48.jpg",
+        "table_caption": [
+            "Table8. Status Register Bit Description"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Bit</td><td>Bit Name</td><td>Description</td></tr><tr><td>ECCS3 ECCS2ECCS1 ECCS0</td><td>ECCStatus</td><td>ECCS provides ECC Status as follows:0000b = No bit errors were detected during the previous read algorithm.0001b = bit errors were detected and corrected, error bit number = 1.0010b = bit errors were detected and corrected, error bit number = 2.0011b = bit errors were detected and corrected, error bit number = 3.0100b = bit errors were detected and corrected, error bit number = 4.0101b = bit errors were detected and corrected, error bit number = 5.0110b = bit errors were detected and corrected, error bit number = 6.0111b = bit errors were detected and corrected, error bit number = 7.1000b = bit errors were detected and corrected, error bit number = 8.1111b = Bit errors greater than ECC capability (8 bits) and not corrected.Bit errors cannot be detected and corrected if their number exceeds the tolerance.ECCS is set to 0000b either following a RESET, or at the beginning of the READ. It is then updated after the device completes a valid READ operation.After power-on RESET, ECC status is set to reflect the contents of block 0, page 0.</td></tr><tr><td>P_FAIL</td><td>Program Fail</td><td>This bit indicates that a program failure has occurred (P_FAIL set to 1). It will also be set if the user attempts to program an invalid address or a protected region, including the OTP area. This bit is cleared during the PROGRAM EXECUTE command sequence or a RESET command (P_FAIL = 0).</td></tr><tr><td>E_FAIL</td><td>Erase Fail</td><td>This bit indicates that an erase failure has occurred (E_FAIL set to 1). It will also be set if the user attempts to erase a locked region. This bit is cleared (E_FAIL = 0) at the start of the BLOCK ERASE command sequence or the RESET command.</td></tr><tr><td>WEL</td><td>WRITE ENABLE Latch</td><td>This bit indicates the current status of the WRITE ENABLE latch (WEL) and must be set (WEL=1), prior to issuing a PROGRAM EXECUTE or BLOCK ERASE command. It is set by issuing the WRITE ENABLE command. WEL can also be disabled (WEL=0), by issuing the WRITE DISABLE command.</td></tr><tr><td>OIP</td><td>Operation In Progress</td><td>This bit indicates that PROGRAM EXECUTE、PAGE READ、BLOCK ERASE、RESET is in progress.</td></tr></table>",
+        "bbox": [
+            58,
+            261,
+            924,
+            908
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "page_number",
+        "text": "Page 36",
+        "bbox": [
+            872,
+            959,
+            937,
+            973
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            959,
+            488,
+            973
+        ],
+        "page_idx": 34
+    },
+    {
+        "type": "text",
+        "text": "9. OTP Region",
+        "text_level": 2,
+        "bbox": [
+            50,
+            97,
+            270,
+            123
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "The device offers a protected, One-Time Programmable NAND Flash memory area. Four full pages (4352 bytes per page) are available on the device, and the entire range is guaranteed to be good. Customers can use the OTP area any way they want, like programming serial numbers, or other data, for permanent storage. When delivered from factory, feature bit OTP\\_PRT is 0.",
+        "bbox": [
+            55,
+            147,
+            919,
+            220
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "To access the OTP feature, the user must issue the SET FEATURES command, followed by feature address B0h. When the OTP is ready for access, pages 00h–03h can be programmed in sequential order. The PROGRAM LOAD (02H) and PROGRAM EXECUTE (10H) commands can be used to program the pages. Also, the PAGE READ (13H) command and READ FROM CACHE (03h/0Bh/3Bh/6Bh/BBh/EBh) commands can be used to read the OTP area. The data bits used in feature address B0h to enable OTP access are shown in the table below.",
+        "bbox": [
+            55,
+            245,
+            919,
+            339
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "9.1 OTP Access",
+        "text_level": 2,
+        "bbox": [
+            78,
+            349,
+            251,
+            368
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "To access OTP, perform the following command sequence:",
+        "bbox": [
+            77,
+            391,
+            523,
+            408
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": " Issue the SET FEATURES command (1Fh)",
+        "bbox": [
+            78,
+            412,
+            355,
+            426
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": " Set feature bit OTP\\_EN",
+        "bbox": [
+            80,
+            429,
+            251,
+            442
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": " Issue the PAGE PROGRAM (if OTP\\_EN=1) or PAGE READ command",
+        "bbox": [
+            80,
+            446,
+            513,
+            460
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "It is important to note that after bits 6 and 7 of the OTP register are set by the user, the OTP area becomes read-only and no further programming is supported. For OTP states, see the following table.",
+        "bbox": [
+            58,
+            485,
+            919,
+            521
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "9.2 OTP Protect",
+        "text_level": 2,
+        "bbox": [
+            78,
+            533,
+            260,
+            551
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": " Issue the SET FEATURES command (1FH)",
+        "bbox": [
+            78,
+            561,
+            355,
+            574
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": " Set feature bit OTP\\_EN and OTP\\_PRT",
+        "bbox": [
+            80,
+            578,
+            337,
+            591
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": " 06H (WRITE ENABLE)",
+        "bbox": [
+            80,
+            595,
+            238,
+            608
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": " Issue the PROGRAM EXECUTE (10H) command.",
+        "bbox": [
+            80,
+            612,
+            395,
+            627
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "table",
+        "img_path": "images/8f1d2f7812a2be30c3f50e7005531c8e9c28b6f160ec534942226c0419a85721.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>OTP_PRT</td><td>OTP_EN</td><td>State</td></tr><tr><td>x</td><td>0</td><td>Normal Operation</td></tr><tr><td>0</td><td>1</td><td>Access OTP region</td></tr><tr><td>1</td><td>1</td><td>When the device power on state OTP_PRT is 0, user can set feature bit OTP_PRT and OTP_EN to 1, then issue PROGRAM EXECUTE (10H) to lock OTP, and after that OTP_PRT will permanently remain 1.When the device power on state OTP_PRT is 1, user can only read the OTP region data.</td></tr></table>",
+        "bbox": [
+            58,
+            656,
+            942,
+            863
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "Table9. OTP States",
+        "bbox": [
+            442,
+            887,
+            588,
+            902
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "page_number",
+        "text": "Page 37",
+        "bbox": [
+            872,
+            959,
+            936,
+            973
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            959,
+            486,
+            973
+        ],
+        "page_idx": 35
+    },
+    {
+        "type": "text",
+        "text": "10. Error Management",
+        "text_level": 2,
+        "bbox": [
+            52,
+            97,
+            402,
+            122
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "text",
+        "text": "This NAND Flash device is specified to have the minimum number of valid blocks (NVB) of the total available blocks per die shown in the table below. This means the devices may have blocks that are invalid when shipped from the factory. An invalid block is one that contains at least one page that has more bad bits than can be corrected by the minimum required ECC. Additional bad blocks may develop with use. However, the total number of available blocks will not fall below NVB during the endurance life of the product.",
+        "bbox": [
+            55,
+            146,
+            879,
+            257
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "text",
+        "text": "Although NAND Flash memory devices may contain bad blocks, they can be used reliably in systems that provide bad-block management and error-correction algorithms. This ensures data integrity.",
+        "bbox": [
+            58,
+            282,
+            877,
+            318
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "text",
+        "text": "Internal circuitry isolates each block from other blocks, so the presence of a bad block does not affect the operation of the rest of the NAND Flash array.",
+        "bbox": [
+            57,
+            342,
+            875,
+            377
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "text",
+        "text": "NAND Flash devices are shipped from the factory erased. The factory identifies invalid blocks before shipping by programming the Bad Block Mark (00h) to the first spare area location in each bad block. This method is compliant with ONFI Factory Defect Mapping requirements. See the following table for the badblock mark.",
+        "bbox": [
+            57,
+            401,
+            877,
+            475
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "text",
+        "text": "System software should initially check the first spare area location for non-FFh data on the first page of each block prior to performing any program or erase operations on the NAND Flash device. A bad-block table can then be created, enabling system software to map around these areas. Factory testing is performed under worst-case conditions. Because invalid blocks may be marginal, it may not be possible to recover the bad-block marking if the block is erased.",
+        "bbox": [
+            55,
+            500,
+            879,
+            593
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "table",
+        "img_path": "images/d7c875639537837cdd23aeaaa530988b78fcda21946b4254aaa0492131182291.jpg",
+        "table_caption": [
+            "Table10.Error Management Details"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Description</td><td>Requirement</td></tr><tr><td>Minimum number of valid blocks (NVB)</td><td>2008</td></tr><tr><td>Total available blocks per die</td><td>2048</td></tr><tr><td>First spare area location</td><td>Byte 4096</td></tr><tr><td>Bad-block mark</td><td>Non FFh</td></tr></table>",
+        "bbox": [
+            58,
+            644,
+            914,
+            760
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "page_number",
+        "text": "Page 38",
+        "bbox": [
+            872,
+            959,
+            937,
+            973
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            959,
+            488,
+            973
+        ],
+        "page_idx": 36
+    },
+    {
+        "type": "text",
+        "text": "11. ECC Protection",
+        "text_level": 2,
+        "bbox": [
+            52,
+            98,
+            337,
+            122
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "text",
+        "text": "The device offers data corruption protection by offering internal ECC. ECC is always on after device power up, so the default READ and PROGRAM commands operate with internal ECC in the “active” state.",
+        "bbox": [
+            55,
+            147,
+            919,
+            182
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "text",
+        "text": "During a PROGRAM operation, the device calculates an ECC code on the 4k page in the cache register, before the page is written to the NAND Flash array.",
+        "bbox": [
+            57,
+            207,
+            919,
+            243
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "text",
+        "text": "During a READ operation, the page data is read from the array to the cache register, where the ECC code is calculated and compared with the ECC code value read from the array. If error bits are detected, the error is corrected in the cache register. Only corrected data is output on the I/O bus. The ECC status bit indicates whether or not the error correction was successful. The ECC Protection table below shows the ECC protection scheme used throughout a page.",
+        "bbox": [
+            57,
+            267,
+            919,
+            359
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "text",
+        "text": "With internal ECC, the user must accommodate the following:",
+        "bbox": [
+            77,
+            384,
+            548,
+            400
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "text",
+        "text": " Spare area definitions provided in the ECC Protection table below.",
+        "bbox": [
+            78,
+            403,
+            515,
+            418
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "text",
+        "text": " ECC can protect according main and spare areas. WRITEs to the ECC area are ignored.",
+        "bbox": [
+            80,
+            421,
+            630,
+            435
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "table",
+        "img_path": "images/29f5cf28a7ff0ccf1e310a80d72df0b63d97c8786b565f88e8a52dd55de75fb1.jpg",
+        "table_caption": [
+            "Table11.ECC Protection and Spare Area"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Min Byte Address</td><td>Max Byte Address</td><td>ECC Protected</td><td>Area</td><td>Description</td></tr><tr><td>0000H</td><td>01FFH</td><td>Yes</td><td>Main 0</td><td>User data 0</td></tr><tr><td>0200H</td><td>03FFH</td><td>Yes</td><td>Main 1</td><td>User data 1</td></tr><tr><td>0400H</td><td>05FFH</td><td>Yes</td><td>Main 2</td><td>User data 2</td></tr><tr><td>0600H</td><td>07FFH</td><td>Yes</td><td>Main 3</td><td>User data 3</td></tr><tr><td>0800H</td><td>09FFH</td><td>Yes</td><td>Main 4</td><td>User data 4</td></tr><tr><td>0A00H</td><td>0BFFH</td><td>Yes</td><td>Main 5</td><td>User data 5</td></tr><tr><td>0C00H</td><td>0DFFH</td><td>Yes</td><td>Main 6</td><td>User data 6</td></tr><tr><td>0E00H</td><td>0FFFH</td><td>Yes</td><td>Main 7</td><td>User data 7</td></tr><tr><td>1000H</td><td>100FH</td><td>Yes</td><td>Spare 0</td><td>User meta data 0</td></tr><tr><td>1010H</td><td>101FH</td><td>Yes</td><td>Spare 1</td><td>User meta data 1</td></tr><tr><td>1020H</td><td>102FH</td><td>Yes</td><td>Spare 2</td><td>User meta data 2</td></tr><tr><td>1030H</td><td>103FH</td><td>Yes</td><td>Spare 3</td><td>User meta data 3</td></tr><tr><td>1040H</td><td>104FH</td><td>Yes</td><td>Spare 4</td><td>User meta data 4</td></tr><tr><td>1050H</td><td>105FH</td><td>Yes</td><td>Spare 5</td><td>User meta data 5</td></tr><tr><td>1060H</td><td>106FH</td><td>Yes</td><td>Spare 6</td><td>User meta data 6</td></tr><tr><td>1070H</td><td>107FH</td><td>Yes</td><td>Spare 7</td><td>User meta data 7</td></tr><tr><td>1080H</td><td>10E7H</td><td>Yes</td><td>Spare area</td><td>Internal ECC parity data</td></tr><tr><td>10E8H</td><td>10FFH</td><td>NO</td><td>Spare area</td><td>for file system</td></tr></table>",
+        "bbox": [
+            90,
+            486,
+            907,
+            910
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "page_number",
+        "text": "Page 39",
+        "bbox": [
+            872,
+            959,
+            937,
+            973
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            959,
+            488,
+            973
+        ],
+        "page_idx": 37
+    },
+    {
+        "type": "text",
+        "text": "12. Application Notes And Comments",
+        "text_level": 2,
+        "bbox": [
+            52,
+            97,
+            627,
+            123
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "text",
+        "text": "12.1 Addressing for program operation",
+        "text_level": 2,
+        "bbox": [
+            78,
+            135,
+            520,
+            156
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "text",
+        "text": "Within a block, the pages must be programmed consecutively from the LSB (least significant bit) page of the block to the MSB (most significant bit) page of the block. Random page address programming is prohibited.",
+        "bbox": [
+            57,
+            176,
+            907,
+            214
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "image",
+        "img_path": "images/82314281baf16962dd0b24e4e0ef4c140032f12fe1c95602bdde01846e497779.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            186,
+            222,
+            815,
+            454
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "text",
+        "text": "12.2 Several programming cycles on the same page (Partial Page Program)",
+        "text_level": 2,
+        "bbox": [
+            78,
+            471,
+            909,
+            492
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "text",
+        "text": "ECC Parity Code is generated during Program operation on Main area (512 byte)+Spare area(16 byte). While using the Partial Page Program, the user must program the data to main field and spare field simultaneously by the definition of sector in section “ECC & Sector definition for ECC”.",
+        "bbox": [
+            58,
+            515,
+            907,
+            571
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "table",
+        "img_path": "images/46499e33021abb00c568d0da27e2d1dd3a42c49135b34621e5d725d83db5be3a.jpg",
+        "table_caption": [
+            "For Example, each segment can be programmed individually as follows:"
+        ],
+        "table_footnote": [
+            "Number of partial program cycles in the same page must not exceed 4."
+        ],
+        "table_body": "<table><tr><td rowspan=\"2\"></td><td colspan=\"8\">Main Area</td><td colspan=\"8\">Spare Area</td></tr><tr><td>Address 0~511</td><td>Address 512~1023</td><td>Address 1024~1535</td><td>Address 1536~2047</td><td>Address 2048~2559</td><td>Address 2560~3071</td><td>Address 3072~3583</td><td>Address 3584~4095</td><td>Address 4096~4111</td><td>Address 4112~4127</td><td>Address 4128~4143</td><td>Address 4144~4159</td><td>Address 4160~4175</td><td>Address 4176~4191</td><td>Address 4192~4207</td><td>Address 4208~4223</td></tr><tr><td> $1^{st}$  Programming</td><td> $1^{st}$ Main</td><td colspan=\"7\">All 1 s</td><td> $1^{st}$  Spare</td><td colspan=\"7\">All 1 s</td></tr><tr><td> $2^{nd}$  Programming</td><td>All 1 s</td><td colspan=\"3\"> $2^{nd}$ Main</td><td colspan=\"4\">All 1 s</td><td></td><td colspan=\"3\"> $2^{nd}$ Spare</td><td colspan=\"4\">All 1 s</td></tr><tr><td> $3^{rd}$  Programming</td><td colspan=\"4\">All 1 s</td><td colspan=\"2\"> $3^{rd}$ Main</td><td colspan=\"2\">All 1 s</td><td colspan=\"4\">All 1 s</td><td colspan=\"2\"> $3^{rd}$ Spare</td><td colspan=\"2\">All 1 s</td></tr><tr><td> $4^{th}$  Programming</td><td colspan=\"6\">All 1 s</td><td colspan=\"2\"> $4^{th}$ Main</td><td colspan=\"6\">All 1 s</td><td colspan=\"2\"> $4^{th}$ Spare</td></tr><tr><td>Result</td><td>Data Pattern 1</td><td colspan=\"3\">Data Pattern 2</td><td colspan=\"2\">......</td><td colspan=\"2\">Data Pattern 4</td><td>Data Pattern 1</td><td colspan=\"3\">Data Pattern 2</td><td colspan=\"2\">......</td><td colspan=\"2\">Data Pattern 4</td></tr></table>",
+        "bbox": [
+            41,
+            600,
+            941,
+            881
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "page_number",
+        "text": "Page 40",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 38
+    },
+    {
+        "type": "text",
+        "text": "12.3 Keep the power stable and sufficient",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            548,
+            105
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "text",
+        "text": "Do not turn off the power before the Write/Erase operation is complete. Avoid using the device when the battery is low. Power shortage and/or power failure before the Write/Erase operation is complete will cause loss of data and/or damage to data.",
+        "bbox": [
+            57,
+            128,
+            907,
+            182
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "page_number",
+        "text": "Page 41",
+        "bbox": [
+            872,
+            950,
+            936,
+            964
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 39
+    },
+    {
+        "type": "text",
+        "text": "13. Electrical Characteristics",
+        "text_level": 2,
+        "bbox": [
+            50,
+            86,
+            481,
+            111
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "13.1 Absolute Maximum Ratings",
+        "text_level": 2,
+        "bbox": [
+            78,
+            124,
+            446,
+            143
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "table",
+        "img_path": "images/75db92832653168eb2ac0845c6f97a69b4197e0fb6206580e10464705fa0b37f.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Operating Temperature</td><td>-40°C to +85°C</td></tr><tr><td>Storage Temperature</td><td>-65°C to +150°C</td></tr><tr><td>Voltage on I/O Pin with Respect to Ground</td><td>-0.3V to (VCC+0.3)V (&lt;= 3.9V)</td></tr><tr><td> $V_{CC}$ </td><td>-0.3V to 3.9V</td></tr><tr><td rowspan=\"2\">Electrostatic Discharge Voltage</td><td>Human Body Model(1)</td></tr><tr><td>Charge Device Model(2)</td></tr></table>",
+        "bbox": [
+            73,
+            150,
+            911,
+            277
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "Note:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            287,
+            102,
+            300
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "1. JS-001-2017 (R=1500 ohms, C=100pF).",
+        "bbox": [
+            57,
+            302,
+            338,
+            318
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "2. JS-002-2018.",
+        "bbox": [
+            58,
+            319,
+            167,
+            333
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "\\*NOTICE:",
+        "text_level": 2,
+        "bbox": [
+            57,
+            363,
+            129,
+            377
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "Stresses beyond those listed under “Absolute Maximum Ratings” may cause permanent damage to the device. This is a stress rating only and functional operation of the device at these or any other conditions beyond those indicated in the operational sections of this specification are not implied. Exposure to absolute maximum rating conditions for extended periods may affect device reliability.",
+        "bbox": [
+            90,
+            380,
+            914,
+            440
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "13.2 PinCapacitance",
+        "text_level": 2,
+        "bbox": [
+            80,
+            480,
+            310,
+            501
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "Applicable over recommended operating range from: ${ \\mathsf { T } } _ { \\mathsf { A } } = 2 5 ^ { \\circ } { \\mathsf { C } } ,$ f = 1 MHz.",
+        "bbox": [
+            77,
+            524,
+            634,
+            540
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "table",
+        "img_path": "images/af71c8b0ea4676ae6a77d0f6397f521cf08a699e83ff59a988aa03b19dfaca35.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Symbol</td><td>Test Condition</td><td>MAX.</td><td>Units</td><td>Conditions</td></tr><tr><td> $C_{IN}$ </td><td>Input Capacitance</td><td>6</td><td>pF</td><td>VIN = 0V</td></tr><tr><td> $C_{OUT}^{(1)}$ </td><td>Output Capacitance</td><td>8</td><td>pF</td><td>VOUT = 0V</td></tr></table>",
+        "bbox": [
+            75,
+            542,
+            907,
+            621
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "Note:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            641,
+            102,
+            655
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "Characterized and is not 100% tested.",
+        "bbox": [
+            92,
+            657,
+            352,
+            672
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "page_number",
+        "text": "Page 42",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 40
+    },
+    {
+        "type": "text",
+        "text": "13.3 Power-on and Power-off Timing",
+        "text_level": 2,
+        "bbox": [
+            78,
+            84,
+            496,
+            105
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "text",
+        "text": "Do not turn off the power before write/erase operation is complete. Avoid using the device when the battery is low. Power shortage and/or power failure before write/erase operation is complete will cause loss of data and/or damage to data.",
+        "bbox": [
+            57,
+            128,
+            907,
+            182
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "chart",
+        "img_path": "images/4c0d42d6dcd513038be323f3aef6580ae6cd96b0550febdd841fc8c2c1468169.jpg",
+        "content": "",
+        "chart_caption": [
+            "Figure25. Power-On Timing"
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            181,
+            239,
+            865,
+            444
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "table",
+        "img_path": "images/a8d9d90c4cb8c2871aabc994cfff83aee3b6b8580cf09cfda26f8a724b0af57e.jpg",
+        "table_caption": [
+            "Table12.Power-On Timing and Write Inhibit Threshold"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"2\">PARAMETER</td><td rowspan=\"2\">SYMBOL</td><td colspan=\"2\">SPEC</td><td rowspan=\"2\">UNIT</td></tr><tr><td>MIN.</td><td>MAX.</td></tr><tr><td>VCC (min) to CS# Low</td><td> $t_{VSL}$ </td><td>3</td><td></td><td>ms</td></tr><tr><td>Time Delay Before Write Instruction</td><td> $t_{PUW}$ </td><td>6</td><td></td><td>ms</td></tr><tr><td>Write Inhibit Voltage</td><td> $V_{WI}$ </td><td></td><td>2.5</td><td>V</td></tr></table>",
+        "bbox": [
+            78,
+            517,
+            904,
+            625
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "page_number",
+        "text": "Page 43",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 41
+    },
+    {
+        "type": "text",
+        "text": "13.4 DC Electrical Characteristics",
+        "text_level": 2,
+        "bbox": [
+            88,
+            92,
+            454,
+            111
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "text",
+        "text": "Table13.DC Characteristics",
+        "text_level": 2,
+        "bbox": [
+            414,
+            134,
+            614,
+            149
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "table",
+        "img_path": "images/97410f48fdf6c66739ebb2d7a5304f2d8cc6e8ba8e3d47968be57fce4ed1bb8f.jpg",
+        "table_caption": [
+            "Applicable over recommended operating range from: ${ \\mathsf { T A } } = - 4 0 ^ { \\circ } { \\mathsf { C } }$ to $8 5 ^ { \\circ } \\mathsf { C } ,$ $\\mathsf { V C C } = 2 . 7 \\mathsf { V }$ to 3.6 V, (unless otherwise noted)"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"2\">SYMBOL</td><td rowspan=\"2\">PARAMETER</td><td rowspan=\"2\">CONDITIONS</td><td colspan=\"3\">SPEC</td><td rowspan=\"2\">UNIT</td></tr><tr><td>MIN.</td><td>TYP.</td><td>MAX.</td></tr><tr><td>VCC</td><td>Supply Voltage</td><td></td><td>2.7</td><td></td><td>3.6</td><td>V</td></tr><tr><td>ILI</td><td>Input Leakage Current Times</td><td></td><td></td><td></td><td>±10</td><td>μA</td></tr><tr><td>ILO</td><td>Output Leakage Current</td><td></td><td></td><td></td><td>±10</td><td>μA</td></tr><tr><td>ICC1</td><td>Standby Current</td><td>VCC=3.3V, CS# = VCC,VIN = VSS or VCC</td><td></td><td>180</td><td>1000</td><td>μA</td></tr><tr><td rowspan=\"3\">ICC</td><td>Read Current</td><td rowspan=\"3\">CLK=0.1VCC/0.9VCCFCLK=104MHz</td><td></td><td>25</td><td>40</td><td>mA</td></tr><tr><td>Program Current</td><td></td><td>30</td><td>40</td><td>mA</td></tr><tr><td>Erase Current</td><td></td><td>25</td><td>40</td><td>mA</td></tr><tr><td>VIL (1)</td><td>Input Low Voltage</td><td></td><td>-0.3</td><td></td><td>0.2VCC</td><td>V</td></tr><tr><td>VIH</td><td>Input High Voltage</td><td></td><td>0.8VCC</td><td></td><td>VCC+0.3</td><td>V</td></tr><tr><td>VOL</td><td>Output Low Voltage</td><td>IOL = 1.6mA</td><td></td><td></td><td>0.4</td><td>V</td></tr><tr><td>VOH</td><td>Output High Voltage</td><td>IOH = -100 μA</td><td>VCC-0.2</td><td></td><td></td><td>V</td></tr></table>",
+        "bbox": [
+            65,
+            207,
+            936,
+            614
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "text",
+        "text": "Note：",
+        "text_level": 2,
+        "bbox": [
+            63,
+            647,
+            112,
+            660
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "text",
+        "text": "VILmin and VIH max are reference only and are not tested.",
+        "bbox": [
+            98,
+            663,
+            491,
+            678
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "page_number",
+        "text": "Page 44",
+        "bbox": [
+            882,
+            950,
+            944,
+            964
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            68,
+            34,
+            174,
+            74
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            439,
+            55,
+            521,
+            70
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            843,
+            57,
+            927,
+            70
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            41,
+            948,
+            139,
+            964
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            436,
+            948,
+            494,
+            963
+        ],
+        "page_idx": 42
+    },
+    {
+        "type": "text",
+        "text": "13.5 AC Measurement Conditions",
+        "text_level": 2,
+        "bbox": [
+            88,
+            84,
+            466,
+            104
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "table",
+        "img_path": "images/b810dedda4d18069493037bde9272de21a7cba0444ce4f3336a0f52f778c7533.jpg",
+        "table_caption": [
+            "Table14.AC Measurement Conditions"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"2\">SYMBOL</td><td rowspan=\"2\">PARAMETER</td><td colspan=\"2\">SPEC</td><td rowspan=\"2\">UNIT</td></tr><tr><td>MIN.</td><td>MAX.</td></tr><tr><td>CL</td><td>Load Capacitance</td><td></td><td>30</td><td>pF</td></tr><tr><td>TR, TF</td><td>Input Rise and Fall Times</td><td></td><td>5</td><td>ns</td></tr><tr><td>VIN</td><td>Input Pulse Voltages</td><td colspan=\"2\"> $0.2 V_{CC}$  to  $0.8 V_{CC}$ </td><td>V</td></tr><tr><td>IN</td><td>Input Timing Reference Voltages</td><td colspan=\"2\"> $0.3 V_{CC}$  to  $0.7 V_{CC}$ </td><td>V</td></tr><tr><td>OUT</td><td>Output Timing Reference Voltages</td><td colspan=\"2\"> $0.5 V_{CC}$ </td><td>V</td></tr></table>",
+        "bbox": [
+            125,
+            154,
+            901,
+            304
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "table",
+        "img_path": "images/f77d8aa1be00d021334953098231376a556a1ccb62a58a8962e5efc38e354f99.jpg",
+        "table_caption": [
+            "Figure26. AC Measurement I/O Waveform"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"3\"></td><td colspan=\"2\">Input timing reference level</td><td colspan=\"2\">Output timing reference level</td></tr><tr><td>0.8VCC</td><td>0.7VCC</td><td rowspan=\"2\">AC Measurement level</td><td rowspan=\"2\">0.5VCC</td></tr><tr><td>0.2VCC</td><td>0.3VCC</td></tr></table>",
+        "bbox": [
+            204,
+            365,
+            828,
+            427
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "page_number",
+        "text": "Page 45",
+        "bbox": [
+            882,
+            950,
+            944,
+            964
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            68,
+            34,
+            174,
+            74
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            439,
+            57,
+            520,
+            70
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            843,
+            57,
+            927,
+            70
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            41,
+            948,
+            139,
+            964
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            436,
+            948,
+            494,
+            963
+        ],
+        "page_idx": 43
+    },
+    {
+        "type": "text",
+        "text": "13.6 AC Electrical Characteristics",
+        "text_level": 2,
+        "bbox": [
+            80,
+            93,
+            446,
+            112
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "text",
+        "text": "Table15.AC Characteristics",
+        "text_level": 2,
+        "bbox": [
+            411,
+            136,
+            609,
+            150
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "table",
+        "img_path": "images/a2268c046fba783c893b72cc0a5075f8f8551564587a596474d201194f336968.jpg",
+        "table_caption": [
+            "Applicable over recommended operating range from: $\\mathsf { T A } = - 4 0 ^ { \\circ } \\mathsf C$ to ${ 8 5 ^ { \\circ } } \\mathsf C ,$ VCC = 2.7V to 3.6V"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"2\">SYMBOL</td><td rowspan=\"2\">PARAMETER</td><td colspan=\"3\">SPEC</td><td rowspan=\"2\">UNIT</td></tr><tr><td>MIN.</td><td>TYP.</td><td>MAX.</td></tr><tr><td>fC</td><td>Serial Clock Frequency for: all command</td><td></td><td></td><td>104</td><td>MHz</td></tr><tr><td> $t_{CH1(1)}$ </td><td>Serial Clock High Time</td><td>4.5</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{CL1(1)}$ </td><td>Serial Clock Low Time</td><td>4.5</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{CLCH}$ </td><td>Serial Clock Rise Time (Slew Rate)</td><td>0.1</td><td></td><td></td><td>V/ns</td></tr><tr><td> $t_{CHCL}$ </td><td>Serial Clock Fall Time (Slew Rate)</td><td>0.1</td><td></td><td></td><td>V/ns</td></tr><tr><td> $t_{SLCH}$ </td><td>CS# Active Setup Time</td><td>5</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{CHSH}$ </td><td>CS# Active Hold Time</td><td>5</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{SHCH}$ </td><td>CS# Not Active Setup Time</td><td>5</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{CHSL}$ </td><td>CS# Not Active Hold Time</td><td>5</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{SHSL}/t_{CS}$ </td><td>CS# High Time</td><td>20</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{SHQZ}$ </td><td>Output Disable Time</td><td></td><td></td><td>10</td><td>ns</td></tr><tr><td> $t_{CLQX}$ </td><td>Output Hold Time</td><td>0</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{DVCH}$ </td><td>Data In Setup Time</td><td>2</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{CHDX}$ </td><td>Data In Hold Time</td><td>3</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{CLQV}$ </td><td>Output Valid from CLK</td><td></td><td></td><td>8</td><td>ns</td></tr><tr><td> $t_{WHSL}$ </td><td>WP# Setup Time before CS# Low</td><td>20</td><td></td><td></td><td>ns</td></tr><tr><td> $t_{SHWL}$ </td><td>WP# Hold Time after CS# High</td><td>100</td><td></td><td></td><td>ns</td></tr></table>",
+        "bbox": [
+            78,
+            185,
+            946,
+            584
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "text",
+        "text": "Note:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            593,
+            102,
+            606
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "text",
+        "text": "1. Maximum Serial Clock Frequencies are measured results picked at the falling edge.",
+        "bbox": [
+            90,
+            609,
+            677,
+            625
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "text",
+        "text": "2. TCH1+TCL1 $> = 1 / \\mathsf { f C } ;$ characterized and not 100% tested.",
+        "bbox": [
+            92,
+            625,
+            501,
+            640
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "page_number",
+        "text": "Page 46",
+        "bbox": [
+            872,
+            950,
+            937,
+            964
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 44
+    },
+    {
+        "type": "table",
+        "img_path": "images/a0bf5da7e08255cee1be07626283ad612afaf6c8a3a7a90b9dcbcf2b61e6f108.jpg",
+        "table_caption": [
+            "Table16.Programming, Reading and Erasing Characteristics"
+        ],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"2\">SYMBOL</td><td rowspan=\"2\">PARAMETER</td><td colspan=\"3\">SPEC</td><td rowspan=\"2\">UNIT</td></tr><tr><td>MIN.</td><td>TYP.</td><td>MAX.</td></tr><tr><td>tRST</td><td>CS# High to Next Command After Reset(FFh) from Idle/Program/Read</td><td></td><td></td><td>50</td><td>μs</td></tr><tr><td>tRST</td><td>CS# High to Next Command After Reset(FFh) from Erase</td><td></td><td></td><td>550</td><td>μs</td></tr><tr><td> $tRD^{(1)}$ </td><td>Page Read From Array (random, with ECC)</td><td></td><td>175</td><td>300</td><td>μs</td></tr><tr><td> $tRHSA4^{(2)}$ </td><td>Average Read Time for Sequential Read (with ECC) (High Speed Mode Enable, Read buffer x 4)</td><td></td><td>50</td><td></td><td>μs</td></tr><tr><td>tPROG</td><td>Page Program(with ECC)</td><td></td><td>360</td><td>800</td><td>μs</td></tr><tr><td>tERS</td><td>Block Erase</td><td></td><td>3.5</td><td>10</td><td>ms</td></tr></table>",
+        "bbox": [
+            78,
+            109,
+            947,
+            369
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "text",
+        "text": "Note:",
+        "text_level": 2,
+        "bbox": [
+            55,
+            391,
+            102,
+            406
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "text",
+        "text": "1. tRD is the average busy time for Page Read operation of 64 page continuously in a block.",
+        "bbox": [
+            92,
+            409,
+            719,
+            423
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "text",
+        "text": "2. tRHSA4 is the average busy time for sequential Page Read operation with all data output in each page of 64 pages continuously in a block at 100MHz.",
+        "bbox": [
+            90,
+            425,
+            944,
+            454
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "page_number",
+        "text": "Page 47",
+        "bbox": [
+            872,
+            950,
+            936,
+            964
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            57,
+            511,
+            70
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 45
+    },
+    {
+        "type": "text",
+        "text": "14. SPI Serial Timing",
+        "text_level": 2,
+        "bbox": [
+            52,
+            86,
+            364,
+            112
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "chart",
+        "img_path": "images/1bd008a481b1b72cec22240e8814478e39de9e620ad9d3ab6a69787bf2a3d1c4.jpg",
+        "content": "",
+        "chart_caption": [
+            "Serial Input Timing"
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            167,
+            140,
+            812,
+            280
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "chart",
+        "img_path": "images/2f017945781e255f3fe74491349991950022c282eaa54d32b677312b2b3ff2ae.jpg",
+        "content": "",
+        "chart_caption": [
+            "Output Timing"
+        ],
+        "chart_footnote": [],
+        "bbox": [
+            169,
+            327,
+            817,
+            496
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "image",
+        "img_path": "images/627d1d45388934a8429380fb1e1f884205232dcae11cf9e63d71233340b6c79c.jpg",
+        "image_caption": [
+            "WP Timing"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            167,
+            546,
+            808,
+            728
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "page_number",
+        "text": "Page 48",
+        "bbox": [
+            872,
+            948,
+            937,
+            964
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            511,
+            70
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 46
+    },
+    {
+        "type": "text",
+        "text": "15. Ordering Information",
+        "text_level": 2,
+        "bbox": [
+            50,
+            86,
+            439,
+            112
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "Company Prefix",
+        "bbox": [
+            149,
+            159,
+            286,
+            176
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "XT = XTX",
+        "bbox": [
+            157,
+            181,
+            233,
+            197
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "26G = 2.7\\~3.6V Serial NAND Flash Memory",
+        "bbox": [
+            157,
+            232,
+            481,
+            250
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "01 = 1G bit",
+        "bbox": [
+            161,
+            311,
+            253,
+            328
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "02 = 2G bit",
+        "bbox": [
+            161,
+            328,
+            253,
+            344
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "image",
+        "img_path": "images/4acf29a1695931fab4f4a37fe1816bd31feb7fe9fbaa49c3bada048ce188cef4.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            145,
+            140,
+            852,
+            678
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "04 = 4G bit",
+        "bbox": [
+            161,
+            344,
+            253,
+            361
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "Generation",
+        "bbox": [
+            147,
+            385,
+            250,
+            402
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "C = Internal Version",
+        "bbox": [
+            156,
+            404,
+            312,
+            420
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "WS = 8-pin WSON(8x6mm)",
+        "bbox": [
+            154,
+            464,
+            367,
+            482
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "I = Industrial (-40℃ to +85℃)",
+        "bbox": [
+            154,
+            528,
+            384,
+            546
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "Green Code",
+        "bbox": [
+            149,
+            571,
+            253,
+            587
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "R = RoHS Compliant Package",
+        "bbox": [
+            154,
+            587,
+            377,
+            606
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "G = Green/Reach Package",
+        "bbox": [
+            156,
+            606,
+            357,
+            624
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "A = Tray",
+        "bbox": [
+            156,
+            663,
+            226,
+            679
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "T = Tape and Reel",
+        "bbox": [
+            154,
+            680,
+            295,
+            697
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "page_number",
+        "text": "Page 49",
+        "bbox": [
+            872,
+            948,
+            936,
+            964
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 47
+    },
+    {
+        "type": "text",
+        "text": "16. Package Information",
+        "text_level": 2,
+        "bbox": [
+            52,
+            97,
+            427,
+            124
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "text",
+        "text": "16.1 8-Pad WSON8 (8\\*6mm)",
+        "text_level": 2,
+        "bbox": [
+            78,
+            133,
+            402,
+            155
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "image",
+        "img_path": "images/988d1c9cc4506a3615c774c247f188399004fc80a54947478ed4cad037cdf330.jpg",
+        "image_caption": [
+            "TOP VIEW"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            38,
+            165,
+            399,
+            381
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "image",
+        "img_path": "images/d4cd445e55c6ead60bf9e588c875e7941a54954d258d507c0facc230fa3e3531.jpg",
+        "image_caption": [
+            "SIDE VIEW"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            409,
+            163,
+            520,
+            372
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "image",
+        "img_path": "images/0c58bef4c7e6af77cd65b8a2ba79613f8f7f854f8f6c2aaae323d3de106a8617.jpg",
+        "image_caption": [
+            "BOTTOM VIEW"
+        ],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            533,
+            163,
+            912,
+            388
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "image",
+        "img_path": "images/48e708bcce471647f120a00fa740566fa91abc2a1c700135345c94be8278f04c.jpg",
+        "image_caption": [],
+        "image_footnote": [],
+        "content": "",
+        "bbox": [
+            58,
+            408,
+            362,
+            488
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "table",
+        "img_path": "images/c2ceda23c9bcf1096e37a88775d38417aa9a64f323d944556e8391f38342478f.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=\"2\">SYMBOL</td><td colspan=\"3\">MILLIMETER</td></tr><tr><td>MIN</td><td>NOM</td><td>MAX</td></tr><tr><td>A</td><td>0.70</td><td>0.75</td><td>0.80</td></tr><tr><td>A1</td><td>0.00</td><td>0.02</td><td>0.05</td></tr><tr><td>b</td><td>0.35</td><td>0.40</td><td>0.45</td></tr><tr><td>b1</td><td colspan=\"3\">0.25REF</td></tr><tr><td>c</td><td>0.18</td><td>0.20</td><td>0.25</td></tr><tr><td>D</td><td>7.90</td><td>8.00</td><td>8.10</td></tr><tr><td>Nd</td><td colspan=\"3\">3.81BSC</td></tr><tr><td>e</td><td colspan=\"3\">1.27BSC</td></tr><tr><td>E</td><td>5.90</td><td>6.00</td><td>6.10</td></tr><tr><td>D2</td><td>3.30</td><td>3.40</td><td>3.50</td></tr><tr><td>E2</td><td>4.20</td><td>4.30</td><td>4.40</td></tr><tr><td>L</td><td>0.45</td><td>0.50</td><td>0.55</td></tr><tr><td>h</td><td>0.30</td><td>0.35</td><td>0.40</td></tr></table>",
+        "bbox": [
+            253,
+            500,
+            642,
+            802
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "page_number",
+        "text": "Page 50",
+        "bbox": [
+            872,
+            958,
+            937,
+            973
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "header",
+        "text": "xX",
+        "bbox": [
+            58,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            958,
+            130,
+            973
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            958,
+            488,
+            973
+        ],
+        "page_idx": 48
+    },
+    {
+        "type": "text",
+        "text": "17. Revision History",
+        "text_level": 2,
+        "bbox": [
+            52,
+            97,
+            360,
+            122
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "table",
+        "img_path": "images/0f2dbd5e31ba4eac1fe2b7aedc1d477926a75c50556051e30362d317a889f000.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td>Version No.</td><td>Description</td><td>Date</td></tr><tr><td>1.0</td><td>Initial Release</td><td>Jan-17-2021</td></tr><tr><td>1.1</td><td>Update status register layout to align with feature address</td><td>Jan-29-2021</td></tr><tr><td>1.2</td><td>Update as ECC always on</td><td>Feb-27-2021</td></tr><tr><td>1.3</td><td>Update standby current value</td><td>Jul-12-2021</td></tr><tr><td>1.4</td><td>Update storage temperature</td><td>Sep-07-2021</td></tr><tr><td>1.5</td><td>Revise the AC Characteristics description and add WP TimingUpdate the max. value of standby current、tRSTUpdate Package information</td><td>Dec-07-2021</td></tr><tr><td>1.6</td><td>Revise the min. Value of  $t_{VSL}$ Update DS_IO[1] and DS_IO[0] description</td><td>Dec-28-2021</td></tr><tr><td>1.7</td><td>Corrected default value of IO drive strength from 50% to 25%Added &quot;12. Application Notes And Comments&quot; chapterAdjusted ILI/ILO max from ±2μA to ±10μAtRD typical from 270μs to 125μstRD max from 300μs to 200μstPROG typical from 450μs to 360ustPROG max from 700μs to 800μsAdded Note1 after “13.6 AC Electrical Characteristics”</td><td>Jun-23-2022</td></tr><tr><td>1.8</td><td>Adjusted tRD typical to 175μstRD max to 300μstERS typical to 3.5msAdded Endurance</td><td>Sep-26-2024</td></tr><tr><td>1.9</td><td>Add ESD-CDMAdd tRHSA4Delete HOLD function</td><td>Jan-02-2025</td></tr></table>",
+        "bbox": [
+            68,
+            125,
+            882,
+            682
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "page_number",
+        "text": "Page 51",
+        "bbox": [
+            872,
+            950,
+            934,
+            964
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            835,
+            57,
+            919,
+            70
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            33,
+            948,
+            130,
+            964
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 49
+    },
+    {
+        "type": "text",
+        "text": "芯天下技术股份有限公司",
+        "bbox": [
+            68,
+            86,
+            303,
+            105
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "text",
+        "text": "XTX Technology Inc.",
+        "bbox": [
+            68,
+            109,
+            246,
+            125
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "text",
+        "text": "Tel: (86 755) 28229862",
+        "bbox": [
+            68,
+            137,
+            251,
+            153
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "text",
+        "text": "Fax: (86 755) 28229847",
+        "bbox": [
+            68,
+            153,
+            255,
+            169
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "text",
+        "text": "Web Site: http://www.xtxtech.com/",
+        "bbox": [
+            67,
+            180,
+            350,
+            197
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "text",
+        "text": "Technical Contact: fae@xtxtech.com",
+        "bbox": [
+            68,
+            197,
+            352,
+            214
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "page_number",
+        "text": "Page 52",
+        "bbox": [
+            872,
+            950,
+            936,
+            964
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "header",
+        "text": "x",
+        "bbox": [
+            60,
+            34,
+            166,
+            74
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "header",
+        "text": "SPI NAND",
+        "bbox": [
+            431,
+            55,
+            513,
+            70
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "header",
+        "text": "XT26G04C",
+        "bbox": [
+            833,
+            55,
+            919,
+            70
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "page_footnote",
+        "text": "\\* Information furnished is believed to be accurate and reliable. However, XTX Technology Inc. assumes no responsibility for the conseguences of use of such information or for any infringement of patents of other rights of third parties which may result from its use. No license is granted by implication or otherwise under any patent rights of XTX Technology Inc.. Specifications mentioned in this publication are subject to change without notice This publication supersedes and replaces all information previously supplied. XTX Technology Inc. products are not authorized for use as critical components in life support devices or systems without express written approval of XTX Technology Inc.. The XTX logo is a registered trademark of XTX Technology Inc.. All other names are the property of their respective own.",
+        "bbox": [
+            65,
+            738,
+            937,
+            866
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "footer",
+        "text": "Jan 02, 2025",
+        "bbox": [
+            31,
+            948,
+            132,
+            964
+        ],
+        "page_idx": 50
+    },
+    {
+        "type": "footer",
+        "text": "Rev 1.9",
+        "bbox": [
+            427,
+            948,
+            488,
+            963
+        ],
+        "page_idx": 50
+    }
+]
