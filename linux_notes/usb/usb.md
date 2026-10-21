@@ -2,9 +2,9 @@
 ## USB框架
 
 1. 基础知识
-    - usb接口是什么
+    - usb是什么
     - usb接口介绍
-    - 版本命名规则
+    - usb版本命名规则
     - 开发板usb接口介绍
 2. 理论知识
     - 拓扑结构
@@ -25,6 +25,65 @@
     - host和phy驱动
 5. 实践
     - 4g模块移植
+
+### 1. USB是什么
+
+## USB
+USB 全程 Universal Serial Bus 通用串行总线
+是一个标准
+
+## 发展历史
+- usb 1.0   96年    1.5Mbps
+- usb 1.1   98年    12Mbps
+- usb 2.0   00年    480Mbps
+- usb 3.0   08年    5Gbps
+- usb 3.1   13年    10Gbps
+- usb 3.2   17年    20Gbps
+- usb 4.0   19年    40Gbps
+
+### 2. USB接口介绍
+
+## 常见usb接口
+- Type-A    键盘/鼠标/U盘
+- Type-B    打印机/音频接口
+- Mini-A    已废弃/罕见
+- Mini-B    行车记录仪
+- Micro-A   已废弃/罕见
+- Micro-B   旧安卓
+- Type-C    唯一的答案
+
+最初设计是 A=Host，B=Device
+Type-A 和 Type-B 都只有 4 个引脚
+靠 接口形状 来区分角色：A 口插主机，B 口插外设
+
+ID 引脚出现在 Mini-USB、Micro-USB 的 OTG 接口 里，是第 5 个引脚。
+
+Mini-A / Micro-A 插头：ID 引脚接地,默认当 Host
+Mini-B / Micro-B 插头：ID 引脚悬空,默认当 Device
+
+
+## usb接口颜色
+usb接口颜色有标准有关,但厂商可能不遵守
+
+
+## usb接口历史
+一开始Type-A 和 Type-B 都只有 4 个引脚,靠接口形状来区分角色
+后来有了OTG的需求,搞了Mini-USB、Micro-USB ,加入了ID引脚
+Mini-A / Micro-A 插头：ID 引脚接地 → 识别为 A-Device，默认当 Host。
+Mini-B / Micro-B 插头：ID 引脚悬空 → 识别为 B-Device，默认当 Device。
+还有Mini-AB / Micro-AB 插座
+但是大家由于成本,方便考虑
+用Mini-B / Micro-B 插座
+改Mini-B / Micro-B 插头的ID 引脚接地,来实现host
+Mini-A / Micro-A 逐渐没落弃用
+最后2014年推出Type-C
+
+
+
+
+
+
+
 
 
 
