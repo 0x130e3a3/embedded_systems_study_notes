@@ -79,6 +79,16 @@ Mini-A / Micro-A 逐渐没落弃用
 最后2014年推出Type-C
 
 
+### 3. usb版本命名规则
+
+## usb命名变化
+- usb 1.0   usb2.0 ls
+- usb 1.1   usb2.0 fs
+- usb 2.0   usb2.0 hs
+- usb 3.0   usb3.1GEN1  usb3.2GEN1
+- usb 3.1   usb3.1GEN2  usb3.2GEN2
+- usb 3.2               usb3.2GEN2x2
+- usb 4.0   usb4
 
 
 
@@ -86,6 +96,20 @@ Mini-A / Micro-A 逐渐没落弃用
 
 
 
+
+### 7. usb拓扑结构
+
+## 集线器hub
+USB 是纯树形结构，所有设备都必须挂在某个 Hub 的端口上
+设备不能直接挂在 Host Controller 上，必须经过 Hub
+
+## 根集线器Root Hub
+主机侧的 Host Controller 自带一个 Root Hub（根集线器）主机自带的 Root Hub 就是这棵树的第一层
+
+## 集线器限制
+集线器最多7层
+所有设备加起来不能超过127个,因为设备地址字段只有 7 bit（地址 1~127，0 是枚举前的默认地址）
+Hub 本身也算设备
 
 
 ### 8. usb主机如何识别到usb设备被插入/拔出了?
