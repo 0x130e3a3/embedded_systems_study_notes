@@ -90,10 +90,41 @@ Mini-A / Micro-A 逐渐没落弃用
 - usb 3.2               usb3.2GEN2x2
 - usb 4.0   usb4
 
+### 4. 开发板usb接口介绍1
+
+## RK3568的USB资源
+2个USB 2.0 Host
+1个USB 3.0 Host
+1个USB 3.0 OTG
+
+## Host,Device和OTG
+usb分为主设备Host和从设备Device
+- Host
+    负责枚举设备、分配带宽、提供 VBUS 供电，例如 PC、开发板的 Host 口。
+- Device
+    由 Host 控制，不能主动管理总线，例如 U盘、鼠标、键盘
+- OTG
+    支持在 Host 和 Device 之间切换，既可以被其他主机识别，也可以作为主机去连接外设。
+
+## USB 2.0 Host控制器
+包括EHCI主控制器和OHCI主控制器,共享同一个 USB 2.0 Host 控制器/物理端口
+- EHCI
+    仅支持高速
+- OHCI
+    仅支持全速和低速
+
+### 5. 开发板usb接口介绍2
+## USB 3.0 Host控制器
+基于 DWC3 控制器，支持 USB 3.0 SuperSpeed，同时也兼容 USB 2.0 高速、全速和低速设备。
+
+## USB 3.0 OTG控制器
+基于 DWC3 控制器，支持 OTG 双角色切换，可工作在 Host、Device 或 OTG 模式，并兼容 USB 3.0 和 USB 2.0 协议。
 
 
+### 6. 开发板usb接口介绍3
 
-
+## usb硬件知识
+- USB Host 接口：通常由 5V VBUS 电源、差分数据线 D+/D-、GND 和可选的 OC 过流检测脚组成。VBUS 输出一般经过电源开关或 LDO，并配合过流保护电路；当负载短路或电流超过设定阈值时，会关闭 VBUS 或进入限流状态
 
 
 
